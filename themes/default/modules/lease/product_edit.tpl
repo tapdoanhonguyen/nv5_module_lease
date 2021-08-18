@@ -32,7 +32,7 @@
 									</li>
 									<li class="breadcrumb-item"><a href="/lease/product/">{LANG.product}</a>
 									</li>
-									<li class="breadcrumb-item active" aria-current="page">{LANG.product_add}</li>
+									<li class="breadcrumb-item active" aria-current="page">{LANG.product_edit}</li>
 								</ol>
 							</nav>
 						</div>
@@ -53,7 +53,7 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="card-title">
-					<h4 class="mb-0">{LANG.product_add}</h4>
+					<h4 class="mb-0">{LANG.product_edit}</h4>
 				</div>
 				<hr/>	
 				<!-- BEGIN: error -->
@@ -63,6 +63,21 @@
 				<div class="panel-body">
 				<form class="form-horizontal" action="{PRODUCT_ADD}" method="post">
 					<input type="hidden" name="pid" value="{ROW.pid}" />
+					<div class="form-group">
+						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.title_product}</strong> <span class="red">(*)</span></label>
+						<div class="col-sm-19 col-md-20">
+							<input class="form-control" type="text" name="title" value="{ROW.title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.alias}</strong> <span class="red">(*)</span></label>
+						<div class="col-sm-19 col-md-18">
+							<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+						</div>
+						<div class="col-sm-4 col-md-2">
+							<i class="fa fa-refresh fa-lg icon-pointer" onclick="nv_get_alias('id_alias');">&nbsp;</i>
+						</div>
+					</div>
 					<div class="form-group">
 						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.fid}</strong> <span class="red">(*)</span></label>
 						<div class="col-sm-19 col-md-20">
@@ -74,12 +89,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.title_product}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="title" value="{ROW.title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
+					
 					<div class="form-group">
 						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.area}</strong> <span class="red">(*)</span></label>
 						<div class="col-sm-19 col-md-20">
@@ -160,7 +170,27 @@
 		</div>	
  
 <script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-
-
+<script type="text/javascript">
+//<![CDATA[
+    function nv_get_alias(id) {
+        var title = strip_tags($("[name='title']").val());
+        if (title != '') {
+            $.post(nv_base_siteurl + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=product/alias&nocache=' + new Date().getTime(), 'get_alias_title=' + encodeURIComponent(title), function(res) {
+                $("#"+id).val(strip_tags(res));
+            });
+        }
+        return false;
+    }
+//]]>
+</script>
+<!-- BEGIN: auto_get_alias -->
+<script type="text/javascript">
+//<![CDATA[
+    $("[name='title']").change(function() {
+        nv_get_alias('id_alias');
+    });
+//]]>
+</script>
+<!-- END: auto_get_alias -->
 <!-- END: main -->
 

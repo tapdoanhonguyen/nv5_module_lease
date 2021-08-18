@@ -95,3 +95,18 @@ $lang_module['error_required_price_usd_max'] = 'Error: Required fields enter the
 $lang_module['error_required_price_vnd_min'] = 'Error: Required fields enter the Price vnd min';
 $lang_module['error_required_price_vnd_max'] = 'Error: Required fields enter the Price vnd max';
 $lang_module['error_required_rent_status'] = 'Error: Required fields enter the Rent status';
+
+//Lang for function product_export
+$lang_module['product_export'] = 'product_export';
+$lang_module['adminid'] = 'Adminid';
+$lang_module['crtd_date'] = 'Crtd date';
+$lang_module['userid_edit'] = 'Userid edit';
+
+//Lang for function product_import
+$lang_module['product_import'] = 'product_import';
+$lang_module['update_date'] = 'Update date';
+
+//Lang for function product_alias
+$lang_module['product_alias'] = 'product_alias';
+$lang_module['alias'] = 'Alias';
+$lang_module['error_required_alias'] = 'Error: Required fields enter the Alias';

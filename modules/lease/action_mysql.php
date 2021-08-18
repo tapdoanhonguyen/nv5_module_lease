@@ -32,10 +32,11 @@ fid int(11) NOT NULL AUTO_INCREMENT,
   image varchar(250) NOT NULL,
   note text NOT NULL,
   active int(1) NOT NULL,
-  adminid int(11) NOT NULL,
-  crtd_date int(11) NOT NULL,
-  userid_edit int(11) NOT NULL,
-  update_time int(11) NOT NULL,
+  active int(2) NOT NULL DEFAULT '0',
+  adminid int(11) NOT NULL DEFAULT '0',
+  crtd_date int(11) NOT NULL DEFAULT '0',
+  userid_edit int(11) NOT NULL DEFAULT '0',
+  update_date int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (fid)
 ) ENGINE=MyISAM;";
 
@@ -44,10 +45,11 @@ id int(11) NOT NULL AUTO_INCREMENT,
   title varchar(250) NOT NULL,
   note text NOT NULL,
   active int(1) NOT NULL,
-  adminid int(11) NOT NULL,
-  crtd_date int(11) NOT NULL,
-  userid_edit int(11) NOT NULL,
-  time_update int(11) NOT NULL,
+  active int(2) NOT NULL DEFAULT '0',
+  adminid int(11) NOT NULL DEFAULT '0',
+  crtd_date int(11) NOT NULL DEFAULT '0',
+  userid_edit int(11) NOT NULL DEFAULT '0',
+  update_date int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE=MyISAM;";
 
@@ -55,6 +57,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
  pid int(11) NOT NULL AUTO_INCREMENT,
   fid int(11) NOT NULL,
   title varchar(250) NOT NULL,
+  alias VARCHAR(250) NOT NULL DEFAULT '',
   area float NOT NULL,
   price_usd_min float NOT NULL,
   price_usd_max float NOT NULL,
@@ -64,11 +67,12 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   image varchar(250) NOT NULL,
   note text NOT NULL,
   active tinyint(2) NOT NULL,
-  adminid int(11) NOT NULL,
-  crtd_date int(11) NOT NULL,
-  userid_edit int(11) NOT NULL,
-  update_date int(11) NOT NULL,
-  PRIMARY KEY (pid)
+  adminid int(11) NOT NULL DEFAULT '0',
+  crtd_date int(11) NOT NULL DEFAULT '0',
+  userid_edit int(11) NOT NULL DEFAULT '0',
+  update_date int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (pid),
+  UNIQUE KEY alias (alias)
 ) ENGINE=MyISAM;";
 
 $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_rent_status (
@@ -91,11 +95,11 @@ sid int(11) NOT NULL AUTO_INCREMENT,
   price_vnd float NOT NULL,
   chargeid int(11) NOT NULL,
   note text NOT NULL,
-  active int(2) NOT NULL,
-  adminid int(11) NOT NULL,
-  crtd_date int(11) NOT NULL,
-  userid_edit int(11) NOT NULL,
-  update_time int(11) NOT NULL,
+  active int(2) NOT NULL DEFAULT '0',
+  adminid int(11) NOT NULL DEFAULT '0',
+  crtd_date int(11) NOT NULL DEFAULT '0',
+  userid_edit int(11) NOT NULL DEFAULT '0',
+  update_date int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (sid)
 ) ENGINE=MyISAM;";
 
@@ -103,10 +107,11 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
 cid int(11) NOT NULL AUTO_INCREMENT,
   title varchar(250) NOT NULL,
   active int(2) NOT NULL,
-  adminid int(11) NOT NULL,
-  crtd_date int(11) NOT NULL,
-  userid_edit int(11) NOT NULL,
-  update_date int(11) NOT NULL,
+  active int(2) NOT NULL DEFAULT '0',
+  adminid int(11) NOT NULL DEFAULT '0',
+  crtd_date int(11) NOT NULL DEFAULT '0',
+  userid_edit int(11) NOT NULL DEFAULT '0',
+  update_date int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (cid)
 ) ENGINE=MyISAM;";
 

@@ -1,6 +1,10 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: view -->
-<div class="well">
+
+<link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
+<div class="well" style="display:none">
 <form action="{NV_BASE_SITEURL}index.php" method="get">
     <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
     <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
@@ -19,42 +23,78 @@
     </div>
 </form>
 </div>
+
+<div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+	<div class="breadcrumb-title pr-3">Sản phẩm</div>
+	<div class="pl-3">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 p-0">
+					<li class="breadcrumb-item">
+						<a href="/"><i class='bx bx-home-alt'></i></a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">Hiện Trạng</li>
+				</ol>
+			</nav>
+		</div>
+	<div class="ml-auto">
+			<div class="btn-group">
+				<button type="button" class="btn btn-primary">{LANG.status_add}</button>
+				<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">Toggle Dropdown</span>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">	
+					<a class="dropdown-item" href="javascript:;">Nhập Excel</a>
+					<a class="dropdown-item" href="javascript:;">Xuất data</a>
+					<div class="dropdown-divider"></div>	
+				</div>
+			</div>
+		</div>
+</div>
+
+
 <form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th class="w100">{LANG.update_date}</th>
-                    <th>{LANG.decription}</th>
-                    <th class="w100 text-center">{LANG.active}</th>
-                    <th class="w150">&nbsp;</th>
-                </tr>
-            </thead>
-            <!-- BEGIN: generate_page -->
-            <tfoot>
-                <tr>
-                    <td class="text-center" colspan="4">{NV_GENERATE_PAGE}</td>
-                </tr>
-            </tfoot>
-            <!-- END: generate_page -->
-            <tbody>
-                <!-- BEGIN: loop -->
-                <tr>
-                    <td>
-                        <select class="form-control" id="id_weight_{VIEW.rid}" onchange="nv_change_weight('{VIEW.rid}');">
-                        <!-- BEGIN: update_date_loop -->
-                            <option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
-                        <!-- END: update_date_loop -->
-                    </select>
-                </td>
-                    <td> {VIEW.decription} </td>
-                    <td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.rid}" value="{VIEW.rid}" {CHECK} onclick="nv_change_status({VIEW.rid});" /></td>
-                    <td class="text-center"><i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a></td>
-                </tr>
-                <!-- END: loop -->
+	<div class="card">
+		<div class="card-body">
+			<div class="card-title">
+				<h4 class="mb-0">Danh sách Tầng</h4>
+			</div>
+			<hr/>	
+			<div class="table-responsive">
+				<table id="example" class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th class="w100">{LANG.number}</th>
+							<th>{LANG.title_status}</th>
+							<th class="w100 text-center">{LANG.rent_status1}</th>
+							<th class="w150 text-center">{LANG.active}</th>
+						</tr>
+					</thead>
+					<!-- BEGIN: generate_page -->
+					<tfoot>
+						<tr>
+							<td class="text-center" colspan="4">{NV_GENERATE_PAGE}</td>
+						</tr>
+					</tfoot>
+					<!-- END: generate_page -->
+					<tbody>
+						<!-- BEGIN: loop -->
+							<tr>
+								<td>
+									<select class="form-control" id="id_weight_{VIEW.rid}" onchange="nv_change_weight('{VIEW.rid}');">
+									<!-- BEGIN: update_date_loop -->
+										<option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
+									<!-- END: update_date_loop -->
+								</select>
+							</td>
+								<td> {VIEW.decription} </td>
+								<td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.rid}" value="{VIEW.rid}" {CHECK} onclick="nv_change_status({VIEW.rid});" /></td>
+								<td class="text-center"><i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a></td>
+							</tr>
+						<!-- END: loop -->
             </tbody>
         </table>
-    </div>
+			</div>
+		</div>
+	</div>
 </form>
 <!-- END: view -->
 
@@ -89,7 +129,7 @@
             return;
         });
         return;
-    } 
+    }
 
 
     function nv_change_status(id) {
@@ -112,4 +152,14 @@
 
 //]]>
 </script>
+
+<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			//Default data table
+			$('#example').DataTable();
+		});
+	</script>
+	
+	
 <!-- END: main -->

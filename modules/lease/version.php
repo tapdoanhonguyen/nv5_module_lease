@@ -13,9 +13,9 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'Lease',
-    'modfuncs' => 'main,floor,customer_groups,customer,cat,charge,product,product_add,permission,status,service',
-    'change_alias' => 'main,floor,customer_groups,customer,cat,charge,product,product_add,permission,status,service',
-    'submenu' => 'floor,customer_groups,customer,cat,charge,product,product_add,permission,status,service',
+    'modfuncs' => 'main,floor,customer_groups,customer,customer_add,cat,cat_add,charge,product,product_add,product_export,product_import,permission,status,service,service_add',
+    'change_alias' => 'main,floor,customer_groups,customer,customer_add,cat,cat_add,charge,product,product_add,product_export,product_import,permission,status,service,service_add',
+    'submenu' => 'floor,customer_groups,customer,customer_add,cat,cat_add,charge,product,product_add,product_export,product_import,permission,status,service,service_add',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.03',

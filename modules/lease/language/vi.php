@@ -25,6 +25,8 @@ $lang_module['cat'] = 'Loại dịch vụ';
 $lang_module['charge'] = 'Cách tính phí';
 $lang_module['product'] = 'Danh sách sản phẩm';
 $lang_module['product_add'] = 'Thêm sản phẩm';
+$lang_module['product_edit'] = 'Sữa sản phẩm';
+$lang_module['product_view'] = 'Chi tiết sản phẩm';
 $lang_module['product_choose'] = 'Hành động';
 $lang_module['product_more'] = 'Tiện ích khác';
 $lang_module['product_import'] = 'Nhập data';
@@ -95,3 +97,19 @@ $lang_module['chargeid'] = 'Hiện trạng dịch vụ';
 $lang_module['error_required_catid'] = 'Lỗi: bạn cần nhập dữ liệu cho loại dịch vụ';
 $lang_module['error_required_unitid'] = 'Lỗi: bạn cần nhập dữ liệu cho Đơn vị sản phẩm';
 $lang_module['error_required_chargeid'] = 'Lỗi: bạn cần nhập dữ liệu cho hiện trạng dịch vụ';
+
+//Lang for function product_export
+$lang_module['adminid'] = 'Adminid';
+$lang_module['crtd_date'] = 'Crtd date';
+$lang_module['userid_edit'] = 'Userid edit';
+
+//Lang for function product_import
+$lang_module['update_date'] = 'Update date';
+
+//Lang for function product_alias
+$lang_module['product_alias'] = 'product_alias';
+$lang_module['alias'] = 'Alias';
+$lang_module['error_required_alias'] = 'Lỗi: Alias đã tồn tại, bạn cần nhập dữ liệu khác cho Alias';
+$lang_module['develop'] = 'Trang đang được thiết kế';
+$lang_module['setting'] = 'Cấu hình';
+$lang_module['dashboard'] = 'Dashboard';
