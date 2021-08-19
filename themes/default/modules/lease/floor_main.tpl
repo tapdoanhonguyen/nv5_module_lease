@@ -24,7 +24,7 @@
 </div>
 
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
-	<div class="breadcrumb-title pr-3">Sản phẩm</div>
+	<div class="breadcrumb-title pr-3">{LANG.floor}</div>
 	<div class="pl-3">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb mb-0 p-0">
@@ -37,7 +37,7 @@
 		</div>
 	<div class="ml-auto">
 			<div class="btn-group">
-				<button type="button" class="btn btn-primary">{LANG.add}</button>
+				<a type="button" class="btn btn-primary" href="{FLOOR_ADD}">{LANG.add}</a>
 				
 			</div>
 		</div>
@@ -48,7 +48,7 @@
 	<div class="card">
 		<div class="card-body">
 			<div class="card-title">
-				<h4 class="mb-0">Danh sách Tầng</h4>
+				<h4 class="mb-0">{LANG.floor_list}</h4>
 			</div>
 			<hr/>				
 			<div class="table-responsive">
