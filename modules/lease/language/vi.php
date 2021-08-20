@@ -20,7 +20,8 @@ $lang_translator['langtype'] = 'lang_module';
 $lang_module['main'] = 'Trang chính';
 $lang_module['floor'] = 'Danh sách tầng';
 $lang_module['customer-groups'] = 'Nhóm khách hàng';
-$lang_module['customer'] = 'Danh sách khách hàng';
+$lang_module['customer'] = 'Khách hàng';
+$lang_module['customer_list'] = 'Danh sách khách hàng';
 $lang_module['cat'] = 'Loại dịch vụ';
 $lang_module['charge'] = 'Cách tính phí';
 $lang_module['product'] = 'Danh sách sản phẩm';
@@ -35,6 +36,8 @@ $lang_module['permission'] = 'Phân quyền';
 
 //Lang for function floor
 $lang_module['add'] = 'Thêm mới';
+$lang_module['floor_add'] = 'Thêm tàng';
+$lang_module['floor_edit'] = 'Sửa tầng';
 $lang_module['edit'] = 'Sửa';
 $lang_module['delete'] = 'Xóa';
 $lang_module['number'] = 'STT';
@@ -113,3 +116,4 @@ $lang_module['error_required_alias'] = 'Lỗi: Alias đã tồn tại, bạn c�
 $lang_module['develop'] = 'Trang đang được thiết kế';
 $lang_module['setting'] = 'Cấu hình';
 $lang_module['dashboard'] = 'Dashboard';
+$lang_module['cat_title'] = 'Tên loại dịch vụ';

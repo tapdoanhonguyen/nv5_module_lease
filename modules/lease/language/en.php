@@ -110,3 +110,25 @@ $lang_module['update_date'] = 'Update date';
 $lang_module['product_alias'] = 'product_alias';
 $lang_module['alias'] = 'Alias';
 $lang_module['error_required_alias'] = 'Error: Required fields enter the Alias';
+
+//Lang for function company
+$lang_module['company'] = 'company';
+$lang_module['vi_title'] = 'Vi title';
+$lang_module['en_title'] = 'En title';
+$lang_module['vi_address'] = 'Vi address';
+$lang_module['en_address'] = 'En address';
+$lang_module['vi_province'] = 'Vi province';
+$lang_module['en_province'] = 'En province';
+$lang_module['phone'] = 'Phone';
+$lang_module['crt_date'] = 'Crt date';
+
+//Lang for function bank
+$lang_module['bank'] = 'bank';
+$lang_module['companyid'] = 'Companyid';
+$lang_module['vi_bank_number'] = 'Vi bank number';
+$lang_module['en_bank_number'] = 'En bank number';
+$lang_module['vi_bank_account_holder'] = 'Vi bank account holder';
+$lang_module['en_bank_account_holder'] = 'En bank account holder';
+$lang_module['vi_bank_name'] = 'Vi bank name';
+$lang_module['en_bank_name'] = 'En bank name';
+$lang_module['swiftcode'] = 'Swiftcode';
