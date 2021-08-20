@@ -52,7 +52,7 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="card-title">
-					<h4 class="mb-0">{LANG.product_list}</h4>
+					<h4 class="mb-0">{LANG.product}</h4>
 				</div>
 				<hr/>	
 				<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">

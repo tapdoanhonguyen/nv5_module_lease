@@ -1,24 +1,39 @@
 <!-- BEGIN: main -->
-<!-- BEGIN: view -->
-<div class="well">
-<form action="{NV_BASE_SITEURL}index.php" method="get">
-    <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-    <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-    <input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-    <div class="row">
-        <div class="col-xs-24 col-md-6">
-            <div class="form-group">
-                <input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-3">
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-            </div>
-        </div>
-    </div>
-</form>
+
+
+<link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
+
+
+<div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+	<div class="breadcrumb-title pr-3">{LANG.customer}</div>
+	<div class="pl-3">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 p-0">
+					<li class="breadcrumb-item">
+						<a href="/"><i class='bx bx-home-alt'></i></a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">{LANG.customer_list}</li>
+				</ol>
+			</nav>
+		</div>
+	<div class="ml-auto">
+			<div class="btn-group">
+				<a type="button" class="btn btn-primary" href="{customer_add}">{LANG.add}</a>
+				<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+					<a class="dropdown-item" href="{customer_import}">{LANG.customer_import}</a>
+					<a class="dropdown-item" href="{customer_export}">{LANG.customer_export}</a>
+					<div class="dropdown-divider"></div>	
+				</div>
+			</div>
+		</div>
 </div>
+<!-- BEGIN: view -->
+
+
 <form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
@@ -52,7 +67,7 @@
                         <!-- END: update_date_loop -->
                     </select>
                 </td>
-                    <td> {VIEW.title} </td>
+                    <td> <a href ="{VIEW.link_view}" >{VIEW.title}</a> </td>
                     <td> {VIEW.gid} </td>
                     <td> {VIEW.address} </td>
                     <td> {VIEW.mobile} </td>
@@ -67,81 +82,6 @@
     </div>
 </form>
 <!-- END: view -->
-
-<!-- BEGIN: error -->
-<div class="alert alert-warning">{ERROR}</div>
-<!-- END: error -->
-<div class="panel panel-default">
-<div class="panel-body">
-<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-    <input type="hidden" name="cid" value="{ROW.cid}" />
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.title}</strong> <span class="red">(*)</span></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="title" value="{ROW.title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.gid}</strong> <span class="red">(*)</span></label>
-        <div class="col-sm-19 col-md-20">
-            <select class="form-control" name="gid">
-                <option value=""> --- </option>
-                <!-- BEGIN: select_gid -->
-                <option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
-                <!-- END: select_gid -->
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.address}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="address" value="{ROW.address}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.mobile}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="mobile" value="{ROW.mobile}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.fax}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="fax" value="{ROW.fax}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.email}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="email" value="{ROW.email}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.taxcode}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="taxcode" value="{ROW.taxcode}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.person_legal}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="person_legal" value="{ROW.person_legal}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.person_legal_mobile}</strong></label>
-        <div class="col-sm-19 col-md-20">
-            <input class="form-control" type="text" name="person_legal_mobile" value="{ROW.person_legal_mobile}" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-5 col-md-4 control-label"><strong>{LANG.note}</strong></label>
-        <div class="col-sm-19 col-md-20">
-{ROW.note}        </div>
-    </div>
-    <div class="form-group" style="text-align: center"><input class="btn btn-primary" name="submit" type="submit" value="{LANG.save}" /></div>
-</form>
-</div></div>
 
 <script type="text/javascript">
 //<![CDATA[
@@ -180,4 +120,14 @@
 
 //]]>
 </script>
+	
+<!-- END: main -->
+
+
+
+
+
+
+<!-- BEGIN: main -->
+
 <!-- END: main -->

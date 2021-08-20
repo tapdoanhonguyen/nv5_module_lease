@@ -19,10 +19,9 @@
     </div>
 </form>
 </div>
-<link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
 
-		
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
 	<div class="breadcrumb-title pr-3">Sản phẩm</div>
 	<div class="pl-3">
@@ -50,110 +49,107 @@
 						</div>
 </div>
 		
-		<div class="card">
-			<div class="card-body">
-				<div class="card-title">
+<div class="card radius-15">
+	<div class="card-body">
+		<div class="card-title">
 					<h4 class="mb-0">{LANG.product_edit}</h4>
 				</div>
-				<hr/>	
-				<!-- BEGIN: error -->
-				<div class="alert alert-warning">{ERROR}</div>
-				<!-- END: error -->
-				<div class="panel panel-default">
-				<div class="panel-body">
-				<form class="form-horizontal" action="{PRODUCT_ADD}" method="post">
-					<input type="hidden" name="pid" value="{ROW.pid}" />
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.title_product}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="title" value="{ROW.title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+			<hr/>	
+		<!-- BEGIN: error -->
+			<div class="alert alert-warning">{ERROR}</div>
+		<!-- END: error -->	
+			<form class="needs-validation form-horizontal" action="{PRODUCT_ADD}" method="post">
+			<input type="hidden" name="pid" value="{ROW.pid}" />
+			<div class="form-row">
+				<div class="col-md-6 mb-3">
+					<label >{LANG.title_product} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="title" value="{ROW.title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+				<div class="col-md-6 mb-3">
+					<label>{LANG.alias} <span class="red">(*)</span></label>
+					<div class="input-group">
+						<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+						<div class="input-group-append">
+							<button onclick="nv_get_alias('id_alias');" class="btn btn-outline-secondary" type="button">
+								<i class="fa fa-refresh fa-lg icon-pointer">&nbsp;</i>
+							</button>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.alias}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-18">
-							<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-						<div class="col-sm-4 col-md-2">
-							<i class="fa fa-refresh fa-lg icon-pointer" onclick="nv_get_alias('id_alias');">&nbsp;</i>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.fid}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<select class="form-control" name="fid">
-								<option value=""> --- </option>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-6 mb-3">
+						<label>{LANG.fid} <span class="red">(*)</span></label>
+						<select class="form-control" name="fid">
+								<option value=""> -- Chọn tầng -- </option>
 								<!-- BEGIN: select_fid -->
 								<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 								<!-- END: select_fid -->
-							</select>
-						</div>
+						</select>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label>{LANG.area} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="area" value="{ROW.area}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-3 mb-3">
+					<label>{LANG.price_usd_min} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="price_usd_min" value="{ROW.price_usd_min}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.price_usd_max}<span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="price_usd_max" value="{ROW.price_usd_max}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />	
+				</div>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.price_vnd_min} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="price_vnd_min" value="{ROW.price_vnd_min}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.price_vnd_max} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="price_vnd_max" value="{ROW.price_vnd_max}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />	
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-12 mb-3">		
+					<label><strong>{LANG.image}</strong></label>
+					<div class="input-group">
+						<input class="form-control" type="text" name="image" value="{ROW.image}" id="id_image" />
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary selectfile" type="button" >
+								<em class="fa fa-folder-open-o fa-fix">&nbsp;</em>
+							</button>
+						</div>	
+					</div>	
+				</div>	
+			</div>	
+			<div class="form-row">
+				<div class="col-md-12 mb-3">
+					<label><strong>{LANG.note}</strong></label>
+					<div>
+						{ROW.note}        
 					</div>
-					
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.area}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="area" value="{ROW.area}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.price_usd_min}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="price_usd_min" value="{ROW.price_usd_min}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.price_usd_max}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="price_usd_max" value="{ROW.price_usd_max}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.price_vnd_min}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="price_vnd_min" value="{ROW.price_vnd_min}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.price_vnd_max}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<input class="form-control" type="text" name="price_vnd_max" value="{ROW.price_vnd_max}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.rent_status}</strong> <span class="red">(*)</span></label>
-						<div class="col-sm-19 col-md-20">
-							<select class="form-control" name="rent_status">
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-3 mb-3">
+					<label >{LANG.rent_status} <span class="red">(*)</span></label>
+					<select class="form-control" name="rent_status">
 								<option value=""> --- </option>
 								<!-- BEGIN: select_rent_status -->
 								<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 								<!-- END: select_rent_status -->
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.image}</strong></label>
-						<div class="col-sm-19 col-md-20">
-							<div class="input-group">
-							<input class="form-control" type="text" name="image" value="{ROW.image}" id="id_image" />
-							<span class="input-group-btn">
-								<button class="btn btn-default selectfile" type="button" >
-								<em class="fa fa-folder-open-o fa-fix">&nbsp;</em>
-							</button>
-							</span>
-						</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-5 col-md-4 control-label"><strong>{LANG.note}</strong></label>
-						<div class="col-sm-19 col-md-20">
-				{ROW.note}        </div>
-					</div>
-					<div class="form-group" style="text-align: center"><input class="btn btn-primary" name="submit" type="submit" value="{LANG.save}" /></div>
-				</form>
-				</div></div>
+					</select>
+				</div>
+			</div>
+		
+			<input class="btn btn-primary" name="submit" type="submit" value="{LANG.save}" />
+			
+		</form>
+	</div>
+</div>
 
-				<script type="text/javascript">
+	<script type="text/javascript">
 				//<![CDATA[
 					$(".selectfile").click(function() {
 						var area = "id_image";
@@ -166,10 +162,8 @@
 
 				//]]>
 				</script>
-			</div>
-		</div>	
+			
  
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
 //<![CDATA[
     function nv_get_alias(id) {

@@ -25,16 +25,15 @@
             <thead>
                 <tr>
                     <th class="w100">{LANG.weight}</th>
-                    <th>{LANG.vi_title}</th>
-                    <th>{LANG.en_title}</th>
+                    <th>{LANG.vi_bank_number}</th>
+                    <th>{LANG.en_bank_number}</th>
+                    <th>{LANG.vi_bank_account_holder}</th>
+                    <th>{LANG.en_bank_account_holder}</th>
+                    <th>{LANG.vi_bank_name}</th>
+                    <th>{LANG.en_bank_name}</th>
                     <th>{LANG.vi_address}</th>
                     <th>{LANG.en_address}</th>
-                    <th>{LANG.vi_province}</th>
-                    <th>{LANG.en_province}</th>
-                    <th>{LANG.phone}</th>
-                    <th>{LANG.fax}</th>
-                    <th>{LANG.email}</th>
-                    <th>{LANG.active}</th>
+                    <th>{LANG.swiftcode}</th>
                     <th class="w100 text-center">{LANG.active}</th>
                     <th class="w150">&nbsp;</th>
                 </tr>
@@ -42,7 +41,7 @@
             <!-- BEGIN: generate_page -->
             <tfoot>
                 <tr>
-                    <td class="text-center" colspan="13">{NV_GENERATE_PAGE}</td>
+                    <td class="text-center" colspan="12">{NV_GENERATE_PAGE}</td>
                 </tr>
             </tfoot>
             <!-- END: generate_page -->
@@ -50,23 +49,22 @@
                 <!-- BEGIN: loop -->
                 <tr>
                     <td>
-                        <select class="form-control" id="id_weight_{VIEW.cid}" onchange="nv_change_weight('{VIEW.cid}');">
+                        <select class="form-control" id="id_weight_{VIEW.id}" onchange="nv_change_weight('{VIEW.id}');">
                         <!-- BEGIN: weight_loop -->
                             <option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
                         <!-- END: weight_loop -->
                     </select>
                 </td>
-                    <td> {VIEW.vi_title} </td>
-                    <td> {VIEW.en_title} </td>
+                    <td> {VIEW.vi_bank_number} </td>
+                    <td> {VIEW.en_bank_number} </td>
+                    <td> {VIEW.vi_bank_account_holder} </td>
+                    <td> {VIEW.en_bank_account_holder} </td>
+                    <td> {VIEW.vi_bank_name} </td>
+                    <td> {VIEW.en_bank_name} </td>
                     <td> {VIEW.vi_address} </td>
                     <td> {VIEW.en_address} </td>
-                    <td> {VIEW.vi_province} </td>
-                    <td> {VIEW.en_province} </td>
-                    <td> {VIEW.phone} </td>
-                    <td> {VIEW.fax} </td>
-                    <td> {VIEW.email} </td>
-                    <td> {VIEW.active} </td>
-                    <td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.cid}" value="{VIEW.cid}" {CHECK} onclick="nv_change_status({VIEW.cid});" /></td>
+                    <td> {VIEW.swiftcode} </td>
+                    <td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.id}" value="{VIEW.id}" {CHECK} onclick="nv_change_status({VIEW.id});" /></td>
                     <td class="text-center"><i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a></td>
                 </tr>
                 <!-- END: loop -->
