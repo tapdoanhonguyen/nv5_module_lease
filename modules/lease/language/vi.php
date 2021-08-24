@@ -58,7 +58,10 @@ $lang_module['error_required_common_area'] = 'Lỗi: bạn cần nhập dữ li�
 $lang_module['save'] = 'Lưu thay đổi';
 
 //Lang for function customer_groups
-$lang_module['customer_groups'] = 'customer_groups';
+$lang_module['customer_groups'] = 'Nhóm khách hàng';
+$lang_module['customer_groups_add'] = 'Thêm nhóm khách hàng';
+$lang_module['customer_groups_edit'] = 'Sữa nhóm khách hàng';
+$lang_module['customer_groups_title'] = 'Tên nhóm khách hàng';
 
 //Lang for function customer
 $lang_module['gid'] = 'Nhóm khách hàng';
@@ -117,3 +120,24 @@ $lang_module['develop'] = 'Trang đang được thiết kế';
 $lang_module['setting'] = 'Cấu hình';
 $lang_module['dashboard'] = 'Dashboard';
 $lang_module['cat_title'] = 'Tên loại dịch vụ';
+$lang_module['bank_add'] = 'Thêm tài khoản ngân hàng';
+$lang_module['bank_edit'] = 'Sữa tài khoản ngân hàng';
+
+//Lang for function bank_add
+$lang_module['companyid'] = 'Companyid';
+$lang_module['vi_bank_number'] = 'Vi bank number';
+$lang_module['en_bank_number'] = 'En bank number';
+$lang_module['vi_bank_account_holder'] = 'Vi bank account holder';
+$lang_module['en_bank_account_holder'] = 'En bank account holder';
+$lang_module['vi_bank_name'] = 'Vi bank name';
+$lang_module['en_bank_name'] = 'En bank name';
+$lang_module['vi_address'] = 'Vi address';
+$lang_module['en_address'] = 'En address';
+$lang_module['swiftcode'] = 'Swiftcode';
+
+//Lang for function rate
+$lang_module['rate'] = 'rate';
+$lang_module['mount'] = 'Mount';
+$lang_module['exchange_rate'] = 'Exchange rate';
+$lang_module['error_required_mount'] = 'Lỗi: bạn cần nhập dữ liệu cho Mount';
+$lang_module['error_required_exchange_rate'] = 'Lỗi: bạn cần nhập dữ liệu cho Exchange rate';

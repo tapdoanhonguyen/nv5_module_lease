@@ -132,3 +132,13 @@ $lang_module['en_bank_account_holder'] = 'En bank account holder';
 $lang_module['vi_bank_name'] = 'Vi bank name';
 $lang_module['en_bank_name'] = 'En bank name';
 $lang_module['swiftcode'] = 'Swiftcode';
+
+//Lang for function bank_add
+$lang_module['bank_add'] = 'bank_add';
+
+//Lang for function rate
+$lang_module['rate'] = 'rate';
+$lang_module['mount'] = 'Mount';
+$lang_module['exchange_rate'] = 'Exchange rate';
+$lang_module['error_required_mount'] = 'Error: Required fields enter the Mount';
+$lang_module['error_required_exchange_rate'] = 'Error: Required fields enter the Exchange rate';

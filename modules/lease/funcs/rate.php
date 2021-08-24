@@ -43,7 +43,7 @@ if(defined('NV_IS_USER')){
 
 		return $return;
 	}
-	$xtpl = new XTemplate('bank_'.$action.'.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
+	$xtpl = new XTemplate($op . '_'.$action.'.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
 		$xtpl->assign('LANG', $lang_module);
 		$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
 		$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
@@ -59,84 +59,66 @@ if(defined('NV_IS_USER')){
 		//$xtpl->assign('PRODUCT_EXPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/export',true));
 	if(	$action == "add" or $action == "edit"){
 		
-	}else{
-		// Change status
-		if ($nv_Request->isset_request('change_status', 'post, get')) {
-			$id = $nv_Request->get_int('id', 'post, get', 0);
-			$content = 'NO_' . $id;
+		$row = array();
+		$error = array();
+		$row['id'] = $nv_Request->get_int('id', 'post,get', 0);
+		if ($nv_Request->isset_request('submit', 'post')) {
+			$row['mount'] = $nv_Request->get_title('mount', 'post', '');
+			$row['exchange_rate'] = $nv_Request->get_int('exchange_rate', 'post', 0);
 
-			$query = 'SELECT active FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id=' . $id;
-			$row = $db->query($query)->fetch();
-			if (isset($row['active']))     {
-				$active = ($row['active']) ? 0 : 1;
-				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET active=' . intval($active) . ' WHERE id=' . $id;
-				$db->query($query);
-				$content = 'OK_' . $id;
+			if (empty($row['mount'])) {
+				$error[] = $lang_module['error_required_mount'];
+			} elseif (empty($row['exchange_rate'])) {
+				$error[] = $lang_module['error_required_exchange_rate'];
 			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
-		}
 
-		if ($nv_Request->isset_request('ajax_action', 'post')) {
-			$id = $nv_Request->get_int('id', 'post', 0);
-			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
-			$content = 'NO_' . $id;
-			if ($new_vid > 0)     {
-				$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id!=' . $id . ' ORDER BY weight ASC';
-				$result = $db->query($sql);
-				$weight = 0;
-				while ($row = $result->fetch())
-				{
-					++$weight;
-					if ($weight == $new_vid) ++$weight;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET weight=' . $weight . ' WHERE id=' . $row['id'];
-					$db->query($sql);
+			if (empty($error)) {
+				try {
+					if (empty($row['id'])) {
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate (mount, exchange_rate) VALUES (:mount, :exchange_rate)');
+					} else {
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate SET mount = :mount, exchange_rate = :exchange_rate WHERE id=' . $row['id']);
+					}
+					$stmt->bindParam(':mount', $row['mount'], PDO::PARAM_STR);
+					$stmt->bindParam(':exchange_rate', $row['exchange_rate'], PDO::PARAM_INT);
+
+					$exc = $stmt->execute();
+					if ($exc) {
+						$nv_Cache->delMod($module_name);
+						if (empty($row['id'])) {
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Rate', ' ', $admin_info['userid']);
+						} else {
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Rate', 'ID: ' . $row['id'], $admin_info['userid']);
+						}
+						nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+					}
+				} catch(PDOException $e) {
+					trigger_error($e->getMessage());
+					die($e->getMessage()); //Remove this line after checks finished
 				}
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET weight=' . $new_vid . ' WHERE id=' . $id;
-				$db->query($sql);
-				$content = 'OK_' . $id;
 			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
+		} elseif ($row['id'] > 0) {
+			$row = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate WHERE id=' . $row['id'])->fetch();
+			if (empty($row)) {
+				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+			}
+		} else {
+			$row['id'] = 0;
+			$row['mount'] = '';
+			$row['exchange_rate'] = 0;
 		}
 
+	}else{
 		if ($nv_Request->isset_request('delete_id', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
 			$id = $nv_Request->get_int('delete_id', 'get');
 			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
 			if ($id > 0 and $delete_checkss == md5($id . NV_CACHE_PREFIX . $client_info['session_id'])) {
-				$weight=0;
-				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id =' . $db->quote($id);
-				$result = $db->query($sql);
-				list($weight) = $result->fetch(3);
-				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank  WHERE id = ' . $db->quote($id));
-				if ($weight > 0)         {
-					$sql = 'SELECT id, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE weight >' . $weight;
-					$result = $db->query($sql);
-					while (list($id, $weight) = $result->fetch(3))
-					{
-						$weight--;
-						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET weight=' . $weight . ' WHERE id=' . intval($id));
-					}
-				}
+				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate  WHERE id = ' . $db->quote($id));
 				$nv_Cache->delMod($module_name);
-				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Bank', 'ID: ' . $id, $user_info['userid']);
+				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Rate', 'ID: ' . $id, $admin_info['userid']);
 				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
 			}
 		}
-
-		$row = array();
-		$error = array();
-		$array_companyid_lease = array();
-		$_sql = 'SELECT cid,vi_title FROM vidoco_vi_lease_company';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_companyid_lease[$_row['cid']] = $_row;
-		}
-
 
 		$q = $nv_Request->get_title('q', 'post,get');
 
@@ -148,49 +130,33 @@ if(defined('NV_IS_USER')){
 			$page = $nv_Request->get_int('page', 'post,get', 1);
 			$db->sqlreset()
 				->select('COUNT(*)')
-				->from('' . NV_PREFIXLANG . '_' . $module_data . '_bank');
+				->from('' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate');
 
 			if (!empty($q)) {
-				$db->where('vi_bank_number LIKE :q_vi_bank_number OR en_bank_number LIKE :q_en_bank_number OR vi_bank_account_holder LIKE :q_vi_bank_account_holder OR en_bank_account_holder LIKE :q_en_bank_account_holder OR vi_bank_name LIKE :q_vi_bank_name OR en_bank_name LIKE :q_en_bank_name OR vi_address LIKE :q_vi_address OR en_address LIKE :q_en_address OR swiftcode LIKE :q_swiftcode');
+				$db->where('mount LIKE :q_mount OR exchange_rate LIKE :q_exchange_rate');
 			}
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {
-				$sth->bindValue(':q_vi_bank_number', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_number', '%' . $q . '%');
-				$sth->bindValue(':q_vi_bank_account_holder', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_account_holder', '%' . $q . '%');
-				$sth->bindValue(':q_vi_bank_name', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_name', '%' . $q . '%');
-				$sth->bindValue(':q_vi_address', '%' . $q . '%');
-				$sth->bindValue(':q_en_address', '%' . $q . '%');
-				$sth->bindValue(':q_swiftcode', '%' . $q . '%');
+				$sth->bindValue(':q_mount', '%' . $q . '%');
+				$sth->bindValue(':q_exchange_rate', '%' . $q . '%');
 			}
 			$sth->execute();
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('weight ASC')
+				->order('id DESC')
 				->limit($per_page)
 				->offset(($page - 1) * $per_page);
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {
-				$sth->bindValue(':q_vi_bank_number', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_number', '%' . $q . '%');
-				$sth->bindValue(':q_vi_bank_account_holder', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_account_holder', '%' . $q . '%');
-				$sth->bindValue(':q_vi_bank_name', '%' . $q . '%');
-				$sth->bindValue(':q_en_bank_name', '%' . $q . '%');
-				$sth->bindValue(':q_vi_address', '%' . $q . '%');
-				$sth->bindValue(':q_en_address', '%' . $q . '%');
-				$sth->bindValue(':q_swiftcode', '%' . $q . '%');
+				$sth->bindValue(':q_mount', '%' . $q . '%');
+				$sth->bindValue(':q_exchange_rate', '%' . $q . '%');
 			}
 			$sth->execute();
 		}
 
-
-		$xtpl->assign('ROW', $row);
 
 		$xtpl->assign('Q', $q);
 
@@ -206,15 +172,7 @@ if(defined('NV_IS_USER')){
 			}
 			$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
 			while ($view = $sth->fetch()) {
-				for($i = 1; $i <= $num_items; ++$i) {
-					$xtpl->assign('WEIGHT', array(
-						'key' => $i,
-						'title' => $i,
-						'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
-					$xtpl->parse('main.view.loop.weight_loop');
-				}
-				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['companyid'] = $array_companyid_lease[$view['companyid']]['vi_title'];
+				$view['number'] = $number++;
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['id'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['id'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);
 				$xtpl->assign('VIEW', $view);
@@ -228,13 +186,13 @@ if(defined('NV_IS_USER')){
 			$xtpl->assign('ERROR', implode('<br />', $error));
 			$xtpl->parse('main.error');
 		}
-
-
-		$page_title = $lang_module['bank'];
+		$page_title = $lang_module['rate'];
 	}
-
 	$xtpl->parse('main');
 	$contents = $xtpl->text('main');
+
+
+
 	include NV_ROOTDIR . '/includes/header.php';
 	echo nv_site_theme($contents);
 	include NV_ROOTDIR . '/includes/footer.php';
