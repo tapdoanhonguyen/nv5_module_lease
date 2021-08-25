@@ -141,3 +141,97 @@ $lang_module['mount'] = 'Mount';
 $lang_module['exchange_rate'] = 'Exchange rate';
 $lang_module['error_required_mount'] = 'Lỗi: bạn cần nhập dữ liệu cho Mount';
 $lang_module['error_required_exchange_rate'] = 'Lỗi: bạn cần nhập dữ liệu cho Exchange rate';
+
+//Lang for function contractcat
+$lang_module['contractcat'] = 'contractcat';
+$lang_module['parentid'] = 'Loại hợp đồng';
+
+//Lang for function contractcat_add
+$lang_module['contractcat_add'] = 'contractcat_add';
+$lang_module['error_required_parentid'] = 'Lỗi: bạn cần nhập dữ liệu cho Loại hợp đồng';
+
+//Lang for function serviceextra
+$lang_module['serviceextra'] = 'serviceextra';
+$lang_module['pid'] = 'Pid';
+$lang_module['cid'] = 'Cid';
+$lang_module['yearmount'] = 'Yearmount';
+$lang_module['datefrom'] = 'Datefrom';
+$lang_module['dateto'] = 'Dateto';
+$lang_module['sid'] = 'Sid';
+$lang_module['pricevnd'] = 'Pricevnd';
+$lang_module['priceusd'] = 'Priceusd';
+$lang_module['amount'] = 'Amount';
+$lang_module['totalvnd'] = 'Totalvnd';
+$lang_module['totalusd'] = 'Totalusd';
+$lang_module['error_required_cid'] = 'Lỗi: bạn cần nhập dữ liệu cho Cid';
+$lang_module['error_required_yearmount'] = 'Lỗi: bạn cần nhập dữ liệu cho Yearmount';
+$lang_module['error_required_datefrom'] = 'Lỗi: bạn cần nhập dữ liệu cho Datefrom';
+
+//Lang for function serviceextra_add
+$lang_module['serviceextra_add'] = 'serviceextra_add';
+$lang_module['crt_date'] = 'Crt date';
+$lang_module['error_required_pid'] = 'Lỗi: bạn cần nhập dữ liệu cho Pid';
+$lang_module['error_required_dateto'] = 'Lỗi: bạn cần nhập dữ liệu cho Dateto';
+$lang_module['error_required_sid'] = 'Lỗi: bạn cần nhập dữ liệu cho Sid';
+
+//Lang for function debitnote
+$lang_module['debitnote'] = 'debitnote';
+$lang_module['debitnotedate'] = 'Debitnotedate';
+$lang_module['areareal'] = 'Areareal';
+$lang_module['exchangeusd'] = 'Exchangeusd';
+$lang_module['recipients_vi'] = 'Recipients vi';
+$lang_module['recipients_en'] = 'Recipients en';
+$lang_module['explain_vi'] = 'Explain vi';
+$lang_module['explain_en'] = 'Explain en';
+$lang_module['account_bank_vi'] = 'Account bank vi';
+$lang_module['account_bank_en'] = 'Account bank en';
+$lang_module['holding_vi'] = 'Holding vi';
+$lang_module['holding_en'] = 'Holding en';
+$lang_module['bank_name_vi'] = 'Bank name vi';
+$lang_module['bank_name_en'] = 'Bank name en';
+$lang_module['bank_address_vi'] = 'Bank address vi';
+$lang_module['bank_address_en'] = 'Bank address en';
+$lang_module['note_vi'] = 'Note vi';
+$lang_module['note_en'] = 'Note en';
+$lang_module['comapyname_vi'] = 'Comapyname vi';
+$lang_module['comapyname_en'] = 'Comapyname en';
+$lang_module['manager_name_vi'] = 'Manager name vi';
+$lang_module['manager_name_en'] = 'Manager name en';
+
+//Lang for function debitnote_add
+$lang_module['debitnote_add'] = 'debitnote_add';
+$lang_module['debitcode'] = 'Debitcode';
+$lang_module['error_required_debitnotedate'] = 'Lỗi: bạn cần nhập dữ liệu cho Debitnotedate';
+$lang_module['error_required_areareal'] = 'Lỗi: bạn cần nhập dữ liệu cho Areareal';
+$lang_module['error_required_exchangeusd'] = 'Lỗi: bạn cần nhập dữ liệu cho Exchangeusd';
+$lang_module['error_required_recipients_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Recipients vi';
+$lang_module['error_required_recipients_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Recipients en';
+$lang_module['error_required_explain_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Explain vi';
+$lang_module['error_required_explain_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Explain en';
+$lang_module['error_required_account_bank_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Account bank vi';
+$lang_module['error_required_account_bank_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Account bank en';
+$lang_module['error_required_holding_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Holding vi';
+$lang_module['error_required_holding_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Holding en';
+$lang_module['error_required_bank_name_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Bank name vi';
+$lang_module['error_required_bank_name_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Bank name en';
+$lang_module['error_required_bank_address_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Bank address vi';
+$lang_module['error_required_bank_address_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Bank address en';
+$lang_module['error_required_swiftcode'] = 'Lỗi: bạn cần nhập dữ liệu cho Swiftcode';
+$lang_module['error_required_note_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Note vi';
+$lang_module['error_required_note_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Note en';
+$lang_module['error_required_companyid'] = 'Lỗi: bạn cần nhập dữ liệu cho Companyid';
+$lang_module['error_required_comapyname_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Comapyname vi';
+$lang_module['error_required_comapyname_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Comapyname en';
+$lang_module['error_required_manager_name_vi'] = 'Lỗi: bạn cần nhập dữ liệu cho Manager name vi';
+$lang_module['error_required_manager_name_en'] = 'Lỗi: bạn cần nhập dữ liệu cho Manager name en';
+
+//Lang for function contract
+$lang_module['contract'] = 'contract';
+$lang_module['yearmonth'] = 'Yearmonth';
+$lang_module['ccode'] = 'Ccode';
+$lang_module['feevnd'] = 'Feevnd';
+$lang_module['feeusd'] = 'Feeusd';
+$lang_module['ccat'] = 'Ccat';
+
+//Lang for function contract_add
+$lang_module['contract_add'] = 'contract_add';

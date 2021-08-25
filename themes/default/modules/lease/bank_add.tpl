@@ -1,4 +1,35 @@
 <!-- BEGIN: main -->
+
+<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
+<div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+	<div class="breadcrumb-title pr-3">{LANG.floor}</div>
+	<div class="pl-3">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 p-0">
+					<li class="breadcrumb-item">
+						<a href="/"><i class='bx bx-home-alt'></i></a>
+					</li>
+					<li class="breadcrumb-item" aria-current="page">{LANG.floor}</li>
+					<li class="breadcrumb-item active" aria-current="page">{LANG.bank_add}</li>
+				</ol>
+			</nav>
+		</div>
+	<div class="ml-auto">
+			<div class="btn-group">
+				<a type="button" class="btn btn-primary" href="{bank_add}">{LANG.add}</a>
+				
+			</div>
+		</div>
+</div>
+
+
+<div class="card radius-15">
+	<div class="card-body">
+		<div class="card-title">
+			<h4 class="mb-0">{LANG.bank_add}</h4>
+		</div>
+		<hr/>	
 <!-- BEGIN: error -->
 <div class="alert alert-warning">{ERROR}</div>
 <!-- END: error -->
