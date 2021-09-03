@@ -12,6 +12,12 @@
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
 if(defined('NV_IS_USER')){
+	$array_unitid_lease = array();
+	$_sql = 'SELECT uid,title FROM vidoco_vi_lease_unit';
+	$_query = $db->query($_sql);
+	while ($_row = $_query->fetch()) {
+		$array_unitid_lease[$_row['uid']] = $_row;
+	}
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -152,12 +158,7 @@ if(defined('NV_IS_USER')){
 			$array_catid_lease[$_row['cid']] = $_row;
 		}
 
-		$array_unitid_lease = array();
-		$_sql = 'SELECT uid,title FROM vidoco_vi_lease_unit';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_unitid_lease[$_row['uid']] = $_row;
-		}
+
 
 		$array_chargeid_lease = array();
 		$_sql = 'SELECT cid,title FROM vidoco_vi_lease_charge';
@@ -165,7 +166,31 @@ if(defined('NV_IS_USER')){
 		while ($_row = $_query->fetch()) {
 			$array_chargeid_lease[$_row['cid']] = $_row;
 		}
-
+		$xtpl->assign('ROW', $row);
+		foreach ($array_catid_lease as $value) {
+			$xtpl->assign('OPTION', array(
+				'key' => $value['cid'],
+				'title' => $value['title'],
+				'selected' => ($value['cid'] == $row['catid']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.select_catid');
+		}
+		foreach ($array_unitid_lease as $value) {
+			$xtpl->assign('OPTION', array(
+				'key' => $value['uid'],
+				'title' => $value['title'],
+				'selected' => ($value['uid'] == $row['unitid']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.select_unitid');
+		}
+		foreach ($array_chargeid_lease as $value) {
+			$xtpl->assign('OPTION', array(
+				'key' => $value['cid'],
+				'title' => $value['title'],
+				'selected' => ($value['cid'] == $row['chargeid']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.select_chargeid');
+		}
 	}else{
 		// Change status
 		if ($nv_Request->isset_request('change_status', 'post, get')) {
@@ -280,30 +305,6 @@ if(defined('NV_IS_USER')){
 		}
 
 
-		foreach ($array_catid_lease as $value) {
-			$xtpl->assign('OPTION', array(
-				'key' => $value['cid'],
-				'title' => $value['title'],
-				'selected' => ($value['cid'] == $row['catid']) ? ' selected="selected"' : ''
-			));
-			$xtpl->parse('main.select_catid');
-		}
-		foreach ($array_unitid_lease as $value) {
-			$xtpl->assign('OPTION', array(
-				'key' => $value['uid'],
-				'title' => $value['title'],
-				'selected' => ($value['uid'] == $row['unitid']) ? ' selected="selected"' : ''
-			));
-			$xtpl->parse('main.select_unitid');
-		}
-		foreach ($array_chargeid_lease as $value) {
-			$xtpl->assign('OPTION', array(
-				'key' => $value['cid'],
-				'title' => $value['title'],
-				'selected' => ($value['cid'] == $row['chargeid']) ? ' selected="selected"' : ''
-			));
-			$xtpl->parse('main.select_chargeid');
-		}
 		$xtpl->assign('Q', $q);
 
 		if ($show_view) {
@@ -329,7 +330,7 @@ if(defined('NV_IS_USER')){
 				$view['catid'] = $array_catid_lease[$view['catid']]['title'];
 				$view['unitid'] = $array_unitid_lease[$view['unitid']]['title'];
 				$view['chargeid'] = $array_chargeid_lease[$view['chargeid']]['title'];
-				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;sid=' . $view['sid'];
+				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;sid=' . $view['sid'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_sid=' . $view['sid'] . '&amp;delete_checkss=' . md5($view['sid'] . NV_CACHE_PREFIX . $client_info['session_id']);
 				$xtpl->assign('VIEW', $view);
 				$xtpl->parse('main.view.loop');

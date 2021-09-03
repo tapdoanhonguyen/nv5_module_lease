@@ -54,80 +54,11 @@ if(defined('NV_IS_USER')){
 		$xtpl->assign('MODULE_UPLOAD', $module_upload);
 		$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
 		$xtpl->assign('OP', $op);
-		$xtpl->assign('FLOOR_ADD', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=floor/add'),true);
+		$xtpl->assign($op . '_add', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/add'),true);
 		//$xtpl->assign('PRODUCT_IMPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/import'),true);
 		//$xtpl->assign('PRODUCT_EXPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/export',true));
 	if(	$action == "add" or $action == "edit"){
 		
-	}else{
-		// Change status
-		if ($nv_Request->isset_request('change_status', 'post, get')) {
-			$cid = $nv_Request->get_int('cid', 'post, get', 0);
-			$content = 'NO_' . $cid;
-
-			$query = 'SELECT active FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid=' . $cid;
-			$row = $db->query($query)->fetch();
-			if (isset($row['active']))     {
-				$active = ($row['active']) ? 0 : 1;
-				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET active=' . intval($active) . ' WHERE cid=' . $cid;
-				$db->query($query);
-				$content = 'OK_' . $cid;
-			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
-		}
-
-		if ($nv_Request->isset_request('ajax_action', 'post')) {
-			$cid = $nv_Request->get_int('cid', 'post', 0);
-			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
-			$content = 'NO_' . $cid;
-			if ($new_vid > 0)     {
-				$sql = 'SELECT cid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid!=' . $cid . ' ORDER BY weight ASC';
-				$result = $db->query($sql);
-				$weight = 0;
-				while ($row = $result->fetch())
-				{
-					++$weight;
-					if ($weight == $new_vid) ++$weight;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $weight . ' WHERE cid=' . $row['cid'];
-					$db->query($sql);
-				}
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $new_vid . ' WHERE cid=' . $cid;
-				$db->query($sql);
-				$content = 'OK_' . $cid;
-			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
-		}
-
-		if ($nv_Request->isset_request('delete_cid', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
-			$cid = $nv_Request->get_int('delete_cid', 'get');
-			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
-			if ($cid > 0 and $delete_checkss == md5($cid . NV_CACHE_PREFIX . $client_info['session_id'])) {
-				$weight=0;
-				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid =' . $db->quote($cid);
-				$result = $db->query($sql);
-				list($weight) = $result->fetch(3);
-				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company  WHERE cid = ' . $db->quote($cid));
-				if ($weight > 0)         {
-					$sql = 'SELECT cid, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE weight >' . $weight;
-					$result = $db->query($sql);
-					while (list($cid, $weight) = $result->fetch(3))
-					{
-						$weight--;
-						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $weight . ' WHERE cid=' . intval($cid));
-					}
-				}
-				$nv_Cache->delMod($module_name);
-				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Company', 'ID: ' . $cid, $user_info['userid']);
-				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
-			}
-		}
-
 		$row = array();
 		$error = array();
 		$row['cid'] = $nv_Request->get_int('cid', 'post,get', 0);
@@ -212,6 +143,75 @@ if(defined('NV_IS_USER')){
 			$row['userid_edit'] = 0;
 			$row['update_date'] = 0;
 		}
+	}else{
+		// Change status
+		if ($nv_Request->isset_request('change_status', 'post, get')) {
+			$cid = $nv_Request->get_int('cid', 'post, get', 0);
+			$content = 'NO_' . $cid;
+
+			$query = 'SELECT active FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid=' . $cid;
+			$row = $db->query($query)->fetch();
+			if (isset($row['active']))     {
+				$active = ($row['active']) ? 0 : 1;
+				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET active=' . intval($active) . ' WHERE cid=' . $cid;
+				$db->query($query);
+				$content = 'OK_' . $cid;
+			}
+			$nv_Cache->delMod($module_name);
+			include NV_ROOTDIR . '/includes/header.php';
+			echo $content;
+			include NV_ROOTDIR . '/includes/footer.php';
+		}
+
+		if ($nv_Request->isset_request('ajax_action', 'post')) {
+			$cid = $nv_Request->get_int('cid', 'post', 0);
+			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
+			$content = 'NO_' . $cid;
+			if ($new_vid > 0)     {
+				$sql = 'SELECT cid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid!=' . $cid . ' ORDER BY weight ASC';
+				$result = $db->query($sql);
+				$weight = 0;
+				while ($row = $result->fetch())
+				{
+					++$weight;
+					if ($weight == $new_vid) ++$weight;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $weight . ' WHERE cid=' . $row['cid'];
+					$db->query($sql);
+				}
+				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $new_vid . ' WHERE cid=' . $cid;
+				$db->query($sql);
+				$content = 'OK_' . $cid;
+			}
+			$nv_Cache->delMod($module_name);
+			include NV_ROOTDIR . '/includes/header.php';
+			echo $content;
+			include NV_ROOTDIR . '/includes/footer.php';
+		}
+
+		if ($nv_Request->isset_request('delete_cid', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
+			$cid = $nv_Request->get_int('delete_cid', 'get');
+			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
+			if ($cid > 0 and $delete_checkss == md5($cid . NV_CACHE_PREFIX . $client_info['session_id'])) {
+				$weight=0;
+				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid =' . $db->quote($cid);
+				$result = $db->query($sql);
+				list($weight) = $result->fetch(3);
+				
+				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company  WHERE cid = ' . $db->quote($cid));
+				if ($weight > 0)         {
+					$sql = 'SELECT cid, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE weight >' . $weight;
+					$result = $db->query($sql);
+					while (list($cid, $weight) = $result->fetch(3))
+					{
+						$weight--;
+						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET weight=' . $weight . ' WHERE cid=' . intval($cid));
+					}
+				}
+				$nv_Cache->delMod($module_name);
+				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Company', 'ID: ' . $cid, $user_info['userid']);
+				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+			}
+		}
+
 
 		$q = $nv_Request->get_title('q', 'post,get');
 
@@ -289,7 +289,7 @@ if(defined('NV_IS_USER')){
 					$xtpl->parse('main.view.loop.weight_loop');
 				}
 				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;cid=' . $view['cid'];
+				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;cid=' . $view['cid'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_cid=' . $view['cid'] . '&amp;delete_checkss=' . md5($view['cid'] . NV_CACHE_PREFIX . $client_info['session_id']);
 				$xtpl->assign('VIEW', $view);
 				$xtpl->parse('main.view.loop');

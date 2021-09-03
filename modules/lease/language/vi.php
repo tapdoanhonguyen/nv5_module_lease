@@ -95,6 +95,7 @@ $lang_module['active'] = 'Chức năng';
 
 //Lang for function service
 $lang_module['service'] = 'Dịch vụ cho thuê';
+$lang_module['service_title'] = 'Tên dịch vụ';
 $lang_module['catid'] = 'Loại dịch vụ';
 $lang_module['unitid'] = 'Đơn vị tính';
 $lang_module['price_usd'] = 'Giá USD';
@@ -103,6 +104,8 @@ $lang_module['chargeid'] = 'Hiện trạng dịch vụ';
 $lang_module['error_required_catid'] = 'Lỗi: bạn cần nhập dữ liệu cho loại dịch vụ';
 $lang_module['error_required_unitid'] = 'Lỗi: bạn cần nhập dữ liệu cho Đơn vị sản phẩm';
 $lang_module['error_required_chargeid'] = 'Lỗi: bạn cần nhập dữ liệu cho hiện trạng dịch vụ';
+$lang_module['charge_add'] = 'Thêm cách tính phí';
+$lang_module['charge_edit'] = 'Sữa cách tính phí';
 
 //Lang for function product_export
 $lang_module['adminid'] = 'Adminid';
@@ -122,28 +125,37 @@ $lang_module['dashboard'] = 'Dashboard';
 $lang_module['cat_title'] = 'Tên loại dịch vụ';
 $lang_module['bank_add'] = 'Thêm tài khoản ngân hàng';
 $lang_module['bank_edit'] = 'Sữa tài khoản ngân hàng';
+$lang_module['bank'] = 'Tài khoản ngân hàng';
 
 //Lang for function bank_add
-$lang_module['companyid'] = 'Companyid';
-$lang_module['vi_bank_number'] = 'Vi bank number';
-$lang_module['en_bank_number'] = 'En bank number';
-$lang_module['vi_bank_account_holder'] = 'Vi bank account holder';
-$lang_module['en_bank_account_holder'] = 'En bank account holder';
-$lang_module['vi_bank_name'] = 'Vi bank name';
-$lang_module['en_bank_name'] = 'En bank name';
-$lang_module['vi_address'] = 'Vi address';
-$lang_module['en_address'] = 'En address';
+$lang_module['companyid'] = 'Tên đơn vị';
+$lang_module['vi_bank_number'] = 'Số tài khoản VND';
+$lang_module['en_bank_number'] = 'Số tài khoản USD';
+$lang_module['vi_bank_account_holder'] = 'Chủ tài khoản VND';
+$lang_module['en_bank_account_holder'] = 'Chủ tài khoản USD';
+$lang_module['vi_bank_name'] = 'Tên ngân hàng tiếng việt';
+$lang_module['en_bank_name'] = 'Tên ngân hàng tiếng anh';
+$lang_module['vi_address'] = 'Địa chỉ tiếng việt';
+$lang_module['en_address'] = 'Địa chỉ tiếng anh';
 $lang_module['swiftcode'] = 'Swiftcode';
+$lang_module['vi_title'] = 'Tên công ty tiếng việt';
+$lang_module['en_title'] = 'Tên công ty tiếng anh';
+$lang_module['company'] = 'Công ty';
+$lang_module['company_add'] = 'Thêm mới công ty';
+$lang_module['vi_province'] = 'Quận Huyện, Tỉnh Thành tiếng việt';
+$lang_module['en_province'] = 'Quận Huyện, Tỉnh Thành tiếng anh';
+$lang_module['phone'] = 'Số điện thoại';
 
 //Lang for function rate
-$lang_module['rate'] = 'rate';
-$lang_module['mount'] = 'Mount';
-$lang_module['exchange_rate'] = 'Exchange rate';
-$lang_module['error_required_mount'] = 'Lỗi: bạn cần nhập dữ liệu cho Mount';
-$lang_module['error_required_exchange_rate'] = 'Lỗi: bạn cần nhập dữ liệu cho Exchange rate';
+$lang_module['rate'] = 'Tỷ giá ngoại tệ';
+$lang_module['mount'] = 'Tháng';
+$lang_module['year'] = 'Năm';
+$lang_module['exchange_rate'] = 'Tỷ giá quy đổi';
+$lang_module['error_required_mount'] = 'Lỗi: bạn cần nhập dữ liệu cho Thángt';
+$lang_module['error_required_exchange_rate'] = 'Lỗi: bạn cần nhập dữ liệu cho tỷ lệ quy đổi';
 
 //Lang for function contractcat
-$lang_module['contractcat'] = 'contractcat';
+$lang_module['contractcat'] = 'Loại hợp đồng';
 $lang_module['parentid'] = 'Loại hợp đồng';
 
 //Lang for function contractcat_add
@@ -151,24 +163,28 @@ $lang_module['contractcat_add'] = 'contractcat_add';
 $lang_module['error_required_parentid'] = 'Lỗi: bạn cần nhập dữ liệu cho Loại hợp đồng';
 
 //Lang for function serviceextra
-$lang_module['serviceextra'] = 'serviceextra';
-$lang_module['pid'] = 'Pid';
-$lang_module['cid'] = 'Cid';
-$lang_module['yearmount'] = 'Yearmount';
-$lang_module['datefrom'] = 'Datefrom';
-$lang_module['dateto'] = 'Dateto';
-$lang_module['sid'] = 'Sid';
-$lang_module['pricevnd'] = 'Pricevnd';
-$lang_module['priceusd'] = 'Priceusd';
-$lang_module['amount'] = 'Amount';
-$lang_module['totalvnd'] = 'Totalvnd';
-$lang_module['totalusd'] = 'Totalusd';
-$lang_module['error_required_cid'] = 'Lỗi: bạn cần nhập dữ liệu cho Cid';
-$lang_module['error_required_yearmount'] = 'Lỗi: bạn cần nhập dữ liệu cho Yearmount';
-$lang_module['error_required_datefrom'] = 'Lỗi: bạn cần nhập dữ liệu cho Datefrom';
+$lang_module['serviceextra'] = 'Dịch vụ khác';
+$lang_module['pid'] = 'Chọn sản phẩm';
+$lang_module['cid'] = 'Chọn công ty';
+$lang_module['serviceextra_customer'] = 'Chọn khách hàng';
+$lang_module['mount'] = 'Tháng';
+$lang_module['year'] = 'Năm';
+$lang_module['datefrom'] = 'Ngày bắt đầu';
+$lang_module['dateto'] = 'Ngày kết thúc';
+$lang_module['sid'] = 'Chọn dịch vụ';
+$lang_module['pricevnd'] = 'Giá dịch vụ VND';
+$lang_module['priceusd'] = 'Giá dịch vụ USD';
+$lang_module['amount'] = 'Số lượng';
+$lang_module['totalvnd'] = 'Thành tiền VND';
+$lang_module['totalusd'] = 'Thành tiền USD';
+$lang_module['error_required_cid'] = 'Lỗi: bạn cần chọn công ty';
+$lang_module['error_required_mount'] = 'Lỗi: bạn cần nhập dữ liệu cho tháng';
+$lang_module['error_required_year'] = 'Lỗi: bạn cần nhập dữ liệu cho năm';
+$lang_module['error_required_datefrom'] = 'Lỗi: bạn cần nhập dữ liệu cho Ngày bắt đầu';
+$lang_module['error_required_datefrom'] = 'Lỗi: bạn cần nhập dữ liệu cho Ngày kết thúc';
 
 //Lang for function serviceextra_add
-$lang_module['serviceextra_add'] = 'serviceextra_add';
+$lang_module['serviceextra_add'] = 'Thêm dịch vụ phụ trội';
 $lang_module['crt_date'] = 'Crt date';
 $lang_module['error_required_pid'] = 'Lỗi: bạn cần nhập dữ liệu cho Pid';
 $lang_module['error_required_dateto'] = 'Lỗi: bạn cần nhập dữ liệu cho Dateto';

@@ -64,11 +64,10 @@ if(defined('NV_IS_USER')){
 		$row['id'] = $nv_Request->get_int('id', 'post,get', 0);
 		if ($nv_Request->isset_request('submit', 'post')) {
 			$row['mount'] = $nv_Request->get_title('mount', 'post', '');
+			$row['year'] = $nv_Request->get_title('year', 'post', '');
 			$row['exchange_rate'] = $nv_Request->get_int('exchange_rate', 'post', 0);
-
-			if (empty($row['mount'])) {
-				$error[] = $lang_module['error_required_mount'];
-			} elseif (empty($row['exchange_rate'])) {
+			$row['my'] = $row['mount'].$row['year'];
+			if (empty($row['exchange_rate'])) {
 				$error[] = $lang_module['error_required_exchange_rate'];
 			}
 
@@ -77,18 +76,18 @@ if(defined('NV_IS_USER')){
 					if (empty($row['id'])) {
 						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate (mount, exchange_rate) VALUES (:mount, :exchange_rate)');
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate SET mount = :mount, exchange_rate = :exchange_rate WHERE id=' . $row['id']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate SET  exchange_rate = :exchange_rate WHERE mount=:mount');
 					}
-					$stmt->bindParam(':mount', $row['mount'], PDO::PARAM_STR);
+					$stmt->bindParam(':mount', $row['my'], PDO::PARAM_STR);
 					$stmt->bindParam(':exchange_rate', $row['exchange_rate'], PDO::PARAM_INT);
 
 					$exc = $stmt->execute();
 					if ($exc) {
 						$nv_Cache->delMod($module_name);
 						if (empty($row['id'])) {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Rate', ' ', $admin_info['userid']);
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Rate', ' ', $user_info['userid']);
 						} else {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Rate', 'ID: ' . $row['id'], $admin_info['userid']);
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Rate', 'ID: ' . $row['id'], $user_info['userid']);
 						}
 						nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
 					}
@@ -104,10 +103,44 @@ if(defined('NV_IS_USER')){
 			}
 		} else {
 			$row['id'] = 0;
-			$row['mount'] = '';
+			$row['mount'] = date("m",NV_CURRENTTIME);
+			$row['year'] = date("Y",NV_CURRENTTIME);
 			$row['exchange_rate'] = 0;
 		}
 
+		$array_mount = array();
+		$array_mount['01'] = 'Tháng 1';
+		$array_mount['02'] = 'Tháng 2';
+		$array_mount['03'] = 'Tháng 3';
+		$array_mount['04'] = 'Tháng 4';
+		$array_mount['05'] = 'Tháng 5';
+		$array_mount['06'] = 'Tháng 6';
+		$array_mount['07'] = 'Tháng 7';
+		$array_mount['08'] = 'Tháng 8';
+		$array_mount['09'] = 'Tháng 9';
+		$array_mount['10'] = 'Tháng 10';
+		$array_mount['11'] = 'Tháng 11';
+		$array_mount['12'] = 'Tháng 12';
+
+		$array_year = array();
+		
+		foreach ($array_mount as $key => $title) {
+			$xtpl->assign('OPTION', array(
+				'key' => $key,
+				'title' => $title,
+				'selected' => ($key == $row['mount']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.select_mount');
+		}
+
+		for ($i=1970;$i<2050;$i++) {
+			$xtpl->assign('OPTION', array(
+				'key' => $i,
+				'title' => $i,
+				'selected' => ($i == $row['year']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.select_year');
+		}
 	}else{
 		if ($nv_Request->isset_request('delete_id', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
 			$id = $nv_Request->get_int('delete_id', 'get');
@@ -115,7 +148,7 @@ if(defined('NV_IS_USER')){
 			if ($id > 0 and $delete_checkss == md5($id . NV_CACHE_PREFIX . $client_info['session_id'])) {
 				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_exchange_rate  WHERE id = ' . $db->quote($id));
 				$nv_Cache->delMod($module_name);
-				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Rate', 'ID: ' . $id, $admin_info['userid']);
+				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Rate', 'ID: ' . $id, $user_info['userid']);
 				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
 			}
 		}

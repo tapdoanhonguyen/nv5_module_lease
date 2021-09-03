@@ -235,3 +235,19 @@ $lang_module['ccat'] = 'Ccat';
 
 //Lang for function contract_add
 $lang_module['contract_add'] = 'contract_add';
+
+//Lang for function company_add
+$lang_module['company_add'] = 'company_add';
+$lang_module['error_required_vi_title'] = 'Error: Required fields enter the Vi title';
+$lang_module['error_required_en_title'] = 'Error: Required fields enter the En title';
+$lang_module['error_required_vi_address'] = 'Error: Required fields enter the Vi address';
+
+//Lang for function company_add
+$lang_module['error_required_en_address'] = 'Error: Required fields enter the En address';
+$lang_module['error_required_vi_province'] = 'Error: Required fields enter the Vi province';
+$lang_module['error_required_en_province'] = 'Error: Required fields enter the En province';
+$lang_module['error_required_phone'] = 'Error: Required fields enter the Phone';
+$lang_module['error_required_fax'] = 'Error: Required fields enter the Fax';
+
+//Lang for function rate_add
+$lang_module['rate_add'] = 'rate_add';
