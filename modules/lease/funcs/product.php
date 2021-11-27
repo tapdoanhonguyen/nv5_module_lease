@@ -11,7 +11,13 @@
 
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
-if(defined('NV_IS_USER')){
+$array_rent_status_lease = array();
+$_sql = 'SELECT * FROM ' .NV_PREFIXLANG . '_' . $module_data . '_rent_status';
+$_query = $db->query($_sql);
+while ($_row = $_query->fetch()) {
+	$array_rent_status_lease[$_row['id']] = $_row;
+}
+if(defined('NV_IS_USER')&& $permission[$op]){
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -62,24 +68,25 @@ if(defined('NV_IS_USER')){
 		$row = array();
 		$error = array();
 		$row['pid'] = $nv_Request->get_int('pid', 'post,get', 0);
+		$xtpl->assign('PRODUCT_EDIT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/edit&pid=' . $row['pid']),true);
+
 		if ($nv_Request->isset_request('submit', 'post')) {
 			$row['fid'] = $nv_Request->get_int('fid', 'post', 0);
-			$row['title'] = $nv_Request->get_title('title', 'post', '');
+			$row['productcode'] = $nv_Request->get_title('productcode', 'post', '');
+			$row['title_vi'] = $nv_Request->get_title('title_vi', 'post', '');
+			$row['title_en'] = $nv_Request->get_title('title_en', 'post', '');
 			$row['alias'] = $nv_Request->get_title('alias', 'post', '');
-			$row['alias'] = empty($row['alias']) ? change_alias($row['title']) : change_alias($row['alias']);
-			$row['area'] = $nv_Request->get_title('area', 'post', '');
-			$row['price_usd_min'] = $nv_Request->get_title('price_usd_min', 'post', '');
-			$row['price_usd_max'] = $nv_Request->get_title('price_usd_max', 'post', '');
-			$row['price_vnd_min'] = $nv_Request->get_title('price_vnd_min', 'post', '');
-			$row['price_vnd_max'] = $nv_Request->get_title('price_vnd_max', 'post', '');
+			$row['alias'] = empty($row['alias']) ? change_alias($row['title_vi']) : change_alias($row['alias']);
+			$row['area'] = str_replace(',','',$nv_Request->get_title('area', 'post', ''));
+			$row['price_usd_min'] = str_replace(',','',$nv_Request->get_title('price_usd_min', 'post', '0'));
+			$row['price_usd_max'] = str_replace(',','',$nv_Request->get_title('price_usd_max', 'post', '0'));
+			$row['price_vnd_min'] = str_replace(',','',$nv_Request->get_title('price_vnd_min', 'post', '0'));
+			$row['price_vnd_max'] = str_replace(',','',$nv_Request->get_title('price_vnd_max', 'post', '0'));
 			$row['rent_status'] = $nv_Request->get_int('rent_status', 'post', 0);
-			$row['image'] = $nv_Request->get_title('image', 'post', '');
-			// Kiểm tra trùng
-			$sql = 'SELECT pid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE alias=' . $db->quote($row['alias']);
-			if ($id and !$copy) {
-				$sql .= ' AND pid!=' . $id;
-			}
-			$is_exists = $db->query($sql)->fetchColumn();
+			$row['image'] = $nv_Request->get_title('image', 'post', '');	
+			$row['oldimage'] = $nv_Request->get_title('oldimage', 'post', '');
+			$row['images'] = $nv_Request->get_title('images', 'post', '');
+
 			if (is_file(NV_DOCUMENT_ROOT . $row['image']))     {
 				$row['image'] = substr($row['image'], strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/'));
 			} else {
@@ -89,43 +96,71 @@ if(defined('NV_IS_USER')){
 
 			if (empty($row['fid'])) {
 				$error[] = $lang_module['error_required_fid'];
-			} elseif (empty($row['title'])) {
+			} elseif (empty($row['title_vi'])) {
 				$error[] = $lang_module['error_required_title'];
 			}elseif ($is_exists) {
 				$error[] = $lang_module['error_required_alias'];
 			} elseif (empty($row['area'])) {
 				$error[] = $lang_module['error_required_area'];
-			} elseif (empty($row['price_usd_min'])) {
-				$error[] = $lang_module['error_required_price_usd_min'];
-			} elseif (empty($row['price_usd_max'])) {
-				$error[] = $lang_module['error_required_price_usd_max'];
-			} elseif (empty($row['price_vnd_min'])) {
-				$error[] = $lang_module['error_required_price_vnd_min'];
-			} elseif (empty($row['price_vnd_max'])) {
-				$error[] = $lang_module['error_required_price_vnd_max'];
-			} elseif (empty($row['rent_status'])) {
-				$error[] = $lang_module['error_required_rent_status'];
+			} 
+			$file = end(explode('/',$row['image']));
+			
+			$path = nv_check_path_upload(NV_UPLOADS_DIR . '/' . $module_upload . '/' . $op);
+			$allow_files_type = [
+				'images'
+			];
+			$sys_max_size = $sys_max_size_local = min($global_config['nv_max_size'], nv_converttoBytes(ini_get('upload_max_filesize')), nv_converttoBytes(ini_get('post_max_size')));
+			if ($global_config['nv_overflow_size'] > $sys_max_size and $global_config['upload_chunk_size'] > 0) {
+				$sys_max_size_local = $global_config['nv_overflow_size'];
 			}
 
+			$upload = new NukeViet\Files\Upload($allow_files_type, $global_config['forbid_extensions'], $global_config['forbid_mimes'], [$sys_max_size, $sys_max_size_local], NV_MAX_WIDTH, NV_MAX_HEIGHT);
+			$upload->setLanguage($lang_module);
+			if (isset($_FILES['images']['tmp_name']) and is_uploaded_file($_FILES['images']['tmp_name'])) {
+				// Upload Chunk (nhiều phần)
+				if ($global_config['upload_chunk_size'] > 0 and $chunk_upload['chunks'] > 0) {
+					$upload->setChunkOption($chunk_upload);
+				}
+				$upload_info = $upload->save_file($_FILES['images'], NV_ROOTDIR . '/' . $path, false, $global_config['nv_auto_resize']);
+			}
+			 if ($global_config['nv_auto_resize'] and ($upload_info['img_info'][0] > NV_MAX_WIDTH or $upload_info['img_info'][1] > NV_MAX_HEIGHT)) {
+				$createImage = new NukeViet\Files\Image(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename'], $upload_info['img_info'][0], $upload_info['img_info'][1]);
+				$createImage->resizeXY(NV_MAX_WIDTH, NV_MAX_HEIGHT);
+				$createImage->save(NV_ROOTDIR . '/' . $path, $upload_info['basename'], $thumb_config['thumb_quality']);
+				$createImage->close();
+				$info = $createImage->create_Image_info;
+				$upload_info['img_info'][0] = $info['width'];
+				$upload_info['img_info'][1] = $info['height'];
+				$upload_info['size'] = filesize(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename']);
+			}
+			 if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
+					$lu = strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/floor' . '/');
+					$row['image'] = substr($row['image'], $lu);
+				} else {
+					$row['image'] = '';
+				}
 			if (empty($error)) {
 				try {
 					if (empty($row['pid'])) {
+						$row['rent_status'] = $db->query('SELECT rid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rent_status WHERE maindefault = 1')->fetchColumn();
 						$row['update_date'] = 0;
-//print_r('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title, alias, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title, :alias, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');die;
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title, alias, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title, :alias, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');	
+//print_r('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title_vi, alias, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title_vi, :alias, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');die;
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title_vi, title_en, alias, productcode, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title_vi, :title_en, :alias, :productcode, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');	
 						
+					$stmt->bindParam(':rent_status', $row['rent_status'], PDO::PARAM_INT);
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET fid = :fid, title = :title, alias = :alias, area = :area, price_usd_min = :price_usd_min, price_usd_max = :price_usd_max, price_vnd_min = :price_vnd_min, price_vnd_max = :price_vnd_max, rent_status = :rent_status, image = :image, note = :note, userid_edit = ' . $user_info['userid'] . ', update_date = ' . NV_CURRENTTIME . ' WHERE pid=' . $row['pid']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET fid = :fid, title_vi = :title_vi, title_en = :title_en, alias = :alias, productcode = :productcode, area = :area, price_usd_min = :price_usd_min, price_usd_max = :price_usd_max, price_vnd_min = :price_vnd_min, price_vnd_max = :price_vnd_max, image = :image, note = :note, userid_edit = ' . $user_info['userid'] . ', update_date = ' . NV_CURRENTTIME . ' WHERE pid=' . $row['pid']);
 					}
 					$stmt->bindParam(':fid', $row['fid'], PDO::PARAM_INT);
-					$stmt->bindParam(':title', $row['title'], PDO::PARAM_STR);
+					$stmt->bindParam(':productcode', $row['productcode'], PDO::PARAM_STR);
+					$stmt->bindParam(':title_vi', $row['title_vi'], PDO::PARAM_STR);
+					$stmt->bindParam(':title_en', $row['title_en'], PDO::PARAM_STR);
 					$stmt->bindParam(':alias', $row['alias'], PDO::PARAM_STR);
 					$stmt->bindParam(':area', $row['area'], PDO::PARAM_STR);
 					$stmt->bindParam(':price_usd_min', $row['price_usd_min'], PDO::PARAM_STR);
 					$stmt->bindParam(':price_usd_max', $row['price_usd_max'], PDO::PARAM_STR);
 					$stmt->bindParam(':price_vnd_min', $row['price_vnd_min'], PDO::PARAM_STR);
 					$stmt->bindParam(':price_vnd_max', $row['price_vnd_max'], PDO::PARAM_STR);
-					$stmt->bindParam(':rent_status', $row['rent_status'], PDO::PARAM_INT);
 					$stmt->bindParam(':image', $row['image'], PDO::PARAM_STR);
 					$stmt->bindParam(':note', $row['note'], PDO::PARAM_STR, strlen($row['note']));
 
@@ -153,7 +188,8 @@ if(defined('NV_IS_USER')){
 		} else {
 			$row['pid'] = 0;
 			$row['fid'] = 0;
-			$row['title'] = '';
+			$row['title_vi'] = '';
+			$row['title_vi'] = '';
 			$row['alias'] = '';
 			$row['area'] = '';
 			$row['price_usd_min'] = '';
@@ -173,24 +209,18 @@ if(defined('NV_IS_USER')){
 		$row['note'] = nv_htmlspecialchars(nv_editor_br2nl($row['note']));
 		$row['note'] = nv_module_aleditor('note', '100%', '300px', $row['note']);
 		$xtpl->assign('ROW', $row);
-		$array_fid_lease = array();
-		$_sql = 'SELECT fid,title FROM vidoco_vi_lease_floor';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_fid_lease[$_row['fid']] = $_row;
+		if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
+			$xtpl->assign('HIDDEN', '');
+		}else{
+			$row['image'] = '';
+			$xtpl->assign('HIDDEN', 'hidden');
 		}
 
-		$array_rent_status_lease = array();
-		$_sql = 'SELECT rid,decription FROM vidoco_vi_lease_rent_status';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_rent_status_lease[$_row['rid']] = $_row;
-		}
 
 		foreach ($array_fid_lease as $value) {
 			$xtpl->assign('OPTION', array(
 				'key' => $value['fid'],
-				'title' => $value['title'],
+				'title' => $value['title_vi'],
 				'selected' => ($value['fid'] == $row['fid']) ? ' selected="selected"' : ''
 			));
 			$xtpl->parse('main.select_fid');
@@ -218,7 +248,11 @@ if(defined('NV_IS_USER')){
 	}elseif($action=="export"){
 		
 	}elseif($action=="view"){
-		
+		$row = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE alias="' . $array_op[2] . '"')->fetch();
+		if (empty($row)) {
+			nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+		}
+		$xtpl->assign('ROW', $row);
 	}else{
 		// Change status
 		if ($nv_Request->isset_request('change_status', 'post, get')) {
@@ -244,16 +278,16 @@ if(defined('NV_IS_USER')){
 			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
 			$content = 'NO_' . $pid;
 			if ($new_vid > 0)     {
-				$sql = 'SELECT pid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid!=' . $pid . ' ORDER BY update_date ASC';
+				$sql = 'SELECT pid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid!=' . $pid . ' AND weight !=0 ORDER BY weight ASC';
 				$result = $db->query($sql);
 				$update_date = 0;
 				while ($row = $result->fetch())
 				{
 					++$update_date;
-					if ($update_date == $new_vid) ++$update_date;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET update_date=' . $update_date . ' WHERE pid=' . $row['pid'];
+					if ($update_date == $new_vid) ++$update_date;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET weight=' . $update_date . ' WHERE pid=' . $row['pid'];
 					$db->query($sql);
 				}
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET update_date=' . $new_vid . ' WHERE pid=' . $pid;
+				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET weight=' . $new_vid . ' WHERE pid=' . $pid;
 				$db->query($sql);
 				$content = 'OK_' . $pid;
 			}
@@ -268,18 +302,19 @@ if(defined('NV_IS_USER')){
 			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
 			if ($pid > 0 and $delete_checkss == md5($pid . NV_CACHE_PREFIX . $client_info['session_id'])) {
 				$update_date=0;
-				$sql = 'SELECT update_date FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid =' . $db->quote($pid);
+				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid =' . $db->quote($pid) ;
 				$result = $db->query($sql);
 				list($update_date) = $result->fetch(3);
 				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product  WHERE pid = ' . $db->quote($pid));
+				$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET status_del=1, weight =0 WHERE rid=' . intval($rid));
+				//$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product  WHERE pid = ' . $db->quote($pid));
 				if ($update_date > 0)         {
-					$sql = 'SELECT pid, update_date FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE update_date >' . $update_date;
+					$sql = 'SELECT pid, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE weight >' . $update_date;
 					$result = $db->query($sql);
 					while (list($pid, $update_date) = $result->fetch(3))
 					{
 						$update_date--;
-						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET update_date=' . $update_date . ' WHERE pid=' . intval($pid));
+						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET weight=' . $update_date . ' WHERE pid=' . intval($pid));
 					}
 				}
 				$nv_Cache->delMod($module_name);
@@ -288,111 +323,10 @@ if(defined('NV_IS_USER')){
 			}
 		}
 
-		$row = array();
-		$error = array();
-		$row['pid'] = $nv_Request->get_int('pid', 'post,get', 0);
-		if ($nv_Request->isset_request('submit', 'post')) {
-			$row['fid'] = $nv_Request->get_int('fid', 'post', 0);
-			$row['title'] = $nv_Request->get_title('title', 'post', '');
-			$row['area'] = $nv_Request->get_title('area', 'post', '');
-			$row['price_usd_min'] = $nv_Request->get_title('price_usd_min', 'post', '');
-			$row['price_usd_max'] = $nv_Request->get_title('price_usd_max', 'post', '');
-			$row['price_vnd_min'] = $nv_Request->get_title('price_vnd_min', 'post', '');
-			$row['price_vnd_max'] = $nv_Request->get_title('price_vnd_max', 'post', '');
-			$row['rent_status'] = $nv_Request->get_int('rent_status', 'post', 0);
-			$row['image'] = $nv_Request->get_title('image', 'post', '');
-			$row['note'] = $nv_Request->get_editor('note', '', NV_ALLOWED_HTML_TAGS);
-
-			if (empty($row['fid'])) {
-				$error[] = $lang_module['error_required_fid'];
-			} elseif (empty($row['title'])) {
-				$error[] = $lang_module['error_required_title'];
-			} elseif (empty($row['area'])) {
-				$error[] = $lang_module['error_required_area'];
-			}
-
-			if (empty($error)) {
-				try {
-					if (empty($row['pid'])) {
-						$row['adminid'] = 0;
-						$row['crtd_date'] = 0;
-						$row['userid_edit'] = 0;
-
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, :active, :adminid, :crtd_date, :userid_edit, :update_date)');
-
-						$stmt->bindValue(':active', 1, PDO::PARAM_INT);
-
-						$stmt->bindParam(':adminid', $row['adminid'], PDO::PARAM_INT);
-						$stmt->bindParam(':crtd_date', $row['crtd_date'], PDO::PARAM_INT);
-						$stmt->bindParam(':userid_edit', $row['userid_edit'], PDO::PARAM_INT);
-						$weight = $db->query('SELECT max(update_date) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product')->fetchColumn();
-						$weight = intval($weight) + 1;
-						$stmt->bindParam(':update_date', $weight, PDO::PARAM_INT);
-
-
-					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET fid = :fid, title = :title, area = :area, price_usd_min = :price_usd_min, price_usd_max = :price_usd_max, price_vnd_min = :price_vnd_min, price_vnd_max = :price_vnd_max, rent_status = :rent_status, image = :image, note = :note WHERE pid=' . $row['pid']);
-					}
-					$stmt->bindParam(':fid', $row['fid'], PDO::PARAM_INT);
-					$stmt->bindParam(':title', $row['title'], PDO::PARAM_STR);
-					$stmt->bindParam(':area', $row['area'], PDO::PARAM_STR);
-					$stmt->bindParam(':price_usd_min', $row['price_usd_min'], PDO::PARAM_STR);
-					$stmt->bindParam(':price_usd_max', $row['price_usd_max'], PDO::PARAM_STR);
-					$stmt->bindParam(':price_vnd_min', $row['price_vnd_min'], PDO::PARAM_STR);
-					$stmt->bindParam(':price_vnd_max', $row['price_vnd_max'], PDO::PARAM_STR);
-					$stmt->bindParam(':rent_status', $row['rent_status'], PDO::PARAM_INT);
-					$stmt->bindParam(':image', $row['image'], PDO::PARAM_STR);
-					$stmt->bindParam(':note', $row['note'], PDO::PARAM_STR, strlen($row['note']));
-
-					$exc = $stmt->execute();
-					if ($exc) {
-						$nv_Cache->delMod($module_name);
-						if (empty($row['pid'])) {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Product', ' ', $admin_info['userid']);
-						} else {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Product', 'ID: ' . $row['pid'], $admin_info['userid']);
-						}
-						nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
-					}
-				} catch(PDOException $e) {
-					trigger_error($e->getMessage());
-					die($e->getMessage()); //Remove this line after checks finished
-				}
-			}
-		} elseif ($row['pid'] > 0) {
-			$row = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid=' . $row['pid'])->fetch();
-			if (empty($row)) {
-				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
-			}
-		} else {
-			$row['pid'] = 0;
-			$row['fid'] = 0;
-			$row['title'] = '';
-			$row['area'] = '';
-			$row['price_usd_min'] = '';
-			$row['price_usd_max'] = '';
-			$row['price_vnd_min'] = '';
-			$row['price_vnd_max'] = '';
-			$row['rent_status'] = 0;
-			$row['image'] = '';
-			$row['note'] = '';
-		}
 
 		$row['note'] = nv_htmlspecialchars(nv_editor_br2nl($row['note']));
 		$row['note'] = nv_module_aleditor('note', '100%', '300px', $row['note']);
-		$array_fid_lease = array();
-		$_sql = 'SELECT fid,title FROM vidoco_vi_lease_floor';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_fid_lease[$_row['fid']] = $_row;
-		}
 
-		$array_rent_status_lease = array();
-		$_sql = 'SELECT rid,decription FROM vidoco_vi_lease_rent_status';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_rent_status_lease[$_row['rid']] = $_row;
-		}
 
 
 		$q = $nv_Request->get_title('q', 'post,get');
@@ -401,14 +335,14 @@ if(defined('NV_IS_USER')){
 		$show_view = false;
 		if (!$nv_Request->isset_request('id', 'post,get')) {
 			$show_view = true;
-			$per_page = 20;
+			$per_page = 2000;
 			$page = $nv_Request->get_int('page', 'post,get', 1);
 			$db->sqlreset()
 				->select('COUNT(*)')
 				->from('' . NV_PREFIXLANG . '_' . $module_data . '_product');
 
 			if (!empty($q)) {
-				$db->where('fid LIKE :q_fid OR title LIKE :q_title OR area LIKE :q_area OR price_usd_min LIKE :q_price_usd_min OR price_usd_max LIKE :q_price_usd_max OR price_vnd_min LIKE :q_price_vnd_min OR price_vnd_max LIKE :q_price_vnd_max OR rent_status LIKE :q_rent_status');
+				$db->where('fid LIKE :q_fid OR title_vi LIKE :q_title OR area LIKE :q_area OR price_usd_min LIKE :q_price_usd_min OR price_usd_max LIKE :q_price_usd_max OR price_vnd_min LIKE :q_price_vnd_min OR price_vnd_max LIKE :q_price_vnd_max OR rent_status LIKE :q_rent_status');
 			}
 			$sth = $db->prepare($db->sql());
 
@@ -426,9 +360,7 @@ if(defined('NV_IS_USER')){
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('update_date ASC')
-				->limit($per_page)
-				->offset(($page - 1) * $per_page);
+				->order('update_date ASC');
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {
@@ -444,22 +376,7 @@ if(defined('NV_IS_USER')){
 			$sth->execute();
 		}
 
-		foreach ($array_fid_lease as $value) {
-			$xtpl->assign('OPTION', array(
-				'key' => $value['fid'],
-				'title' => $value['title'],
-				'selected' => ($value['fid'] == $row['fid']) ? ' selected="selected"' : ''
-			));
-			$xtpl->parse('main.select_fid');
-		}
-		foreach ($array_rent_status_lease as $value) {
-			$xtpl->assign('OPTION', array(
-				'key' => $value['rid'],
-				'title' => $value['decription'],
-				'selected' => ($value['rid'] == $row['rent_status']) ? ' selected="selected"' : ''
-			));
-			$xtpl->parse('main.select_rent_status');
-		}
+		
 		$xtpl->assign('Q', $q);
 
 		if ($show_view) {
@@ -478,11 +395,16 @@ if(defined('NV_IS_USER')){
 					$xtpl->assign('WEIGHT', array(
 						'key' => $i,
 						'title' => $i,
-						'selected' => ($i == $view['update_date']) ? ' selected="selected"' : ''));
+						'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
 					$xtpl->parse('main.view.loop.update_date_loop');
 				}
+				$view['price_format_vnd_min']=number_format($view['price_vnd_min'],0);
+				$view['area_format']=number_format($view['area'],0);
+				$view['price_format_vnd_max']=number_format($view['price_vnd_max'],0);
+				$view['price_format_usd_min']=number_format($view['price_usd_min'],0);
+				$view['price_format_usd_max']=number_format($view['price_usd_max'],0);
 				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['fid'] = $array_fid_lease[$view['fid']]['title'];
+				$view['floorname'] = $array_fid_lease[$view['fid']]['title_vi'];
 				$view['rent_status'] = $array_rent_status_lease[$view['rent_status']]['decription'];
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=product/edit&amp;pid=' . $view['pid'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_pid=' . $view['pid'] . '&amp;delete_checkss=' . md5($view['pid'] . NV_CACHE_PREFIX . $client_info['session_id']);

@@ -11,7 +11,7 @@
 
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
-if(defined('NV_IS_USER')){
+if(defined('NV_IS_USER') && $permission[$op]){
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -72,25 +72,27 @@ if(defined('NV_IS_USER')){
 			$row['phone'] = $nv_Request->get_title('phone', 'post', '');
 			$row['fax'] = $nv_Request->get_title('fax', 'post', '');
 			$row['email'] = $nv_Request->get_title('email', 'post', '');
+			$row['companycode'] = $nv_Request->get_title('companycode', 'post', '');
 			$row['active'] = $nv_Request->get_int('active', 'post', 0);
-			$row['adminid'] = $nv_Request->get_int('adminid', 'post', 0);
-			$row['crt_date'] = $nv_Request->get_int('crt_date', 'post', 0);
-			$row['userid_edit'] = $nv_Request->get_int('userid_edit', 'post', 0);
-			$row['update_date'] = $nv_Request->get_int('update_date', 'post', 0);
-
+			
+			if(empty($row['companycode'])){
+				$error[] = $lang_module['error_required_companycode'];
+			}
 			if (empty($error)) {
 				try {
 					if (empty($row['cid'])) {
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_company (vi_title, en_title, vi_address, en_address, vi_province, en_province, phone, fax, email, active, weight, adminid, crt_date, userid_edit, update_date) VALUES (:vi_title, :en_title, :vi_address, :en_address, :vi_province, :en_province, :phone, :fax, :email, :active, :weight, :adminid, :crt_date, :userid_edit, :update_date)');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_company (companycode, vi_title, en_title, vi_address, en_address, vi_province, en_province, phone, fax, email, active, weight, adminid, crt_date, userid_edit, update_date) VALUES (:companycode, :vi_title, :en_title, :vi_address, :en_address, :vi_province, :en_province, :phone, :fax, :email, :active, :weight, :adminid, ' . NV_CURRENTTIME . ', :userid_edit, ' . NV_CURRENTTIME . ')');
 
 						$weight = $db->query('SELECT max(weight) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company')->fetchColumn();
 						$weight = intval($weight) + 1;
 						$stmt->bindParam(':weight', $weight, PDO::PARAM_INT);
+						$stmt->bindParam(':adminid', $user_info['userid'], PDO::PARAM_INT);
 
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET vi_title = :vi_title, en_title = :en_title, vi_address = :vi_address, en_address = :en_address, vi_province = :vi_province, en_province = :en_province, phone = :phone, fax = :fax, email = :email, active = :active, adminid = :adminid, crt_date = :crt_date, userid_edit = :userid_edit, update_date = :update_date WHERE cid=' . $row['cid']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET companycode = :companycode, vi_title = :vi_title, en_title = :en_title, vi_address = :vi_address, en_address = :en_address, vi_province = :vi_province, en_province = :en_province, phone = :phone, fax = :fax, email = :email, active = :active, userid_edit = :userid_edit, update_date = ' . NV_CURRENTTIME . ' WHERE cid=' . $row['cid']);
 					}
+					$stmt->bindParam(':companycode', $row['companycode'], PDO::PARAM_STR);
 					$stmt->bindParam(':vi_title', $row['vi_title'], PDO::PARAM_STR);
 					$stmt->bindParam(':en_title', $row['en_title'], PDO::PARAM_STR);
 					$stmt->bindParam(':vi_address', $row['vi_address'], PDO::PARAM_STR);
@@ -101,10 +103,7 @@ if(defined('NV_IS_USER')){
 					$stmt->bindParam(':fax', $row['fax'], PDO::PARAM_STR);
 					$stmt->bindParam(':email', $row['email'], PDO::PARAM_STR);
 					$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
-					$stmt->bindParam(':adminid', $row['adminid'], PDO::PARAM_INT);
-					$stmt->bindParam(':crt_date', $row['crt_date'], PDO::PARAM_INT);
-					$stmt->bindParam(':userid_edit', $row['userid_edit'], PDO::PARAM_INT);
-					$stmt->bindParam(':update_date', $row['update_date'], PDO::PARAM_INT);
+					$stmt->bindParam(':userid_edit', $user_info['userid'], PDO::PARAM_INT);
 
 					$exc = $stmt->execute();
 					if ($exc) {
@@ -143,6 +142,7 @@ if(defined('NV_IS_USER')){
 			$row['userid_edit'] = 0;
 			$row['update_date'] = 0;
 		}
+		$xtpl->assign('ROW', $row);
 	}else{
 		// Change status
 		if ($nv_Request->isset_request('change_status', 'post, get')) {
@@ -168,7 +168,7 @@ if(defined('NV_IS_USER')){
 			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
 			$content = 'NO_' . $cid;
 			if ($new_vid > 0)     {
-				$sql = 'SELECT cid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid!=' . $cid . ' ORDER BY weight ASC';
+				$sql = 'SELECT cid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid!=' . $cid . ' AND weight != 0 ORDER BY weight ASC';
 				$result = $db->query($sql);
 				$weight = 0;
 				while ($row = $result->fetch())
@@ -192,11 +192,11 @@ if(defined('NV_IS_USER')){
 			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
 			if ($cid > 0 and $delete_checkss == md5($cid . NV_CACHE_PREFIX . $client_info['session_id'])) {
 				$weight=0;
-				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE cid =' . $db->quote($cid);
+				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE  cid =' . $db->quote($cid);
 				$result = $db->query($sql);
 				list($weight) = $result->fetch(3);
 				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company  WHERE cid = ' . $db->quote($cid));
+				$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_company SET status_del = 1, userid_del = ' . $user_info['userid'] . ', time_del = ' . NV_CURRENTTIME . ' WHERE cid = ' . $db->quote($cid));
 				if ($weight > 0)         {
 					$sql = 'SELECT cid, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company WHERE weight >' . $weight;
 					$result = $db->query($sql);
@@ -226,7 +226,7 @@ if(defined('NV_IS_USER')){
 				->from('' . NV_PREFIXLANG . '_' . $module_data . '_company');
 
 			if (!empty($q)) {
-				$db->where('vi_title LIKE :q_vi_title OR en_title LIKE :q_en_title OR vi_address LIKE :q_vi_address OR en_address LIKE :q_en_address OR vi_province LIKE :q_vi_province OR en_province LIKE :q_en_province OR phone LIKE :q_phone OR fax LIKE :q_fax OR email LIKE :q_email');
+				$db->where(' (vi_title LIKE :q_vi_title OR en_title LIKE :q_en_title OR vi_address LIKE :q_vi_address OR en_address LIKE :q_en_address OR vi_province LIKE :q_vi_province OR en_province LIKE :q_en_province OR phone LIKE :q_phone OR fax LIKE :q_fax OR email LIKE :q_email)');
 			}
 			$sth = $db->prepare($db->sql());
 
@@ -281,18 +281,21 @@ if(defined('NV_IS_USER')){
 			}
 			$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
 			while ($view = $sth->fetch()) {
-				for($i = 1; $i <= $num_items; ++$i) {
-					$xtpl->assign('WEIGHT', array(
-						'key' => $i,
-						'title' => $i,
-						'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
-					$xtpl->parse('main.view.loop.weight_loop');
+				if($view['status_del']==0){
+					for($i = 1; $i <= $num_items; ++$i) {
+						$xtpl->assign('WEIGHT', array(
+							'key' => $i,
+							'title' => $i,
+							'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
+						$xtpl->parse('main.view.loop.weight_loop');
+					}
+					$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
+					$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;cid=' . $view['cid'];
+					$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_cid=' . $view['cid'] . '&amp;delete_checkss=' . md5($view['cid'] . NV_CACHE_PREFIX . $client_info['session_id']);
+					$xtpl->assign('VIEW', $view);
+				
+					$xtpl->parse('main.view.loop');
 				}
-				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;cid=' . $view['cid'];
-				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_cid=' . $view['cid'] . '&amp;delete_checkss=' . md5($view['cid'] . NV_CACHE_PREFIX . $client_info['session_id']);
-				$xtpl->assign('VIEW', $view);
-				$xtpl->parse('main.view.loop');
 			}
 			$xtpl->parse('main.view');
 		}

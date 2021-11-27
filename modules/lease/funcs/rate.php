@@ -11,7 +11,7 @@
 
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
-if(defined('NV_IS_USER')){
+if(defined('NV_IS_USER')&& $permission[$op]){
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -101,6 +101,9 @@ if(defined('NV_IS_USER')){
 			if (empty($row)) {
 				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
 			}
+			$row['year'] = $row['mount'][2].$row['mount'][3].$row['mount'][4].$row['mount'][5];
+			$row['mount'] = $row['mount'][0].$row['mount'][1];
+			
 		} else {
 			$row['id'] = 0;
 			$row['mount'] = date("m",NV_CURRENTTIME);
@@ -123,7 +126,7 @@ if(defined('NV_IS_USER')){
 		$array_mount['12'] = 'Tháng 12';
 
 		$array_year = array();
-		
+		$xtpl->assign('ROW',$row);
 		foreach ($array_mount as $key => $title) {
 			$xtpl->assign('OPTION', array(
 				'key' => $key,

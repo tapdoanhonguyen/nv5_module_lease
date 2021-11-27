@@ -11,13 +11,8 @@
 
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
-if(defined('NV_IS_USER')){
-	$array_unitid_lease = array();
-	$_sql = 'SELECT uid,title FROM vidoco_vi_lease_unit';
-	$_query = $db->query($_sql);
-	while ($_row = $_query->fetch()) {
-		$array_unitid_lease[$_row['uid']] = $_row;
-	}
+if(defined('NV_IS_USER') && $permission[$op]){
+	
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -69,15 +64,20 @@ if(defined('NV_IS_USER')){
 		$error = array();
 		$row['sid'] = $nv_Request->get_int('sid', 'post,get', 0);
 		if ($nv_Request->isset_request('submit', 'post')) {
-			$row['title'] = $nv_Request->get_title('title', 'post', '');
+			$row['servicecode'] = $nv_Request->get_title('servicecode', 'post', '');
+			$row['title_vi'] = $nv_Request->get_title('title_vi', 'post', '');
+			$row['title_en'] = $nv_Request->get_title('title_en', 'post', '');
+			$row['typein'] = $nv_Request->get_title('typein', 'post', '');
 			$row['catid'] = $nv_Request->get_int('catid', 'post', 0);
 			$row['unitid'] = $nv_Request->get_int('unitid', 'post', 0);
-			$row['price_usd'] = $nv_Request->get_title('price_usd', 'post', '');
-			$row['price_vnd'] = $nv_Request->get_title('price_vnd', 'post', '');
+			$row['price_usd'] = str_replace(',','',$nv_Request->get_title('price_usd', 'post', ''));
+			$row['price_vnd'] = str_replace(',','',$nv_Request->get_title('price_vnd', 'post', ''));
 			$row['chargeid'] = $nv_Request->get_int('chargeid', 'post', 0);
+			$row['dailyreport'] = $nv_Request->get_int('dailyreport', 'post', 0);
+			$row['service_main'] = $nv_Request->get_int('service_main', 'post', 0);
 			$row['note'] = $nv_Request->get_editor('note', '', NV_ALLOWED_HTML_TAGS);
 
-			if (empty($row['title'])) {
+			if (empty($row['title_vi'])) {
 				$error[] = $lang_module['error_required_title'];
 			} elseif (empty($row['catid'])) {
 				$error[] = $lang_module['error_required_catid'];
@@ -94,27 +94,29 @@ if(defined('NV_IS_USER')){
 						$row['crtd_date'] = 0;
 						$row['userid_edit'] = 0;
 
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service (title, catid, unitid, price_usd, price_vnd, chargeid, note, active, adminid, crtd_date, userid_edit, update_time) VALUES (:title, :catid, :unitid, :price_usd, :price_vnd, :chargeid, :note, :active, :adminid, :crtd_date, :userid_edit, :update_time)');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service (title_vi, title_en, servicecode, service_main, catid, unitid, price_usd, price_vnd, chargeid, dailyreport, note, active, typein, weight, adminid, crtd_date, userid_edit, update_time) VALUES (:title_vi, :title_en, :servicecode, :service_main, :catid, :unitid, :price_usd, :price_vnd, :chargeid, :dailyreport, :note, :active, :typein, :weight, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ', ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');
 
 						$stmt->bindValue(':active', 1, PDO::PARAM_INT);
 
-						$stmt->bindParam(':adminid', $row['adminid'], PDO::PARAM_INT);
-						$stmt->bindParam(':crtd_date', $row['crtd_date'], PDO::PARAM_INT);
-						$stmt->bindParam(':userid_edit', $row['userid_edit'], PDO::PARAM_INT);
-						$weight = $db->query('SELECT max(update_time) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service')->fetchColumn();
+						$weight = $db->query('SELECT max(weight) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service')->fetchColumn();
 						$weight = intval($weight) + 1;
-						$stmt->bindParam(':update_time', $weight, PDO::PARAM_INT);
+						$stmt->bindParam(':weight', $weight, PDO::PARAM_INT);
 
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET title = :title, catid = :catid, unitid = :unitid, price_usd = :price_usd, price_vnd = :price_vnd, chargeid = :chargeid, note = :note WHERE sid=' . $row['sid']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET title_vi = :title_vi, title_en = :title_en, servicecode = :servicecode, service_main = :service_main, catid = :catid, unitid = :unitid, price_usd = :price_usd, price_vnd = :price_vnd, chargeid = :chargeid, dailyreport = :dailyreport, typein = :typein, note = :note, userid_edit = ' . $user_info['userid'] . ', update_time = ' .  NV_CURRENTTIME. ' WHERE sid=' . $row['sid']);
 					}
-					$stmt->bindParam(':title', $row['title'], PDO::PARAM_STR);
+					$stmt->bindParam(':servicecode', $row['servicecode'], PDO::PARAM_STR);
+					$stmt->bindParam(':service_main', $row['service_main'], PDO::PARAM_STR);
+					$stmt->bindParam(':title_vi', $row['title_vi'], PDO::PARAM_STR);
+					$stmt->bindParam(':title_en', $row['title_en'], PDO::PARAM_STR);
 					$stmt->bindParam(':catid', $row['catid'], PDO::PARAM_INT);
 					$stmt->bindParam(':unitid', $row['unitid'], PDO::PARAM_INT);
 					$stmt->bindParam(':price_usd', $row['price_usd'], PDO::PARAM_STR);
 					$stmt->bindParam(':price_vnd', $row['price_vnd'], PDO::PARAM_STR);
+					$stmt->bindParam(':typein', $row['typein'], PDO::PARAM_STR);
 					$stmt->bindParam(':chargeid', $row['chargeid'], PDO::PARAM_INT);
+					$stmt->bindParam(':dailyreport', $row['dailyreport'], PDO::PARAM_INT);
 					$stmt->bindParam(':note', $row['note'], PDO::PARAM_STR, strlen($row['note']));
 
 					$exc = $stmt->execute();
@@ -139,33 +141,22 @@ if(defined('NV_IS_USER')){
 			}
 		} else {
 			$row['sid'] = 0;
-			$row['title'] = '';
+			$row['servicecode'] = '';
+			$row['title_vi'] = '';
+			$row['title_en'] = '';
 			$row['catid'] = 0;
 			$row['unitid'] = 0;
 			$row['price_usd'] = '';
 			$row['price_vnd'] = '';
 			$row['chargeid'] = 0;
+			$row['dailyreport'] = 0;
 			$row['note'] = '';
 		}
 		
 
 		$row['note'] = nv_htmlspecialchars(nv_editor_br2nl($row['note']));
 		$row['note'] = nv_module_aleditor('note', '100%', '300px', $row['note']);
-		$array_catid_lease = array();
-		$_sql = 'SELECT cid,title FROM vidoco_vi_lease_service_cat';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_catid_lease[$_row['cid']] = $_row;
-		}
 
-
-
-		$array_chargeid_lease = array();
-		$_sql = 'SELECT cid,title FROM vidoco_vi_lease_charge';
-		$_query = $db->query($_sql);
-		while ($_row = $_query->fetch()) {
-			$array_chargeid_lease[$_row['cid']] = $_row;
-		}
 		$xtpl->assign('ROW', $row);
 		foreach ($array_catid_lease as $value) {
 			$xtpl->assign('OPTION', array(
@@ -190,6 +181,29 @@ if(defined('NV_IS_USER')){
 				'selected' => ($value['cid'] == $row['chargeid']) ? ' selected="selected"' : ''
 			));
 			$xtpl->parse('main.select_chargeid');
+		}
+		foreach ($daily_report as $key =>$value) {
+			$xtpl->assign('OPTION', array(
+				'key' => $key,
+				'title' => $value,
+				'selected' => ($key == $row['dailyreport']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.daily_report');
+		}
+		foreach ($array_typein_lease as $key =>$value) {
+			$xtpl->assign('OPTION', array(
+				'key' => $key,
+				'title' => $value,
+				'selected' => ($key == $row['typein']) ? ' selected="selected"' : ''
+			));
+			$xtpl->parse('main.typein');
+		}
+		if($row['service_main'] == 1){
+			$xtpl->assign('smchecked', 'checked="checked"');
+			$xtpl->assign('sechecked', '');
+		}elseif($row['service_main'] == 0){
+			$xtpl->assign('smchecked', '');
+			$xtpl->assign('sechecked', ' checked="checked"');
 		}
 	}else{
 		// Change status
@@ -216,16 +230,16 @@ if(defined('NV_IS_USER')){
 			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
 			$content = 'NO_' . $sid;
 			if ($new_vid > 0)     {
-				$sql = 'SELECT sid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE sid!=' . $sid . ' ORDER BY update_time ASC';
+				$sql = 'SELECT sid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE sid!=' . $sid . ' and weight !=0 ORDER BY weight ASC';
 				$result = $db->query($sql);
 				$update_time = 0;
 				while ($row = $result->fetch())
 				{
 					++$update_time;
-					if ($update_time == $new_vid) ++$update_time;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET update_time=' . $update_time . ' WHERE sid=' . $row['sid'];
+					if ($update_time == $new_vid) ++$update_time;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET weight=' . $update_time . ' WHERE sid=' . $row['sid'];
 					$db->query($sql);
 				}
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET update_time=' . $new_vid . ' WHERE sid=' . $sid;
+				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET weight=' . $new_vid . ' WHERE sid=' . $sid;
 				$db->query($sql);
 				$content = 'OK_' . $sid;
 			}
@@ -240,18 +254,18 @@ if(defined('NV_IS_USER')){
 			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
 			if ($sid > 0 and $delete_checkss == md5($sid . NV_CACHE_PREFIX . $client_info['session_id'])) {
 				$update_time=0;
-				$sql = 'SELECT update_time FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE sid =' . $db->quote($sid);
+				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE sid =' . $db->quote($sid);
 				$result = $db->query($sql);
 				list($update_time) = $result->fetch(3);
-				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service  WHERE sid = ' . $db->quote($sid));
+				$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET status_del=1, weight =0 WHERE sid=' . intval($sid));
+				//$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service  WHERE sid = ' . $db->quote($sid));
 				if ($update_time > 0)         {
-					$sql = 'SELECT sid, update_time FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE update_time >' . $update_time;
+					$sql = 'SELECT sid, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service WHERE weight >' . $update_time;
 					$result = $db->query($sql);
 					while (list($sid, $update_time) = $result->fetch(3))
 					{
 						$update_time--;
-						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET update_time=' . $update_time . ' WHERE sid=' . intval($sid));
+						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET weight=' . $update_time . ' WHERE sid=' . intval($sid));
 					}
 				}
 				$nv_Cache->delMod($module_name);
@@ -289,7 +303,7 @@ if(defined('NV_IS_USER')){
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('update_time ASC')
+				->order('weight ASC')
 				->limit($per_page)
 				->offset(($page - 1) * $per_page);
 			$sth = $db->prepare($db->sql());
@@ -323,17 +337,20 @@ if(defined('NV_IS_USER')){
 					$xtpl->assign('WEIGHT', array(
 						'key' => $i,
 						'title' => $i,
-						'selected' => ($i == $view['update_time']) ? ' selected="selected"' : ''));
+						'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
 					$xtpl->parse('main.view.loop.update_time_loop');
 				}
 				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['catid'] = $array_catid_lease[$view['catid']]['title'];
-				$view['unitid'] = $array_unitid_lease[$view['unitid']]['title'];
-				$view['chargeid'] = $array_chargeid_lease[$view['chargeid']]['title'];
+				$view['price_vnd_format'] = number_format($view['price_vnd']);
+				$view['price_usd_format'] = number_format($view['price_usd']);
+				$view['servicecat'] = $array_catid_lease[$view['catid']]['title'];
+				$view['unitname'] = $array_unitid_lease[$view['unitid']]['title'];
+				$view['chargename'] = $array_chargeid_lease[$view['chargeid']]['title'];
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;sid=' . $view['sid'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_sid=' . $view['sid'] . '&amp;delete_checkss=' . md5($view['sid'] . NV_CACHE_PREFIX . $client_info['session_id']);
 				$xtpl->assign('VIEW', $view);
-				$xtpl->parse('main.view.loop');
+				if($view['status_del'] == 0 )
+					$xtpl->parse('main.view.loop');
 			}
 			$xtpl->parse('main.view');
 		}

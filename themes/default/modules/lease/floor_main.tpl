@@ -2,103 +2,97 @@
 <!-- BEGIN: view -->
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
-
-<div class="well" style="display:none">
-<form action="{NV_BASE_SITEURL}index.php" method="get">
-    <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-    <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-    <input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-    <div class="row">
-        <div class="col-xs-24 col-md-6">
-            <div class="form-group">
-                <input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-3">
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-            </div>
-        </div>
-    </div>
-</form>
-</div>
-
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
 	<div class="breadcrumb-title pr-3">{LANG.floor}</div>
 	<div class="pl-3">
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb mb-0 p-0">
-					<li class="breadcrumb-item">
-						<a href="/"><i class='bx bx-home-alt'></i></a>
-					</li>
-					<li class="breadcrumb-item active" aria-current="page">{LANG.floor}</li>
-				</ol>
-			</nav>
-		</div>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb mb-0 p-0">
+				<li class="breadcrumb-item">
+					<a href="/"><i class='bx bx-home-alt'></i></a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">{LANG.floor}</li>
+			</ol>
+		</nav>
+	</div>
 	<div class="ml-auto">
-			<div class="btn-group">
-				<a type="button" class="btn btn-primary" href="{FLOOR_ADD}">{LANG.add}</a>
-				
-			</div>
-		</div>
-</div>
-
-<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-
-	<div class="card">
-		<div class="card-body">
-			<div class="card-title">
-				<h4 class="mb-0">{LANG.floor}</h4>
-			</div>
-			<hr/>				
-			<div class="table-responsive">
-				<table id="example" class="table table-striped table-bordered table-hover">
-					<thead>
-						<tr>
-							<th class="w50">{LANG.number}</th>
-							<th>{LANG.title}</th>
-							<th>{LANG.area}</th>
-							<th>{LANG.common_area}</th>
-							<th>{LANG.area_for_rent}</th>
-							<th>{LANG.rent_status1}</th>
-							<th class="w100 text-center">{LANG.active}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- BEGIN: loop -->
-						<tr>
-							<td>
-								<select class="form-control" id="id_weight_{VIEW.fid}" onchange="nv_change_weight('{VIEW.fid}');">
-								<!-- BEGIN: update_time_loop -->
-									<option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
-								<!-- END: update_time_loop -->
-								</select>
-							</td>
-							<td> {VIEW.title} </td>
-							<td> {VIEW.area} </td>
-							<td> {VIEW.common_area} </td>
-							<td> {VIEW.area_for_rent} </td>
-							<td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.fid}" value="{VIEW.fid}" {CHECK} onclick="nv_change_status({VIEW.fid});" /></td>
-							<td class="text-center"><i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a></td>
-						</tr>
-						<!-- END: loop -->
-					</tbody>
-					<tfoot>
-						<tr>
-							<th class="w50">{LANG.number}</th>
-							<th>{LANG.title}</th>
-							<th>{LANG.area}</th>
-							<th>{LANG.common_area}</th>
-							<th>{LANG.area_for_rent}</th>
-							<th>{LANG.rent_status1}</th>
-							<th class="w100 text-center">{LANG.active}</th>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
+		<div class="btn-group">
+			<a type="button" class="btn btn-primary" href="{FLOOR_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
-</form>
+</div>
+<div class="card radius-15">
+	<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
+		<div class="card">
+			<div class="card-body">
+				<div class="card-title">
+					<h4 class="mb-0">{LANG.floor}</h4>
+				</div>
+				<hr/>				
+				<div class="table-responsive">
+					<div class="dataTables_wrapper dt-bootstrap4">
+						<table id="datatable" class="table table-striped table-bordered dataTable">
+							<thead class="thead-dark">
+								<tr>
+									<th class="w50">{LANG.number}</th>
+									<th class="w100 text-center">{LANG.active}</th>
+									<th>{LANG.title}</th>
+									<th>{LANG.title_en}</th>
+									<th>{LANG.area}</th>
+									<th>{LANG.common_area}</th>
+									<th>{LANG.area_for_rent}</th>
+									<th>{LANG.rent_status1}</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								<!-- BEGIN: loop -->
+								<tr>
+									<td>
+										<select class="form-control" id="id_weight_{VIEW.fid}" onchange="nv_change_weight('{VIEW.fid}');">
+										<!-- BEGIN: update_time_loop -->
+											<option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
+										<!-- END: update_time_loop -->
+										</select>
+									</td>
+									<td class="text-center">
+										<a class="large-icons-btn btn btn-primary" href="{VIEW.link_edit}#edit" data-toggle="tooltip" data-placement="top" title="{LANG.edit}" data-original-title="{LANG.edit}"><i class="lni lni-pencil"></i></a>&nbsp;&nbsp;
+										<a class="large-icons-btn btn btn-danger" href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);" data-toggle="tooltip" data-placement="top" title="{LANG.delete}" data-original-title="{LANG.delete}"><i class="lni lni-trash"></i>
+										</a>
+									</td>
+									<td>(ID : {VIEW.fid}) {VIEW.title_vi}  </td>
+									<td> {VIEW.title_en} </td>
+									<td> {VIEW.area_format} {LANG.m2}</td>
+									<td> {VIEW.common_area_format} {LANG.m2}</td>
+									<td> {VIEW.area_for_rent_format} {LANG.m2}</td>
+
+									<td class="text-center">
+										<div class="custom-control custom-switch">
+											<input class="custom-control-input" type="checkbox" name="active" id="change_status_{VIEW.fid}" value="{VIEW.fid}" {CHECK} onclick="nv_change_status({VIEW.fid});" /><label class="custom-control-label" for="change_status_{VIEW.fid}"data-toggle="tooltip" data-placement="top" title="Tắt/Mở" data-original-title="Tắt/Mở"></label>
+										</div>
+									</td>
+									
+								</tr>
+								<!-- END: loop -->
+							</tbody>
+							<tfoot>
+								<tr>
+									<th class="w50">{LANG.number}</th>
+									<th>{LANG.title}</th>
+									<th>{LANG.title_en}</th>
+									<th>{LANG.area}</th>
+									<th>{LANG.common_area}</th>
+									<th>{LANG.area_for_rent}</th>
+									<th>{LANG.rent_status1}</th>
+									<th class="w100 text-center">{LANG.active}</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
 <!-- END: view -->
 
 <script type="text/javascript">
@@ -138,17 +132,12 @@
 
 //]]>
 </script>
-
-	<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-	<script>
-		$(document).ready(function () {
-			//Default data table
-			$('#example').DataTable();
-		});
-	</script>
-
-
-
-
-
+<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function () {
+	//Default data table
+	$('#datatable').DataTable();
+	
+});
+</script>
 <!-- END: main -->

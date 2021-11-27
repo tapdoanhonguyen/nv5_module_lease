@@ -34,3 +34,5 @@ $lang_module['error_required_title'] = 'Lỗi: bạn cần nhập dữ liệu ch
 //Lang for function unit
 $lang_module['search_title'] = 'Nhập từ khóa tìm kiếm';
 $lang_module['search_submit'] = 'Tìm kiếm';
+$lang_module['api_users'] = 'API';
+$lang_module['api_users_GetService'] = 'GetService';

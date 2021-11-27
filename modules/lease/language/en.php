@@ -251,3 +251,78 @@ $lang_module['error_required_fax'] = 'Error: Required fields enter the Fax';
 
 //Lang for function rate_add
 $lang_module['rate_add'] = 'rate_add';
+
+//Lang for function debitnotextra
+$lang_module['debitnotextra'] = 'debitnotextra';
+$lang_module['debitnoteid'] = 'Debitnoteid';
+$lang_module['adddate'] = 'Adddate';
+$lang_module['serviceid'] = 'Serviceid';
+$lang_module['exchangeid'] = 'Exchangeid';
+$lang_module['price_vi'] = 'Price vi';
+$lang_module['price_en'] = 'Price en';
+$lang_module['total_vi'] = 'Total vi';
+$lang_module['total_en'] = 'Total en';
+
+//Lang for function debitnotemoney
+$lang_module['debitnotemoney'] = 'debitnotemoney';
+
+//Lang for function users
+$lang_module['users'] = 'users';
+$lang_module['userid'] = 'Userid';
+
+//Lang for function users_add
+$lang_module['users_add'] = 'users_add';
+
+//Lang for function usersign
+$lang_module['usersign'] = 'usersign';
+$lang_module['sign_vi'] = 'Sign vi';
+$lang_module['image_sign_vi'] = 'Image sign vi';
+$lang_module['sign_en'] = 'Sign en';
+$lang_module['image_sign_en'] = 'Image sign en';
+
+//Lang for function receipt
+$lang_module['receipt'] = 'receipt';
+$lang_module['year'] = 'Year';
+
+//Lang for function invoice
+$lang_module['invoice'] = 'invoice';
+
+//Lang for function dept
+$lang_module['dept'] = 'dept';
+$lang_module['customerid'] = 'Customerid';
+$lang_module['customername'] = 'Customername';
+
+//Lang for function permission
+$lang_module['permission'] = 'permission';
+$lang_module['groupid'] = 'Groupid';
+$lang_module['error_required_groupid'] = 'Error: Required fields enter the Groupid';
+
+//Lang for function contractinfo
+$lang_module['contractinfo'] = 'contractinfo';
+$lang_module['contractid'] = 'Contractid';
+$lang_module['productid'] = 'Productid';
+$lang_module['datedocument'] = 'Datedocument';
+$lang_module['feedatefrom'] = 'Feedatefrom';
+$lang_module['feedateto'] = 'Feedateto';
+$lang_module['fee_vi'] = 'Fee vi';
+$lang_module['fee_en'] = 'Fee en';
+$lang_module['status_del'] = 'Status del';
+$lang_module['update_time'] = 'Update time';
+$lang_module['error_required_contractid'] = 'Error: Required fields enter the Contractid';
+$lang_module['error_required_productid'] = 'Error: Required fields enter the Productid';
+$lang_module['error_required_customerid'] = 'Error: Required fields enter the Customerid';
+$lang_module['error_required_serviceid'] = 'Error: Required fields enter the Serviceid';
+$lang_module['error_required_yearmonth'] = 'Error: Required fields enter the Yearmonth';
+$lang_module['error_required_datedocument'] = 'Error: Required fields enter the Datedocument';
+$lang_module['error_required_price_vi'] = 'Error: Required fields enter the Price vi';
+$lang_module['error_required_price_en'] = 'Error: Required fields enter the Price en';
+$lang_module['error_required_fee_vi'] = 'Error: Required fields enter the Fee vi';
+$lang_module['error_required_fee_en'] = 'Error: Required fields enter the Fee en';
+
+//Lang for function pergroups
+$lang_module['pergroups'] = 'pergroups';
+
+//Lang for function func
+$lang_module['func'] = 'func';
+$lang_module['funccode'] = 'Funccode';
+$lang_module['error_required_funccode'] = 'Error: Required fields enter the Funccode';

@@ -1,6 +1,5 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: view -->
-
 <div class="well" style="display:none">
 <form action="{NV_BASE_SITEURL}index.php" method="get">
     <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
@@ -21,95 +20,95 @@
 </form>
 </div>
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
-<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
-
-		
+<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">	
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
-	<div class="breadcrumb-title pr-3">Sản phẩm</div>
+	<div class="breadcrumb-title pr-3">{LANG.product}</div>
 	<div class="pl-3">
-							<nav aria-label="breadcrumb">
-								<ol class="breadcrumb mb-0 p-0">
-									<li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt'></i></a>
-									</li>
-									<li class="breadcrumb-item active" aria-current="page">{LANG.product}</li>
-								</ol>
-							</nav>
-						</div>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb mb-0 p-0">
+				<li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt'></i></a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">{LANG.product}</li>
+			</ol>
+		</nav>
+	</div>
 	<div class="ml-auto">
-							<div class="btn-group">
-								<a type="button" class="btn btn-primary" href="{PRODUCT_ADD}">{LANG.product_add}</a> 
-								<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
-								</button>
-								<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
-									<a class="dropdown-item" href="{PRODUCT_IMPORT}">{LANG.product_import}</a>
-									<a class="dropdown-item" href="{PRODUCT_EXPORT}">{LANG.product_export}</a>
-									<div class="dropdown-divider"></div>	
-								</div>
-							</div>
-						</div>
-</div>
-		
-		<div class="card">
-			<div class="card-body">
-				<div class="card-title">
-					<h4 class="mb-0">{LANG.product}</h4>
-				</div>
-				<hr/>	
-				<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-					<div class="table-responsive">
-						<table id="example" class="table table-striped table-bordered" style="width:100%">
-									<thead>
-										<tr>
-											<th>{LANG.title_product}</th>
-											<th>{LANG.fid}</th>
-											<th>{LANG.area}</th>
-											<th>{LANG.price_usd_min_max}</th>
-											<th>{LANG.price_vnd_min_max}</th>
-											<th>{LANG.rent_status}</th>
-											<th>{LANG.rent_status1}</th>
-											<th class="text-center">{LANG.active}</th>
-										</tr>
-									</thead>
-									<tbody>
-										<!-- BEGIN: loop -->
-										<tr>
-											<td> <a href ="{VIEW.link_view}" >{VIEW.title}</a> </td>
-											<td>{VIEW.fid}</td>
-											<td>{VIEW.area}</td>
-											<td> 				  				            {VIEW.price_usd_min} $- {VIEW.price_usd_max} $
-											</td>
-											<td>{VIEW.price_vnd_min} đ - {VIEW.price_vnd_max} đ</td>
-											<td>{VIEW.rent_status}</td>
-											<td class="text-center">
-												<input type="checkbox" name="active" id="change_status_{VIEW.pid}" value="{VIEW.pid}" {CHECK} onclick="nv_change_status({VIEW.pid});" />
-											</td>
-											<td class="text-center">
-												<i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a>
-											</td>
-										</tr>
-										 <!-- END: loop -->
-									</tbody>
-									<tfoot>
-										<tr>
-											<th>{LANG.title_product}</th>
-											<th>{LANG.fid}</th>
-											<th>{LANG.area}</th>
-											<th>{LANG.price_usd_min_max}</th>
-											<th>{LANG.price_vnd_min_max}</th>
-											<th>{LANG.rent_status}</th>
-											<th>{LANG.rent_status1}</th>
-											<th class="text-center">{LANG.active}</th>
-										</tr>
-									</tfoot>
-						</table>
-				</div>
-				</form>
+		<div class="btn-group">
+			<a type="button" class="btn btn-primary" href="{PRODUCT_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.product_add}</a> 
+			<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
+			</button>
+			<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+				<a class="dropdown-item" href="{PRODUCT_IMPORT}">{LANG.product_import}</a>
+				<a class="dropdown-item" href="{PRODUCT_EXPORT}">{LANG.product_export}</a>
 			</div>
-		</div>	
-    
+		</div>
+	</div>
+</div>
+<div class="card">
+	<div class="card-body">
+		<div class="card-title">
+			<h4 class="mb-0">{LANG.product}</h4>
+		</div>
+		<hr/>	
+		<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
+			<div class="table-responsive">
+				<div class="dataTables_wrapper dt-bootstrap4">
+					<table id="datatable" class="table table-striped table-bordered dataTable">
+						<thead class="thead-dark">
+							<tr>
+								<th class="text-center">{LANG.weight}</th>
+								<th class="text-center">{LANG.active}</th> 
+								<th>{LANG.productcode}</th>
+								<th>{LANG.title_product_vi}</th>
+								<th>{LANG.title_product_en}</th>
+								<th>{LANG.fid}</th>
+								<th>{LANG.area}</th>
+								<th>{LANG.rent_status}</th>
+								<th>{LANG.rent_status1}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- BEGIN: loop -->
+							<tr>
+								<td>{VIEW.weight}</td>
+								<td class="text-center">
+									<a class="large-icons-btn btn btn-primary" href="{VIEW.link_edit}#edit" data-toggle="tooltip" data-placement="top" title="{LANG.edit}" data-original-title="{LANG.edit}"><i class="lni lni-pencil"></i></a>&nbsp;&nbsp;
+									<a class="large-icons-btn btn btn-danger" href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);" data-toggle="tooltip" data-placement="top" title="{LANG.delete}" data-original-title="{LANG.delete}"><i class="lni lni-trash"></i></a>
+								</td>
+								<td> <a href ="{VIEW.link_view}" >(ID {VIEW.pid}):{VIEW.productcode}</a> </td>
+								<td> <a href ="{VIEW.link_view}" >{VIEW.title_vi}</a> </td>
+								<td> <a href ="{VIEW.link_view}" >{VIEW.title_en}</a> </td>
+								<td>{VIEW.floorname}</td>
+								<td>{VIEW.area_format} {LANG.m2}</td>
+								<td>{VIEW.rent_status}</td>
+								<td class="text-center">
+									<div class="custom-control custom-switch">
+										<input class="custom-control-input" type="checkbox" name="active" id="change_status_{VIEW.pid}" value="{VIEW.pid}" {CHECK} onclick="nv_change_status({VIEW.pid});" /><label class="custom-control-label" for="change_status_{VIEW.pid}" data-toggle="tooltip" data-placement="top" title="Tắt/Mở" data-original-title="Tắt/Mở"></label>
+									</div>
+								</td>
+							</tr>
+							 <!-- END: loop -->
+						</tbody>
+						<tfoot>
+							<tr>
+								<th class="text-center">{LANG.weight}</th>
+								<th class="text-center">{LANG.active}</th>
+								<th>{LANG.productcode}</th>
+								<th>{LANG.title_product_vi}</th>
+								<th>{LANG.title_product_en}</th>
+								<th>{LANG.fid}</th>
+								<th>{LANG.area}</th>
+								<th>{LANG.rent_status}</th>
+								<th>{LANG.rent_status1}</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>	
 <!-- END: view -->
-
-
 <script type="text/javascript">
 //<![CDATA[
     function nv_change_weight(id) {
@@ -125,8 +124,6 @@
         });
         return;
     }
-
-
     function nv_change_status(id) {
         var new_status = $('#change_status_' + id).is(':checked') ? true : false;
         if (confirm(nv_is_change_act_confirm[0])) {
@@ -146,19 +143,15 @@
 	function add_product() {
         window.location.href = '{PRODUCT_ADD}';
     }
-
+ 
 //]]>
 </script>
-<script>
-		$(document).ready(function () {
-			//Default data table
-			$('#example').DataTable();
-			
-		});
-		
-</script>
-
 <script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-
-
+<script>
+$(document).ready(function () {
+	//Default data table
+	$('#datatable').DataTable();
+	
+});
+</script>
 <!-- END: main -->

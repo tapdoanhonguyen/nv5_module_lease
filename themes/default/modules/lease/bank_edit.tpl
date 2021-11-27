@@ -1,77 +1,98 @@
 <!-- BEGIN: main -->
-<!-- BEGIN: view -->
-<div class="well">
-<form action="{NV_BASE_SITEURL}index.php" method="get">
-    <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-    <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-    <input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-    <div class="row">
-        <div class="col-xs-24 col-md-6">
-            <div class="form-group">
-                <input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-3">
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-            </div>
-        </div>
-    </div>
-</form>
-</div>
-<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th class="w100">{LANG.weight}</th>
-                    <th>{LANG.vi_bank_number}</th>
-                    <th>{LANG.en_bank_number}</th>
-                    <th>{LANG.vi_bank_account_holder}</th>
-                    <th>{LANG.en_bank_account_holder}</th>
-                    <th>{LANG.vi_bank_name}</th>
-                    <th>{LANG.en_bank_name}</th>
-                    <th>{LANG.vi_address}</th>
-                    <th>{LANG.en_address}</th>
-                    <th>{LANG.swiftcode}</th>
-                    <th class="w100 text-center">{LANG.active}</th>
-                    <th class="w150">&nbsp;</th>
-                </tr>
-            </thead>
-            <!-- BEGIN: generate_page -->
-            <tfoot>
-                <tr>
-                    <td class="text-center" colspan="12">{NV_GENERATE_PAGE}</td>
-                </tr>
-            </tfoot>
-            <!-- END: generate_page -->
-            <tbody>
-                <!-- BEGIN: loop -->
-                <tr>
-                    <td>
-                        <select class="form-control" id="id_weight_{VIEW.id}" onchange="nv_change_weight('{VIEW.id}');">
-                        <!-- BEGIN: weight_loop -->
-                            <option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
-                        <!-- END: weight_loop -->
-                    </select>
-                </td>
-                    <td> {VIEW.vi_bank_number} </td>
-                    <td> {VIEW.en_bank_number} </td>
-                    <td> {VIEW.vi_bank_account_holder} </td>
-                    <td> {VIEW.en_bank_account_holder} </td>
-                    <td> {VIEW.vi_bank_name} </td>
-                    <td> {VIEW.en_bank_name} </td>
-                    <td> {VIEW.vi_address} </td>
-                    <td> {VIEW.en_address} </td>
-                    <td> {VIEW.swiftcode} </td>
-                    <td class="text-center"><input type="checkbox" name="active" id="change_status_{VIEW.id}" value="{VIEW.id}" {CHECK} onclick="nv_change_status({VIEW.id});" /></td>
-                    <td class="text-center"><i class="fa fa-edit fa-lg">&nbsp;</i> <a href="{VIEW.link_edit}#edit">{LANG.edit}</a> - <em class="fa fa-trash-o fa-lg">&nbsp;</em> <a href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);">{LANG.delete}</a></td>
-                </tr>
-                <!-- END: loop -->
-            </tbody>
-        </table>
-    </div>
-</form>
-<!-- END: view -->
 
+<link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
+<div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
+	<div class="breadcrumb-title pr-3">{LANG.bank}</div>
+	<div class="pl-3">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb mb-0 p-0">
+					<li class="breadcrumb-item">
+						<a href="/"><i class='bx bx-home-alt'></i></a>
+					</li>
+					<li class="breadcrumb-item" aria-current="page">{LANG.bank}</li>
+					<li class="breadcrumb-item active" aria-current="page">{LANG.bank_edit}</li>
+				</ol>
+			</nav>
+		</div>
+	<div class="ml-auto">
+			<div class="btn-group">
+				<a type="button" class="btn btn-primary" href="{bank_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+				
+			</div>
+		</div>
+</div>
+
+
+<div class="card radius-15">
+	<div class="card-body">
+		<div class="card-title">
+			<h4 class="mb-0">{LANG.bank_edit}</h4>
+		</div>
+		<hr/>	
+		<!-- BEGIN: error -->
+		<div class="alert alert-warning">{ERROR}</div>
+		<!-- END: error -->
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/edit" method="post">
+					<input type="hidden" name="id" value="{ROW.id}" />
+					<div class="form-row">
+						<div class="col-md-12 mb-3">
+							<label>{LANG.companyid}</label>
+							<select class="form-control" name="companyid">
+								<option value=""> --- </option>
+								<!-- BEGIN: select_companyid -->
+								<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
+								<!-- END: select_companyid -->
+							</select>
+						</div>
+						<div class="col-md-6 mb-3">
+							<label>{LANG.vi_bank_number}</label>
+							<input class="form-control" type="text" name="vi_bank_number" value="{ROW.vi_bank_number}" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label>{LANG.vi_bank_account_holder}</label>
+							<input class="form-control" type="text" name="vi_bank_account_holder" value="{ROW.vi_bank_account_holder}" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label>{LANG.vi_bank_name}</label>
+							<input class="form-control" type="text" name="vi_bank_name" value="{ROW.vi_bank_name}" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label>{LANG.vi_address}</label>
+							<input class="form-control" type="text" name="vi_address" value="{ROW.vi_address}" />
+						</div>
+						<div class="col-md-6 mb-3">
+							<label>{LANG.en_bank_number}</label>
+							<input class="form-control" type="text" name="en_bank_number" value="{ROW.en_bank_number}" />
+						</div>
+						
+						<div class="col-md-6 mb-3">
+							<label>{LANG.en_bank_account_holder}</label>
+							<input class="form-control" type="text" name="en_bank_account_holder" value="{ROW.en_bank_account_holder}" />
+						</div>
+						
+						<div class="col-md-6 mb-3">
+							<label>{LANG.en_bank_name}</label>
+							<input class="form-control" type="text" name="en_bank_name" value="{ROW.en_bank_name}" />
+						</div>
+						
+						<div class="col-md-6 mb-3">
+							<label>{LANG.en_address}</label>
+							<input class="form-control" type="text" name="en_address" value="{ROW.en_address}" />
+						</div>
+						<div class="col-md-12 mb-3">
+							<label>{LANG.swiftcode}</label>
+							<input class="form-control" type="text" name="swiftcode" value="{ROW.swiftcode}" pattern="^[0-9]*$"  oninvalid="setCustomValidity(nv_digits)" oninput="setCustomValidity('')" />
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-primary" name="submit" type="submit"><i class="lni lni-save mrg-r-5"></i>{LANG.save}</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- END: main -->

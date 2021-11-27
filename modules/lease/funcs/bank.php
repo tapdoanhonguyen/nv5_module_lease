@@ -11,7 +11,7 @@
 
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
-if(defined('NV_IS_USER')){
+if(defined('NV_IS_USER') && $permission[$op]){
 	if($array_op[1] == "") {
 		$action = "main";
 	}elseif($array_op[1] == "alias"){
@@ -84,18 +84,18 @@ if(defined('NV_IS_USER')){
 						$row['userid_edit'] = 0;
 						$row['update_date'] = 0;
 
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_bank (companyid, vi_bank_number, en_bank_number, vi_bank_account_holder, en_bank_account_holder, vi_bank_name, en_bank_name, vi_address, en_address, swiftcode, active, adminid, crtd_date, weight, sort, userid_edit, update_date) VALUES (:companyid, :vi_bank_number, :en_bank_number, :vi_bank_account_holder, :en_bank_account_holder, :vi_bank_name, :en_bank_name, :vi_address, :en_address, :swiftcode, :active, :adminid, :crtd_date, :weight, :sort, :userid_edit, :update_date)');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_bank (companyid, vi_bank_number, en_bank_number, vi_bank_account_holder, en_bank_account_holder, vi_bank_name, en_bank_name, vi_address, en_address, swiftcode, active, adminid, crtd_date, weight, sort, userid_edit, update_date) VALUES (:companyid, :vi_bank_number, :en_bank_number, :vi_bank_account_holder, :en_bank_account_holder, :vi_bank_name, :en_bank_name, :vi_address, :en_address, :swiftcode, :active, ' . $user_info['userid'] . ', ' . NV_CURRENTTIME . ', :weight, :sort, ' . $user_info['userid'] . ', ' . NV_CURRENTTIME . ')');
 
 						$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
 						$stmt->bindParam(':adminid', $row['adminid'], PDO::PARAM_INT);
 						$stmt->bindParam(':crtd_date', $row['crtd_date'], PDO::PARAM_INT);
-						$stmt->bindParam(':weight', $row['weight'], PDO::PARAM_INT);
+						$weight = $db->query('SELECT max(weight) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank')->fetchColumn();
+						$weight = intval($weight) + 1;
+						$stmt->bindParam(':weight', $weight, PDO::PARAM_INT);
 						$stmt->bindParam(':sort', $row['sort'], PDO::PARAM_INT);
-						$stmt->bindParam(':userid_edit', $row['userid_edit'], PDO::PARAM_INT);
-						$stmt->bindParam(':update_date', $row['update_date'], PDO::PARAM_INT);
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET companyid = :companyid, vi_bank_number = :vi_bank_number, en_bank_number = :en_bank_number, vi_bank_account_holder = :vi_bank_account_holder, en_bank_account_holder = :en_bank_account_holder, vi_bank_name = :vi_bank_name, en_bank_name = :en_bank_name, vi_address = :vi_address, en_address = :en_address, swiftcode = :swiftcode WHERE id=' . $row['id']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET companyid = :companyid, vi_bank_number = :vi_bank_number, en_bank_number = :en_bank_number, vi_bank_account_holder = :vi_bank_account_holder, en_bank_account_holder = :en_bank_account_holder, vi_bank_name = :vi_bank_name, en_bank_name = :en_bank_name, vi_address = :vi_address, en_address = :en_address, swiftcode = :swiftcode, userid_edit = ' . $user_info['userid'] . ', update_date = ' . NV_CURRENTTIME . '  WHERE id=' . $row['id']);
 					}
 					$stmt->bindParam(':companyid', $row['companyid'], PDO::PARAM_INT);
 					$stmt->bindParam(':vi_bank_number', $row['vi_bank_number'], PDO::PARAM_STR);
@@ -112,9 +112,9 @@ if(defined('NV_IS_USER')){
 					if ($exc) {
 						$nv_Cache->delMod($module_name);
 						if (empty($row['id'])) {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Bank_add', ' ', $admin_info['userid']);
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Bank_add', ' ', $user_info['userid']);
 						} else {
-							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Bank_add', 'ID: ' . $row['id'], $admin_info['userid']);
+							nv_insert_logs(NV_LANG_DATA, $module_name, 'Edit Bank_add', 'ID: ' . $row['id'], $user_info['userid']);
 						}
 						nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
 					}
@@ -188,7 +188,7 @@ if(defined('NV_IS_USER')){
 			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
 			$content = 'NO_' . $id;
 			if ($new_vid > 0)     {
-				$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id!=' . $id . ' ORDER BY weight ASC';
+				$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id!=' . $id . ' AND weight != 0 ORDER BY weight ASC';
 				$result = $db->query($sql);
 				$weight = 0;
 				while ($row = $result->fetch())
@@ -215,8 +215,8 @@ if(defined('NV_IS_USER')){
 				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE id =' . $db->quote($id);
 				$result = $db->query($sql);
 				list($weight) = $result->fetch(3);
-				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank  WHERE id = ' . $db->quote($id));
+					$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_bank SET status_del = 1, userid_del = ' . $user_info['userid'] . ', time_del = ' . NV_CURRENTTIME . ' WHERE cid = ' . $db->quote($cid));
+				//$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank  WHERE id = ' . $db->quote($id));
 				if ($weight > 0)         {
 					$sql = 'SELECT id, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_bank WHERE weight >' . $weight;
 					$result = $db->query($sql);

@@ -31,17 +31,54 @@
 						</div>
 </div>
 		
-		<div class="card">
-			<div class="card-body">
-				<div class="card-title">
-					<h4 class="mb-0">{LANG.product} : {ROW.title}  </h4>
-				</div>
-				<hr/>	
-				{LANG.develop}
-			</div>
-		</div>	
-    
-<!-- END: view -->
 
+    
+		
+<div class="card radius-15">
+	<div class="card-body">
+		<div class="card-title">
+					<h4 class="mb-0">{LANG.product_view} : {ROW.title} </h4>
+				</div>
+			<hr/>	
+
+			<div class="form-row">
+				<div class="col-md-6 mb-3">
+					<label >{LANG.title_product} : {ROW.title}
+				</div>
+
+			</div>
+			<div class="form-row">
+				<div class="col-md-6 mb-3">
+						{LANG.fid} : {ROW.fid}
+
+				</div>
+				<div class="col-md-6 mb-3">
+					{LANG.area} :{ROW.area}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-3 mb-3">
+					{LANG.price_usd} : {ROW.price_usd_min} - {ROW.price_usd_max}
+				</div>
+				<div class="col-md-3 mb-3">
+					{LANG.price_vnd} : {ROW.price_vnd_min} - {ROW.price_vnd_max}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-12 mb-3">		
+					<strong>{LANG.image}</strong>:
+					<img src="{ROW.image}" />
+				</div>	
+			</div>	
+			<div class="form-row">
+				<div class="col-md-12 mb-3">
+					<strong>{LANG.note}</strong>:
+					<div>
+						{ROW.note}        
+					</div>
+				</div>
+			</div>
+	</div>
+</div>
 
 <!-- END: main -->
