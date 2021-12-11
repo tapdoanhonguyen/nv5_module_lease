@@ -3,7 +3,7 @@
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
-	<div class="breadcrumb-title pr-3">{LANG.floor}</div>
+	<div class="breadcrumb-title pr-3">Tầng</div>
 	<div class="pl-3">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb mb-0 p-0">
@@ -16,7 +16,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{FLOOR_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{FLOOR_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -28,13 +28,13 @@
 					<h4 class="mb-0">{LANG.floor}</h4>
 				</div>
 				<hr/>				
-				<div class="table-responsive">
+				
 					<div class="dataTables_wrapper dt-bootstrap4">
 						<table id="datatable" class="table table-striped table-bordered dataTable">
 							<thead class="thead-dark">
 								<tr>
-									<th class="w50">{LANG.number}</th>
-									<th class="w100 text-center">{LANG.active}</th>
+									<th>{LANG.number}</th>
+									<th>{LANG.func}</th>
 									<th>{LANG.title}</th>
 									<th>{LANG.title_en}</th>
 									<th>{LANG.area}</th>
@@ -74,18 +74,7 @@
 								</tr>
 								<!-- END: loop -->
 							</tbody>
-							<tfoot>
-								<tr>
-									<th class="w50">{LANG.number}</th>
-									<th>{LANG.title}</th>
-									<th>{LANG.title_en}</th>
-									<th>{LANG.area}</th>
-									<th>{LANG.common_area}</th>
-									<th>{LANG.area_for_rent}</th>
-									<th>{LANG.rent_status1}</th>
-									<th class="w100 text-center">{LANG.active}</th>
-								</tr>
-							</tfoot>
+							
 						</table>
 					</div>
 				</div>
@@ -132,12 +121,5 @@
 
 //]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function () {
-	//Default data table
-	$('#datatable').DataTable();
-	
-});
-</script>
+
 <!-- END: main -->

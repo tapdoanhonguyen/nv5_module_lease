@@ -178,11 +178,5 @@
 	
 	//]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-	$(document).ready(function () {
-		//Default data table
-		$('#datatable').DataTable();
-	});
-</script>
+
 <!-- END: main -->

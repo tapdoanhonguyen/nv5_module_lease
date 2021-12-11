@@ -10,14 +10,13 @@
 					<li class="breadcrumb-item">
 						<a href="/"><i class='bx bx-home-alt'></i></a>
 					</li>
-					<li class="breadcrumb-item" aria-current="page">{LANG.bank}</li>
 					<li class="breadcrumb-item active" aria-current="page">{LANG.bank_edit}</li>
 				</ol>
 			</nav>
 		</div>
 	<div class="ml-auto">
 			<div class="btn-group">
-				<a type="button" class="btn btn-primary" href="{bank_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+				<a type="button" class="btn btn-success" href="{bank_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 				
 			</div>
 		</div>
@@ -38,52 +37,54 @@
 				<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/edit" method="post">
 					<input type="hidden" name="id" value="{ROW.id}" />
 					<div class="form-row">
-						<div class="col-md-12 mb-3">
-							<label>{LANG.companyid}</label>
+						<div class="col-md-3 mb-3">
+							<label>Tên Công Ty <span class="red">(*)</span></label>
 							<select class="form-control" name="companyid">
-								<option value=""> --- </option>
+								<option value=""> - Chọn công ty- </option>
 								<!-- BEGIN: select_companyid -->
 								<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 								<!-- END: select_companyid -->
 							</select>
 						</div>
-						<div class="col-md-6 mb-3">
-							<label>{LANG.vi_bank_number}</label>
+					</div>
+					<div class="form-row">
+						<div class="col-md-3 mb-3">
+							<label>{LANG.vi_bank_number} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="vi_bank_number" value="{ROW.vi_bank_number}" />
 						</div>
-						<div class="col-md-6 mb-3">
-							<label>{LANG.vi_bank_account_holder}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.vi_bank_account_holder} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="vi_bank_account_holder" value="{ROW.vi_bank_account_holder}" />
 						</div>
-						<div class="col-md-6 mb-3">
-							<label>{LANG.vi_bank_name}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.vi_bank_name} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="vi_bank_name" value="{ROW.vi_bank_name}" />
 						</div>
-						<div class="col-md-6 mb-3">
-							<label>{LANG.vi_address}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.vi_address}<span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="vi_address" value="{ROW.vi_address}" />
 						</div>
-						<div class="col-md-6 mb-3">
-							<label>{LANG.en_bank_number}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.en_bank_number} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="en_bank_number" value="{ROW.en_bank_number}" />
 						</div>
 						
-						<div class="col-md-6 mb-3">
-							<label>{LANG.en_bank_account_holder}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.en_bank_account_holder} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="en_bank_account_holder" value="{ROW.en_bank_account_holder}" />
 						</div>
 						
-						<div class="col-md-6 mb-3">
-							<label>{LANG.en_bank_name}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.en_bank_name} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="en_bank_name" value="{ROW.en_bank_name}" />
 						</div>
 						
-						<div class="col-md-6 mb-3">
-							<label>{LANG.en_address}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.en_address} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="en_address" value="{ROW.en_address}" />
 						</div>
-						<div class="col-md-12 mb-3">
-							<label>{LANG.swiftcode}</label>
+						<div class="col-md-3 mb-3">
+							<label>{LANG.swiftcode} <span class="red">(*)</span></label>
 							<input class="form-control" type="text" name="swiftcode" value="{ROW.swiftcode}" pattern="^[0-9]*$"  oninvalid="setCustomValidity(nv_digits)" oninput="setCustomValidity('')" />
 						</div>
 					</div>

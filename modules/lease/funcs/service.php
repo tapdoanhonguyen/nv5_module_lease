@@ -75,6 +75,7 @@ if(defined('NV_IS_USER') && $permission[$op]){
 			$row['chargeid'] = $nv_Request->get_int('chargeid', 'post', 0);
 			$row['dailyreport'] = $nv_Request->get_int('dailyreport', 'post', 0);
 			$row['service_main'] = $nv_Request->get_int('service_main', 'post', 0);
+			$row['service_static'] = $nv_Request->get_int('service_static', 'post', 0);
 			$row['note'] = $nv_Request->get_editor('note', '', NV_ALLOWED_HTML_TAGS);
 
 			if (empty($row['title_vi'])) {
@@ -94,7 +95,7 @@ if(defined('NV_IS_USER') && $permission[$op]){
 						$row['crtd_date'] = 0;
 						$row['userid_edit'] = 0;
 
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service (title_vi, title_en, servicecode, service_main, catid, unitid, price_usd, price_vnd, chargeid, dailyreport, note, active, typein, weight, adminid, crtd_date, userid_edit, update_time) VALUES (:title_vi, :title_en, :servicecode, :service_main, :catid, :unitid, :price_usd, :price_vnd, :chargeid, :dailyreport, :note, :active, :typein, :weight, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ', ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service (title_vi, title_en, servicecode, service_main, service_static, catid, unitid, price_usd, price_vnd, chargeid, dailyreport, note, active, typein, weight, adminid, crtd_date, userid_edit, update_time) VALUES (:title_vi, :title_en, :servicecode, :service_main, :service_static, :catid, :unitid, :price_usd, :price_vnd, :chargeid, :dailyreport, :note, :active, :typein, :weight, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ', ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');
 
 						$stmt->bindValue(':active', 1, PDO::PARAM_INT);
 
@@ -104,10 +105,11 @@ if(defined('NV_IS_USER') && $permission[$op]){
 
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET title_vi = :title_vi, title_en = :title_en, servicecode = :servicecode, service_main = :service_main, catid = :catid, unitid = :unitid, price_usd = :price_usd, price_vnd = :price_vnd, chargeid = :chargeid, dailyreport = :dailyreport, typein = :typein, note = :note, userid_edit = ' . $user_info['userid'] . ', update_time = ' .  NV_CURRENTTIME. ' WHERE sid=' . $row['sid']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service SET title_vi = :title_vi, title_en = :title_en, servicecode = :servicecode, service_main = :service_main, service_static = :service_static, catid = :catid, unitid = :unitid, price_usd = :price_usd, price_vnd = :price_vnd, chargeid = :chargeid, dailyreport = :dailyreport, typein = :typein, note = :note, userid_edit = ' . $user_info['userid'] . ', update_time = ' .  NV_CURRENTTIME. ' WHERE sid=' . $row['sid']);
 					}
 					$stmt->bindParam(':servicecode', $row['servicecode'], PDO::PARAM_STR);
 					$stmt->bindParam(':service_main', $row['service_main'], PDO::PARAM_STR);
+					$stmt->bindParam(':service_static', $row['service_static'], PDO::PARAM_STR);
 					$stmt->bindParam(':title_vi', $row['title_vi'], PDO::PARAM_STR);
 					$stmt->bindParam(':title_en', $row['title_en'], PDO::PARAM_STR);
 					$stmt->bindParam(':catid', $row['catid'], PDO::PARAM_INT);
@@ -150,6 +152,8 @@ if(defined('NV_IS_USER') && $permission[$op]){
 			$row['price_vnd'] = '';
 			$row['chargeid'] = 0;
 			$row['dailyreport'] = 0;
+			$row['service_static'] = 0;
+			$row['service_main'] = 0;
 			$row['note'] = '';
 		}
 		
@@ -204,6 +208,13 @@ if(defined('NV_IS_USER') && $permission[$op]){
 		}elseif($row['service_main'] == 0){
 			$xtpl->assign('smchecked', '');
 			$xtpl->assign('sechecked', ' checked="checked"');
+		}
+		if($row['service_static'] == 1){
+			$xtpl->assign('sschecked', 'checked="checked"');
+			$xtpl->assign('sdchecked', '');
+		}elseif($row['service_main'] == 0){
+			$xtpl->assign('sschecked', '');
+			$xtpl->assign('sdchecked', ' checked="checked"');
 		}
 	}else{
 		// Change status

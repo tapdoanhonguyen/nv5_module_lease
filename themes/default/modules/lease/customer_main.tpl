@@ -15,8 +15,8 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{customer_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
-			<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
+			<a type="button" class="btn btn-success" href="{customer_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<button type="button" class="btn btn-success bg-split-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
 				<a class="dropdown-item" href="{customer_import}">{LANG.customer_import}</a>
@@ -29,19 +29,19 @@
 <div class="card radius-15">
 	<div class="card-body">
 		<div class="card-title">
-			<h4 class="mb-0">{LANG.customer_add}</h4>
+			<h4 class="mb-0">{LANG.customer_list}</h4>
 		</div>
 		<hr/>
 		<!-- BEGIN: view -->
 		<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-			<div class="table-responsive">
+			
 				<div class="dataTables_wrapper dt-bootstrap4">
 					<table id="datatable" class="table table-striped table-bordered table-hover">
 						<thead class="thead-dark">
 							<tr>
-								<th>Số thứ tự</th>
-								<th class="w100 text-center">{LANG.active}</th>
-								<th>{LANG.title}</th>
+								<th>STT</th>
+								<th class="text-center">{LANG.func}</th>
+								<th>Khách Hàng</th>
 								<th>{LANG.gid}</th>
 								<th>{LANG.address}</th>
 								<th>{LANG.mobile}</th>
@@ -60,7 +60,7 @@
 						<tbody>
 							<!-- BEGIN: loop -->
 							<tr>
-								<td class="w100"> 
+								<td> 
 									<select class="form-control" id="id_weight_{VIEW.cid}" onchange="nv_change_weight('{VIEW.cid}');">
 										<!-- BEGIN: update_date_loop -->
 										<option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
@@ -129,11 +129,5 @@
 	
 	//]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-	$(document).ready(function () {
-		//Default data table
-		$('#datatable').DataTable();
-	});
-</script>
+
 <!-- END: main -->

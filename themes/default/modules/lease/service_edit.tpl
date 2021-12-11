@@ -2,21 +2,20 @@
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
-	<div class="breadcrumb-title pr-3">{LANG.service}</div>
+	<div class="breadcrumb-title pr-3">Dịch vụ</div>
 	<div class="pl-3">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb mb-0 p-0">
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" aria-current="page">{LANG.service}</li>
 				<li class="breadcrumb-item active" aria-current="page">{LANG.service_edit}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -31,47 +30,48 @@
 		<!-- END: error -->
 		<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/edit" method="post">
 			<input type="hidden" name="sid" value="{ROW.sid}" />
-			<div class="form-group">
-				<label>{LANG.service_code} <span class="red">(*)</span></label>
-				<input class="form-control" type="text" name="servicecode" value="{ROW.servicecode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-			</div>
 			<div class="form-row">
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
+					<label>{LANG.service_code} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="servicecode" value="{ROW.servicecode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+				<div class="col-md-4 mb-3">
 					<label>{LANG.service_title_vi} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_vi" value="{ROW.title_vi}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.service_title_en} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_en" value="{ROW.title_en}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 			
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.catid} <span class="red">(*)</span></label>
 					<select class="form-control" name="catid">
-						<option value=""> --- </option>
+						<option value=""> -- Chọn loại dịch vụ -- </option>
 						<!-- BEGIN: select_catid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_catid -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.unitid} <span class="red">(*)</span></label>
 					<select class="form-control" name="unitid">
-						<option value=""> --- </option>
+						<option value=""> -- Chọn đợm vị tính -- </option>
 						<!-- BEGIN: select_unitid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_unitid -->
 					</select>
 				</div>	
-				<div class="col-md-6 mb-3">
-					<label>{LANG.price_usd}<span class="red">(*)</span></label>
-					<input class="mask form-control" type="text" name="price_usd" value="{ROW.price_usd}" required="required"/>
-				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.price_vnd}<span class="red">(*)</span></label>
 					<input class="mask form-control" type="text" name="price_vnd" value="{ROW.price_vnd}" required="required"/>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
+					<label>{LANG.price_usd}<span class="red">(*)</span></label>
+					<input class="mask form-control" type="text" name="price_usd" value="{ROW.price_usd}" required="required"/>
+				</div>
+				
+				<div class="col-md-2 mb-3">
 					<label>{LANG.chargeid} <span class="red">(*)</span></label>
 					<select class="form-control" name="chargeid">
 						<!-- BEGIN: select_chargeid -->
@@ -79,7 +79,7 @@
 						<!-- END: select_chargeid -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.daily_report} <span class="red">(*)</span></label>
 					<select class="form-control" name="dailyreport">
 						<!-- BEGIN: daily_report -->
@@ -87,7 +87,7 @@
 						<!-- END: daily_report -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.typein} <span class="red">(*)</span></label>
 					<select class="form-control" name="typein">
 						<!-- BEGIN: typein -->
@@ -105,6 +105,19 @@
 						<div class="custom-control custom-radio mrg-r-15">
 							<input type="radio" id="service_extra"value="0" name="service_main" {sechecked} class="custom-control-input">
 							<label class="custom-control-label" for="service_extra">{LANG.service_extra}</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label>{LANG.service_static_type} <span class="red">(*)</span></label>
+					<div class="d-flex mb-3">
+						<div class="custom-control custom-radio mrg-r-15">
+							<input type="radio" id="service_static" value="1" name="service_static" {sschecked} class="custom-control-input">
+							<label class="custom-control-label" for="service_static">{LANG.service_static}</label>
+						</div>
+						<div class="custom-control custom-radio mrg-r-15">
+							<input type="radio" id="service_dynamic" value="0" name="service_static" {sdchecked} class="custom-control-input">
+							<label class="custom-control-label" for="service_dynamic">{LANG.service_dynamic}</label>
 						</div>
 					</div>
 				</div>

@@ -30,11 +30,11 @@ while ($_row = $_query->fetch()) {
 	$array_pid_lease[$_row['pid']] = $_row;
 }
 $array_gid_lease = array();
-	$_sql = 'SELECT * FROM ' .NV_PREFIXLANG . '_' . $module_data . '_groups_customer';
-	$_query = $db->query($_sql);
-	while ($_row = $_query->fetch()) {
-		$array_gid_lease[$_row['id']] = $_row;
-	}
+$_sql = 'SELECT * FROM ' .NV_PREFIXLANG . '_' . $module_data . '_groups_customer';
+$_query = $db->query($_sql);
+while ($_row = $_query->fetch()) {
+	$array_gid_lease[$_row['id']] = $_row;
+}
 $array_cid_lease = array();
 $_sql = 'SELECT * FROM ' .NV_PREFIXLANG . '_' . $module_data . '_customer';
 $_query = $db->query($_sql);
@@ -52,14 +52,14 @@ $array_ccat_lease = array();
 $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_contract_cat ORDER BY sort ASC';
 $list = $nv_Cache->db($sql, 'catid', $module_name);
 if (!empty($list)) {
-    foreach ($list as $l) {
-        $array_ccat_lease[$l['catid']] = $l;
+	foreach ($list as $l) {
+		$array_ccat_lease[$l['catid']] = $l;
         //$array_ccat_lease[$l['catid']]['link'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $l['alias'];
-        if ($alias_cat_url == $l['alias']) {
-            $catid = $l['catid'];
-            $parentid = $l['parentid'];
-        }
-    }
+		if ($alias_cat_url == $l['alias']) {
+			$catid = $l['catid'];
+			$parentid = $l['parentid'];
+		}
+	}
 }
 
 
@@ -130,7 +130,11 @@ $array_month['09'] = 'Tháng 9';
 $array_month['10'] = 'Tháng 10';
 $array_month['11'] = 'Tháng 11';
 $array_month['12'] = 'Tháng 12';
-
+$array_3month = array();
+$array_3month['01'] = array("title" =>$lang_module['3month_1'], "month" => array("01","02","03"));
+$array_3month['02'] = array("title" =>$lang_module['3month_2'], "month" => array("04","05","06"));
+$array_3month['03'] = array("title" =>$lang_module['3month_3'], "month" => array("07","08","09"));
+$array_3month['04'] = array("title" =>$lang_module['3month_4'], "month" => array("10","11","12"));
 $array_year = array();
 $array_money_type = array();
 $array_money_type['VND'] = 'VND';
@@ -161,6 +165,19 @@ $daily_report['2'] = $lang_module['report_date'];
 $daily_report['3'] = $lang_module['report_month'];
 $daily_report['4'] = $lang_module['report_3month'];
 $daily_report['5'] = $lang_module['report_year'];
+$day_of_month = array();
+$day_of_month['1'] = 31;
+$day_of_month['2'] = 28;
+$day_of_month['3'] = 31;
+$day_of_month['4'] = 30;
+$day_of_month['5'] = 31;
+$day_of_month['6'] = 30;
+$day_of_month['7'] = 31;
+$day_of_month['8'] = 31;
+$day_of_month['9'] = 20;
+$day_of_month['10'] = 31;
+$day_of_month['11'] = 30;
+$day_of_month['12'] = 31;
 //$array_config['contract_center_prefix'] = '/KH/';
 if(defined('NV_IS_USER')){
 	$my_groups = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_company_users WHERE userid=' . $user_info['userid'])->fetch();
@@ -177,11 +194,19 @@ if(defined('NV_IS_USER')){
 
 function nextMonth()
 {
-    $nextMonthNumber = date('M', strtotime('first day of +1 month'));
-    $nextMonthDate = new DateTime();
-    $nextMonthDate->add(new DateInterval('P1M'));
-    while ($nextMonthDate->format('M') != $nextMonthNumber) {
-        $nextMonthDate->sub(new DateInterval('P1D'));
-    }
-    return $nextMonthDate;
+	$nextMonthNumber = date('M', strtotime('first day of +1 month'));
+	$nextMonthDate = new DateTime();
+	$nextMonthDate->add(new DateInterval('P1M'));
+	while ($nextMonthDate->format('M') != $nextMonthNumber) {
+		$nextMonthDate->sub(new DateInterval('P1D'));
+	}
+	return $nextMonthDate;
+}
+
+function get_info_service($id){
+	global $db,$module_data;
+
+	$info=$db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service where sid=' . $id)->fetch();
+	
+	return $info;
 }

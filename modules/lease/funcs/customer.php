@@ -10,7 +10,7 @@
  */
 
 if (!defined('NV_IS_MOD_LEASE'))
-    die('Stop!!!');
+	die('Stop!!!');
 //them code bắt buộc đăng nhập thi mới cho sử dụng chức năng
 if(defined('NV_IS_USER')&& $permission[$op]){
 	if($array_op[1] == "") {
@@ -38,26 +38,26 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 
 		$return .= '<textarea class="form-control" style="width: ' . $width . '; height:' . $height . ';" id="' . $module_data . '_' . $textareaname . '" name="' . $textareaname . '">' . $val . '</textarea>';
 		$return .= "<script type=\"text/javascript\">CKEDITOR.replace('" . $module_data . "_" . $textareaname . "', {
-		removePlugins: 'uploadfile,uploadimage,autosave',
-		contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
+			removePlugins: 'uploadfile,uploadimage,autosave',
+			contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
 		});</script>";
 
 		return $return;
 	}
 	$xtpl = new XTemplate($op . '_'.$action.'.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
-		$xtpl->assign('LANG', $lang_module);
-		$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
-		$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
-		$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-		$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-		$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-		$xtpl->assign('MODULE_NAME', $module_name);
-		$xtpl->assign('MODULE_UPLOAD', $module_upload);
-		$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
-		$xtpl->assign('OP', $op);
-		$xtpl->assign($op . '_add', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/add'),true);
-		$xtpl->assign($op . '_import', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/import'),true);
-		$xtpl->assign($op . '_export', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/export',true));
+	$xtpl->assign('LANG', $lang_module);
+	$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
+	$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
+	$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+	$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
+	$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
+	$xtpl->assign('MODULE_NAME', $module_name);
+	$xtpl->assign('MODULE_UPLOAD', $module_upload);
+	$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
+	$xtpl->assign('OP', $op);
+	$xtpl->assign($op . '_add', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/add'),true);
+	$xtpl->assign($op . '_import', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/import'),true);
+	$xtpl->assign($op . '_export', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/export',true));
 	if(	$action == "add" or $action == "edit"){
 		$row = array();
 		$error = array();
@@ -99,7 +99,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 						$row['crtd_date'] = NV_CURRENTTIME;
 						$row['update_date'] = NV_CURRENTTIME;
 						$row['userid_edit'] = $user_info['userid'];
-					
+
 						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_customer (cuscode, companyid, title, gid, address, mobile, fax, email, taxcode, person_legal, person_legal_mobile, vi_note, en_note, active, weight, adminid, crtd_date, userid_edit, update_date, status_del) VALUES (:cuscode, :companyid, :title, :gid, :address, :mobile, :fax, :email, :taxcode, :person_legal, :person_legal_mobile, :vi_note, :en_note, :active, :weight, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ', ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ', 0)');
 
 						$stmt->bindValue(':active', 1, PDO::PARAM_INT);
@@ -110,7 +110,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_customer SET title = :title, cuscode = :cuscode, gid = :gid, address = :address, mobile = :mobile, fax = :fax, email = :email, taxcode = :taxcode, person_legal = :person_legal, person_legal_mobile = :person_legal_mobile, vi_note = :vi_note, en_note = :en_note, userid_edit = ' . $user_info['userid'] . ', update_time = ' .  NV_CURRENTTIME. ' WHERE cid=' . $row['cid']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_customer SET title = :title, cuscode = :cuscode, gid = :gid, address = :address, mobile = :mobile, fax = :fax, email = :email, taxcode = :taxcode, person_legal = :person_legal, person_legal_mobile = :person_legal_mobile, vi_note = :vi_note, en_note = :en_note, userid_edit = ' . $user_info['userid'] . ', update_date = ' .  NV_CURRENTTIME. ' WHERE cid=' . $row['cid']);
 					}$stmt->bindParam(':cuscode', $row['cuscode'], PDO::PARAM_STR);
 					$stmt->bindParam(':title', $row['title'], PDO::PARAM_STR);
 					$stmt->bindParam(':gid', $row['gid'], PDO::PARAM_INT);
@@ -178,9 +178,9 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 	}elseif($action=="view"){
 		
 		$row = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_customer WHERE cuscode="' . str_replace("-","/",$array_op[2]) . '"')->fetch();
-			if (empty($row)) {
-				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
-			}
+		if (empty($row)) {
+			nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+		}
 		$xtpl->assign('ROW', $row);
 	}else{
 		// Change status
@@ -251,7 +251,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			}
 		}
 
-	
+
 
 
 
@@ -261,11 +261,11 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 		$show_view = false;
 		if (!$nv_Request->isset_request('id', 'post,get')) {
 			$show_view = true;
-			$per_page = 2000;
+			$per_page = 50;
 			$page = $nv_Request->get_int('page', 'post,get', 1);
 			$db->sqlreset()
-				->select('COUNT(*)')
-				->from('' . NV_PREFIXLANG . '_' . $module_data . '_customer');
+			->select('COUNT(*)')
+			->from('' . NV_PREFIXLANG . '_' . $module_data . '_customer');
 
 			if (!empty($q)) {
 				$db->where('title LIKE :q_title OR gid LIKE :q_gid OR address LIKE :q_address OR mobile LIKE :q_mobile OR email LIKE :q_email OR taxcode LIKE :q_taxcode');
@@ -284,9 +284,9 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('weight ASC')
-				->limit($per_page)
-				->offset(($page - 1) * $per_page);
+			->order('weight ASC')
+			->limit($per_page)
+			->offset(($page - 1) * $per_page);
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {

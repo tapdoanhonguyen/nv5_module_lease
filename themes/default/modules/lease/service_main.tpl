@@ -1,25 +1,7 @@
 <!-- BEGIN: main -->
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
-<div style="display:none">
-	<form action="{NV_BASE_SITEURL}index.php" method="get">
-		<input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-		<input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-		<input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-		<div class="row">
-			<div class="col-xs-24 col-md-6">
-				<div class="form-group">
-					<input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-				</div>
-			</div>
-			<div class="col-xs-12 col-md-3">
-				<div class="form-group">
-					<input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-				</div>
-			</div>
-		</div>
-	</form>
-</div>
+
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
 	<div class="breadcrumb-title pr-3">Dịch vụ</div>
 	<div class="pl-3">
@@ -34,7 +16,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -47,13 +29,13 @@
 				<h4 class="mb-0">Danh sách dịch vụ</h4>
 			</div>
 			<hr/>	
-			<div class="table-responsive">
+			
 				<div class="dataTables_wrapper dt-bootstrap4">
 					<table id="datatable" class="table table-striped table-bordered dataTable">
 						<thead class="thead-dark">
 							<tr>
-								<th class="w100">{LANG.number}</th>
-								<th class="w150">{LANG.active}</th>
+								<th>{LANG.number}</th>
+								<th>{LANG.func}</th>
 								<th>{LANG.service_code}</th>
 								<th>{LANG.service_title_vi}</th>
 								<th>{LANG.service_title_en}</th>
@@ -61,7 +43,7 @@
 								<th>{LANG.unitid}</th>
 								<th>{LANG.price_usd}</th>
 								<th>{LANG.price_vnd}</th>
-								<th class="w100 text-center">{LANG.rent_status1}</th>
+								<th class="text-center">{LANG.rent_status1}</th>
 							</tr>
 						</thead>
 						<!-- BEGIN: generate_page -->
@@ -74,7 +56,7 @@
 						<tbody>
 							<!-- BEGIN: loop -->
 							<tr>
-								<td class="w100">
+								<td>
 									<select class="form-control" id="id_weight_{VIEW.sid}" onchange="nv_change_weight('{VIEW.sid}');">
 									<!-- BEGIN: update_time_loop -->
 										<option value="{WEIGHT.key}"{WEIGHT.selected}>{WEIGHT.title}</option>
@@ -101,22 +83,8 @@
 							</tr>
 							<!-- END: loop -->
 						</tbody>
-						<tfoot>
-							<tr>
-								<th class="w100">{LANG.number}</th>
-								<th class="w150">{LANG.active}</th>
-								<th>{LANG.service_code}</th>
-								<th>{LANG.service_title_vi}</th>
-								<th>{LANG.service_title_en}</th>
-								<th>{LANG.catid}</th>
-								<th>{LANG.unitid}</th>
-								<th>{LANG.price_usd}</th>
-								<th>{LANG.price_vnd}</th>
-								<th class="w100 text-center">{LANG.status}</th>
-							</tr>
-						</tfoot>
 					</table>
-				</div>
+				
 			</div>
 		</div>
     </div>
@@ -159,11 +127,5 @@
 
 //]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-	$(document).ready(function () {
-		//Default data table
-		$('#datatable').DataTable();
-	});
-</script>
+
 <!-- END: main -->

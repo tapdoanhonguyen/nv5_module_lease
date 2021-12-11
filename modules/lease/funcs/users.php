@@ -241,10 +241,13 @@ if(defined('NV_IS_USER')){
 				}
 				
 				$view['usercompanyid'] = $view['userid'] . '-' . $view['companyid'];
-				$username=$db->query('SELECT username FROM ' . NV_USERS_GLOBALTABLE . ' WHERE userid = ' . $view['userid'])->fetch();	
+				$username=$db->query('SELECT username, email, first_name, last_name FROM ' . NV_USERS_GLOBALTABLE . ' WHERE userid = ' . $view['userid'])->fetch();	
 	
 				$view['username'] = $username['username'];
+				$view['email'] = $username['email'];
+				$view['fullname'] = $username['first_name'] . ' ' . $username['last_name'];
 				$view['companyid'] = $array_companyid_lease[$view['companyid']][NV_LANG_DATA . '_title'];
+				$view['permission'] = $array_permission_groups[$view['permissionid']]['title'];
 				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['userid'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['userid'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);

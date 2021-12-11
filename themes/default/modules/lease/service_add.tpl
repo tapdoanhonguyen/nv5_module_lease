@@ -16,7 +16,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{service_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -31,65 +31,70 @@
 		<!-- END: error -->
 		<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/add" method="post">
 			<input type="hidden" name="sid" value="{ROW.sid}" />
-			<div class="form-group">
-				<label>{LANG.service_code} <span class="red">(*)</span></label>
-				<input class="form-control" type="text" name="servicecode" value="{ROW.servicecode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
-			</div>
+			
 			<div class="form-row">
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
+					<label>{LANG.service_code} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="servicecode" value="{ROW.servicecode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
+				<div class="col-md-4 mb-3">
 					<label>{LANG.service_title_vi} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_vi" value="{ROW.title_vi}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.service_title_en} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_en" value="{ROW.title_en}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 			
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.catid} <span class="red">(*)</span></label>
 					<select class="form-control" name="catid">
-						<option value=""> --- </option>
+						<option value=""> -- Chọn loại dịch vụ -- </option>
 						<!-- BEGIN: select_catid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_catid -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.unitid} <span class="red">(*)</span></label>
 					<select class="form-control" name="unitid">
-						<option value=""> --- </option>
+						<option value=""> -- Chọn đơn vị -- </option>
 						<!-- BEGIN: select_unitid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_unitid -->
 					</select>
 				</div>	
-				<div class="col-md-6 mb-3">
-					<label>{LANG.price_usd}<span class="red">(*)</span></label>
-					<input class="mask form-control" type="text" name="price_usd" value="{ROW.price_usd}" required="required"/>
-				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.price_vnd}<span class="red">(*)</span></label>
 					<input class="mask form-control" type="text" name="price_vnd" value="{ROW.price_vnd}" required="required"/>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
+					<label>{LANG.price_usd}<span class="red">(*)</span></label>
+					<input class="mask form-control" type="text" name="price_usd" value="{ROW.price_usd}" required="required"/>
+				</div>
+				
+				<div class="col-md-2 mb-3">
 					<label>{LANG.chargeid} <span class="red">(*)</span></label>
 					<select class="form-control" name="chargeid">
+						<option value=""> -- Chọn cách tính -- </option>
 						<!-- BEGIN: select_chargeid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_chargeid -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.daily_report} <span class="red">(*)</span></label>
 					<select class="form-control" name="dailyreport">
+						<option value=""> -- Chọn loại báo cáo -- </option>
 						<!-- BEGIN: daily_report -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: daily_report -->
 					</select>
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-2 mb-3">
 					<label>{LANG.typein} <span class="red">(*)</span></label>
 					<select class="form-control" name="typein">
+						<option value=""> -- Chọn -- </option>
 						<!-- BEGIN: typein -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: typein -->
@@ -103,8 +108,21 @@
 							<label class="custom-control-label" for="service_main">{LANG.service_main}</label>
 						</div>
 						<div class="custom-control custom-radio mrg-r-15">
-							<input type="radio" id="service_extra"value="0" name="service_main" {sechecked} class="custom-control-input">
+							<input type="radio" id="service_extra" value="0" name="service_main" {sechecked} class="custom-control-input">
 							<label class="custom-control-label" for="service_extra">{LANG.service_extra}</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label>{LANG.service_static_type} <span class="red">(*)</span></label>
+					<div class="d-flex mb-3">
+						<div class="custom-control custom-radio mrg-r-15">
+							<input type="radio" id="service_static" value="1" name="service_static" {sschecked} class="custom-control-input">
+							<label class="custom-control-label" for="service_static">{LANG.service_static}</label>
+						</div>
+						<div class="custom-control custom-radio mrg-r-15">
+							<input type="radio" id="service_dynamic" value="0" name="service_static" {sdchecked} class="custom-control-input">
+							<label class="custom-control-label" for="service_dynamic">{LANG.service_dynamic}</label>
 						</div>
 					</div>
 				</div>

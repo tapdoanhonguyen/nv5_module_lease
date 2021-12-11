@@ -16,7 +16,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{contractcat_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{contractcat_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 			
 		</div>
 	</div>

@@ -10,7 +10,44 @@
  */
 
 if (!defined('NV_IS_MOD_LEASE'))
-    die('Stop!!!');
+	die('Stop!!!');
+
+$mod = $nv_Request->get_string( 'mod', 'get,post', '' );
+//select 2
+if($mod=="import_data"){
+	$serviceextraid=$nv_Request->get_int('serviceextraid', 'get',0);
+	$month=$nv_Request->get_string('month', 'get','');
+	$year=$nv_Request->get_string('year', 'get','');
+
+	$xtpl = new XTemplate('update_number_electric.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
+	$xtpl->assign('LANG', $lang_module);
+	$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
+
+	$list_product = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_product WHERE pid IN (SELECT pid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_contract WHERE active = 1 AND status_del = 0) AND status_del = 0 AND active = 1')->fetchAll();
+	$i = 1;
+	foreach ($list_product as $key => $value) {
+		$value['info_customer'] = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_customer WHERE cid IN (SELECT cid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_contract WHERE pid = ' . $value['pid'] . ') AND active = 1 AND status_del = 0')->fetch();
+		$value['info_service_extra'] = $db->query('SELECT max(amount_new) as maxamount  FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE debit_service_extraid = ' . $serviceextraid . ' AND cid = ' . $value['info_customer']['cid'] . ' AND pid = ' . $value['pid'] . ' AND active = 1 AND status_del = 0')->fetch(5)->maxamount;
+		if($value['info_service_extra']>0){
+			$value['number_old'] = $value['info_service_extra'];
+		}else{
+			$value['number_old'] = $db->query('SELECT amount  FROM ' . NV_PREFIXLANG . '_' . $module_data . '_contract_info WHERE serviceid = ' . $serviceextraid . ' AND staticservice = 1 AND customerid = ' . $value['info_customer']['cid'] . ' AND customerid = ' . $value['pid'] . ' AND yearmonth = "' . $month . $year . '" AND active = 1 AND status_del = 0')->fetch(5)->amount;
+		}
+		$value['stt'] = $i;
+		$xtpl->assign('product', $value);
+		$xtpl->parse('main.product');
+		$i++;
+	}
+	$xtpl->parse('main');
+	$contents = $xtpl->text('main');
+
+	$json[] = ['status'=>'OK', 'text'=>$contents];
+
+	print_r(json_encode($json[0]));die(); 
+}
+
+
+
 if(defined('NV_IS_USER')&& $permission[$op]){
 	if($array_op[1] == "") {
 		$action = "main";
@@ -37,28 +74,29 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 
 		$return .= '<textarea class="form-control" style="width: ' . $width . '; height:' . $height . ';" id="' . $module_data . '_' . $textareaname . '" name="' . $textareaname . '">' . $val . '</textarea>';
 		$return .= "<script type=\"text/javascript\">CKEDITOR.replace('" . $module_data . "_" . $textareaname . "', {
-		removePlugins: 'uploadfile,uploadimage,autosave',
-		contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
+			removePlugins: 'uploadfile,uploadimage,autosave',
+			contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
 		});</script>";
 
 		return $return;
 	}
+	
 	$xtpl = new XTemplate($op . '_'.$action.'.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
-		$xtpl->assign('LANG', $lang_module);
-		$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
-		$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
-		$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-		$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-		$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-		$xtpl->assign('MODULE_NAME', $module_name);
-		$xtpl->assign('MODULE_UPLOAD', $module_upload);
-		$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
-		$xtpl->assign('OP', $op);
-		$xtpl->assign($op . '_add', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/add'),true);
+	$xtpl->assign('LANG', $lang_module);
+	$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
+	$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
+	$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+	$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
+	$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
+	$xtpl->assign('MODULE_NAME', $module_name);
+	$xtpl->assign('MODULE_UPLOAD', $module_upload);
+	$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
+	$xtpl->assign('OP', $op);
+	$xtpl->assign($op . '_add', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op . '/add'),true);
 		//$xtpl->assign('PRODUCT_IMPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/import'),true);
 		//$xtpl->assign('PRODUCT_EXPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/export',true));
 	if(	$action == "add" or $action == "edit"){
-				
+
 		$row = array();
 		$error = array();
 		$row['id'] = $nv_Request->get_int('id', 'post,get', 0);
@@ -66,7 +104,8 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$row['pid'] = $nv_Request->get_int('pid', 'post', 0);
 			$row['cid'] = $nv_Request->get_int('cid', 'post', 0);
 			$row['month'] = $nv_Request->get_int('month', 'post', 0);
-			$row['year'] = $nv_Request->get_int('year', 'post', 0);
+			$row['year'] = $nv_Request->get_int('fileupload', 'post', 0);
+			$row['fileupload'] = $nv_Request->get_title('year',  'post', '');
 			$row['yearmonth'] = $row['month'].$row['year'];
 			if (preg_match('/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/', $nv_Request->get_string('datefrom', 'post'), $m))     {
 				$_hour = 0;
@@ -108,19 +147,19 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			} elseif (empty($row['sid'])) {
 				$error[] = $lang_module['error_required_sid'];
 			}
-
+			
 			if (empty($error)) {
 				try {
 					if (empty($row['id'])) {
 						$row['active'] = 0;
 						$row['weight'] = 0;
 
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra (pid, cid, yearmonth, datefrom, dateto, sid, pricevnd, priceusd, amount, totalvnd, totalusd, note, active, userid_edit, update_date, adminid, crt_date, weight) VALUES (:pid, :cid, :yearmonth, :datefrom, :dateto, :sid, :pricevnd, :priceusd, :amount, :totalvnd, :totalusd, :note, 1, 0, 0, ' . intval($user_info['userid']) . ', ' . NV_CURRENTTIME . ', :weight)');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra (pid, cid, yearmonth, datefrom, dateto, sid, pricevnd, priceusd, amount, totalvnd, totalusd, note, active, userid_edit, update_date, adminid, crt_date, weight, fileupload) VALUES (:pid, :cid, :yearmonth, :datefrom, :dateto, :sid, :pricevnd, :priceusd, :amount, :totalvnd, :totalusd, :note, 1, 0, 0, ' . intval($user_info['userid']) . ', ' . NV_CURRENTTIME . ', :weight, :fileupload)');
 
 						$stmt->bindParam(':weight', $row['weight'], PDO::PARAM_INT);
 
 					} else {
-						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET  datefrom = :datefrom, dateto = :dateto, sid = :sid, pricevnd = :pricevnd, priceusd = :priceusd, amount = :amount, totalvnd = :totalvnd, totalusd = :totalusd, note = :note, userid_edit = ' . intval($user_info['userid']) . ', update_date = ' . NV_CURRENTTIME . ' WHERE pid = :pid and cid = :cid and yearmonth = :yearmonth and id=' . $row['id']);
+						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET  datefrom = :datefrom, dateto = :dateto, sid = :sid, pricevnd = :pricevnd, priceusd = :priceusd, amount = :amount, totalvnd = :totalvnd, totalusd = :totalusd, note = :note, fileupload = :fileupload, userid_edit = ' . intval($user_info['userid']) . ', update_date = ' . NV_CURRENTTIME . ' WHERE pid = :pid and cid = :cid and yearmonth = :yearmonth and id=' . $row['id']);
 					}
 					$stmt->bindParam(':pid', $row['pid'], PDO::PARAM_INT);
 					$stmt->bindParam(':cid', $row['cid'], PDO::PARAM_INT);
@@ -133,6 +172,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 					$stmt->bindParam(':amount', $row['amount'], PDO::PARAM_STR);
 					$stmt->bindParam(':totalvnd', $row['totalvnd'], PDO::PARAM_STR);
 					$stmt->bindParam(':totalusd', $row['totalusd'], PDO::PARAM_STR);
+					$stmt->bindParam(':fileupload', $row['fileupload'], PDO::PARAM_STR);
 					$stmt->bindParam(':note', $row['note'], PDO::PARAM_STR, strlen($row['note']));
 
 					$exc = $stmt->execute();
@@ -214,14 +254,19 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$xtpl->parse('main.select_pid');
 			$xtpl->parse('main.select_pid_en');
 		}
+
 		foreach ($array_sid_lease as $value) {
+
 			if($value['service_main'] != 1){
-				$xtpl->assign('OPTION', array(
-					'key' => $value['sid'],
-					'title' => $value['title_vi'],
-					'selected' => ($value['sid'] == $row['sid']) ? ' selected="selected"' : ''
-				));
-				$xtpl->parse('main.select_sid');
+				if($value['service_static'] == 1){
+					$xtpl->assign('OPTION', array(
+						'key' => $value['sid'],
+						'title' => $value['title_vi'],
+						'selected' => ($value['sid'] == $row['sid']) ? ' selected="selected"' : ''
+					));
+					$xtpl->parse('main.select_sid');
+				}
+				
 			}
 		}
 		
@@ -247,231 +292,278 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$xtpl->assign('ERROR', implode('<br />', $error));
 			$xtpl->parse('main.error');
 		}
-	}else{
+	}elseif($action == "uploadfile"){
+		$duoi = explode('.', $_FILES['file']['name']); // tách chuỗi khi gặp dấu .
+
+			$duoi = $duoi[(count($duoi) - 1)]; //lấy ra đuôi file
+			// Kiểm tra xem có phải file ảnh không
+			
+			if ($duoi === 'doc' || $duoi === 'docx' || $duoi === 'xlsx' || $duoi === 'xls' || $duoi === 'pdf') {
+				// tiến hành upload
+				$target_file = NV_UPLOADS_DIR . '/' . $module_upload . '/serviceextra/';
+				
+				
+				$mang_file = explode('.' . $duoi,$_FILES['file']['name']);
+				$fileName = $mang_file[0];
+				
+				$maxran = 1000000;
+				$random_num = mt_rand(0, $maxran);
+				$random_num = md5($random_num);
+				
+				$fileName = change_alias(strtolower($fileName));
+				
+				$filename_new = $fileName.$random_num . '.' . $duoi;
+				
+				
+				rename($fileName . '.' . $duoi, $filename_new);
+				
+				if (move_uploaded_file($_FILES['file']['tmp_name'], $target_file . $filename_new)) {
+					// Nếu thành công
+					// lưu dữ liệu 
+					$exc = true;
+					
+					if ($exc) {	
+						$content=json_encode(array('status'=>"OKE","code" => "000", "message" =>$filename_new));
+						
+					}
+					
+					
+				} else { // nếu không thành công
+					$content=json_encode(array('status'=>"NO","code" => "001", "message" =>$lang_module['error_upload']));
+					
+				}
+				
+			} else { // nếu không phải file ảnh
+				$content=json_encode(array('status'=>"NO","code" => "001", "message" =>$lang_module['error_upload_type']));
+				
+			}
+			echo $content;
+			die();
+		}else{
 
 		// Change status
-		if ($nv_Request->isset_request('change_status', 'post, get')) {
-			$id = $nv_Request->get_int('id', 'post, get', 0);
-			$content = 'NO_' . $id;
+			if ($nv_Request->isset_request('change_status', 'post, get')) {
+				$id = $nv_Request->get_int('id', 'post, get', 0);
+				$content = 'NO_' . $id;
 
-			$query = 'SELECT active FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id=' . $id;
-			$row = $db->query($query)->fetch();
-			if (isset($row['active']))     {
-				$active = ($row['active']) ? 0 : 1;
-				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET active=' . intval($active) . ' WHERE id=' . $id;
-				$db->query($query);
-				$content = 'OK_' . $id;
-			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
-		}
-
-		if ($nv_Request->isset_request('ajax_action', 'post')) {
-			$id = $nv_Request->get_int('id', 'post', 0);
-			$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
-			$content = 'NO_' . $id;
-			if ($new_vid > 0)     {
-				$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id!=' . $id . ' ORDER BY weight ASC';
-				$result = $db->query($sql);
-				$weight = 0;
-				while ($row = $result->fetch())
-				{
-					++$weight;
-					if ($weight == $new_vid) ++$weight;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $weight . ' WHERE id=' . $row['id'];
-					$db->query($sql);
-				}
-				$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $new_vid . ' WHERE id=' . $id;
-				$db->query($sql);
-				$content = 'OK_' . $id;
-			}
-			$nv_Cache->delMod($module_name);
-			include NV_ROOTDIR . '/includes/header.php';
-			echo $content;
-			include NV_ROOTDIR . '/includes/footer.php';
-		}
-
-		if ($nv_Request->isset_request('delete_id', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
-			$id = $nv_Request->get_int('delete_id', 'get');
-			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
-			if ($id > 0 and $delete_checkss == md5($id . NV_CACHE_PREFIX . $client_info['session_id'])) {
-				$weight=0;
-				$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id =' . $db->quote($id);
-				$result = $db->query($sql);
-				list($weight) = $result->fetch(3);
-				
-				$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra  WHERE id = ' . $db->quote($id));
-				if ($weight > 0)         {
-					$sql = 'SELECT id, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE weight >' . $weight;
-					$result = $db->query($sql);
-					while (list($id, $weight) = $result->fetch(3))
-					{
-						$weight--;
-						$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $weight . ' WHERE id=' . intval($id));
-					}
+				$query = 'SELECT active FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id=' . $id;
+				$row = $db->query($query)->fetch();
+				if (isset($row['active']))     {
+					$active = ($row['active']) ? 0 : 1;
+					$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET active=' . intval($active) . ' WHERE id=' . $id;
+					$db->query($query);
+					$content = 'OK_' . $id;
 				}
 				$nv_Cache->delMod($module_name);
-				nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Serviceextra', 'ID: ' . $id, $user_info['userid']);
-				nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+				include NV_ROOTDIR . '/includes/header.php';
+				echo $content;
+				include NV_ROOTDIR . '/includes/footer.php';
 			}
-		}
 
-		
+			if ($nv_Request->isset_request('ajax_action', 'post')) {
+				$id = $nv_Request->get_int('id', 'post', 0);
+				$new_vid = $nv_Request->get_int('new_vid', 'post', 0);
+				$content = 'NO_' . $id;
+				if ($new_vid > 0)     {
+					$sql = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id!=' . $id . ' ORDER BY weight ASC';
+					$result = $db->query($sql);
+					$weight = 0;
+					while ($row = $result->fetch())
+					{
+						++$weight;
+						if ($weight == $new_vid) ++$weight;             $sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $weight . ' WHERE id=' . $row['id'];
+						$db->query($sql);
+					}
+					$sql = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $new_vid . ' WHERE id=' . $id;
+					$db->query($sql);
+					$content = 'OK_' . $id;
+				}
+				$nv_Cache->delMod($module_name);
+				include NV_ROOTDIR . '/includes/header.php';
+				echo $content;
+				include NV_ROOTDIR . '/includes/footer.php';
+			}
 
-		$q = $nv_Request->get_title('q', 'post,get');
-		$pid = $nv_Request->get_int('pid', 'post,get', 0);
-		$cid = $nv_Request->get_int('cid', 'post,get', 0);
-		$sid = $nv_Request->get_int('sid', 'post,get', 0);
-		$month = $nv_Request->get_int('month', 'post,get', 0);
-		$year = $nv_Request->get_int('year', 'post,get', 0);
-		$yearmonth = $month.$year;
-		$where = '';
-		if($cid > 0){
-			$where .= ' AND cid = ' . $cid ;
-		}
-		if($sid > 0){
-			$where .= ' AND sid = ' . $sid;
-		}
-		if($pid > 0){
-			$where .= ' AND pid = ' . $pid . ' ';
-		}
-		if($month > 0 && $year > 0){
-			$where .= 'AND yearmonth = "' . $yearmonth . '"';
-		}
-		
+			if ($nv_Request->isset_request('delete_id', 'get') and $nv_Request->isset_request('delete_checkss', 'get')) {
+				$id = $nv_Request->get_int('delete_id', 'get');
+				$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
+				if ($id > 0 and $delete_checkss == md5($id . NV_CACHE_PREFIX . $client_info['session_id'])) {
+					$weight=0;
+					$sql = 'SELECT weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE id =' . $db->quote($id);
+					$result = $db->query($sql);
+					list($weight) = $result->fetch(3);
+
+					$db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra  WHERE id = ' . $db->quote($id));
+					if ($weight > 0)         {
+						$sql = 'SELECT id, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra WHERE weight >' . $weight;
+						$result = $db->query($sql);
+						while (list($id, $weight) = $result->fetch(3))
+						{
+							$weight--;
+							$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET weight=' . $weight . ' WHERE id=' . intval($id));
+						}
+					}
+					$nv_Cache->delMod($module_name);
+					nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete Serviceextra', 'ID: ' . $id, $user_info['userid']);
+					nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+				}
+			}
+
+
+
+			$q = $nv_Request->get_title('q', 'post,get');
+			$pid = $nv_Request->get_int('pid', 'post,get', 0);
+			$cid = $nv_Request->get_int('cid', 'post,get', 0);
+			$sid = $nv_Request->get_int('sid', 'post,get', 0);
+			$month = $nv_Request->get_int('month', 'post,get', 0);
+			$year = $nv_Request->get_int('year', 'post,get', 0);
+			$yearmonth = $month.$year;
+			$where = '';
+			if($cid > 0){
+				$where .= ' AND cid = ' . $cid ;
+			}
+			if($sid > 0){
+				$where .= ' AND sid = ' . $sid;
+			}
+			if($pid > 0){
+				$where .= ' AND pid = ' . $pid . ' ';
+			}
+			if($month > 0 && $year > 0){
+				$where .= 'AND yearmonth = "' . $yearmonth . '"';
+			}
+
 		// Fetch Limit
-		$show_view = false;
-		if (!$nv_Request->isset_request('id', 'post,get')) {
-			$show_view = true;
-			$per_page = 20;
-			$page = $nv_Request->get_int('page', 'post,get', 1);
-			$db->sqlreset()
+			$show_view = false;
+			if (!$nv_Request->isset_request('id', 'post,get')) {
+				$show_view = true;
+				$per_page = 20;
+				$page = $nv_Request->get_int('page', 'post,get', 1);
+				$db->sqlreset()
 				->select('COUNT(*)')
-				->from('' . NV_PREFIXLANG . '_' . $module_data . '_service_extra');
+				->from('' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_service');
 
-			
+
 				$db->where(' 1 ' . $where);
-			
-			$sth = $db->prepare($db->sql());
 
-			if (!empty($q)) {
-			}
-			
-			$sth->execute();
+				$sth = $db->prepare($db->sql());
 
-			$num_items = $sth->fetchColumn();
+				if (!empty($q)) {
+				}
 
-			$db->select('*')
+				$sth->execute();
+
+				$num_items = $sth->fetchColumn();
+
+				$db->select('*')
 				->order('weight ASC')
 				->limit($per_page)
 				->offset(($page - 1) * $per_page);
-			$sth = $db->prepare($db->sql());
-		
-			if (!empty($q)) {
-			}
-			$sth->execute();
-		}
+				$sth = $db->prepare($db->sql());
 
-		$xtpl->assign('Q', $q);
-		
-		if ($show_view) {
-			$base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
-			if (!empty($q)) {
-				$base_url .= '&q=' . $q;
+				if (!empty($q)) {
+				}
+				$sth->execute();
 			}
-			$generate_page = nv_generate_page($base_url, $num_items, $per_page, $page);
-			if (!empty($generate_page)) {
-				$xtpl->assign('NV_GENERATE_PAGE', $generate_page);
-				$xtpl->parse('main.view.generate_page');
-			}
-			$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
-			while ($view = $sth->fetch()) {
-				for($i = 1; $i <= $num_items; ++$i) {
-					$xtpl->assign('WEIGHT', array(
+
+			$xtpl->assign('Q', $q);
+
+			if ($show_view) {
+				$base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
+				if (!empty($q)) {
+					$base_url .= '&q=' . $q;
+				}
+				$generate_page = nv_generate_page($base_url, $num_items, $per_page, $page);
+				if (!empty($generate_page)) {
+					$xtpl->assign('NV_GENERATE_PAGE', $generate_page);
+					$xtpl->parse('main.view.generate_page');
+				}
+				$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
+				while ($view = $sth->fetch()) {
+					for($i = 1; $i <= $num_items; ++$i) {
+						$xtpl->assign('WEIGHT', array(
+							'key' => $i,
+							'title' => $i,
+							'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
+						$xtpl->parse('main.view.loop.weight_loop');
+					}
+					$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
+					$view['datefrom_format'] = (empty($view['datefrom'])) ? '' : nv_date('d/m/Y', $view['datefrom']);
+					$view['dateto_format'] = (empty($view['dateto'])) ? '' : nv_date('d/m/Y', $view['dateto']);
+					$view['mount'] = $view['yearmonth'][0].$view['yearmonth'][1];
+					$view['year'] = $view['yearmonth'][2].$view['yearmonth'][3].$view['yearmonth'][4].$view['yearmonth'][5];
+					$view['yearmonth_format'] = $view['mount'].'/'.$view['year'];
+					$view['product_name'] = $array_pid_lease[$view['pid']]['title_vi'];
+					$view['customer_name'] = $array_cid_lease[$view['cid']]['title'];
+					$view['service_name'] = $array_sid_lease[$view['sid']]['title_vi'];
+					$view['invoice_status'] = $array_invoice_status_lease[$view['invoice']]['title_vi'];
+					$view['totalvnd_format'] = number_format($view['totalvnd']);
+					$view['totalusd_format'] = number_format($view['totalusd']);
+					$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['id'];
+					$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['id'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);
+					$xtpl->assign('VIEW', $view);
+					$xtpl->parse('main.view.loop');
+				}
+				foreach ($array_pid_lease as $value) {
+					$xtpl->assign('OPTION', array(
+						'key' => $value['pid'],
+						'title' => $value['title_vi'],
+						'selected' => ($value['pid'] == $pid) ? ' selected="selected"' : ''
+					));
+					$xtpl->parse('main.view.select_pid');
+				}
+				foreach ($array_cid_lease as $value) {
+					$xtpl->assign('OPTION', array(
+						'key' => $value['cid'],
+						'title' => $value['title'],
+						'selected' => ($value['cid'] == $cid) ? ' selected="selected"' : ''
+					));
+					$xtpl->parse('main.view.select_cid');
+				}
+				foreach ($array_sid_lease as $value) {
+					if($value['service_main'] != 1){
+						$xtpl->assign('OPTION', array(
+							'key' => $value['sid'],
+							'title' => $value['title_vi'],
+							'selected' => ($value['sid'] == $sid) ? ' selected="selected"' : ''
+						));
+						$xtpl->parse('main.view.select_sid');
+					}
+				}
+
+				foreach ($array_month as $key => $title) {
+					$xtpl->assign('OPTION', array(
+						'key' => $key,
+						'title' => $title,
+						'selected' => ($key == $month) ? ' selected="selected"' : ''
+					));
+					$xtpl->parse('main.view.select_month');
+				}
+
+				for ($i=1970;$i<2050;$i++) {
+					$xtpl->assign('OPTION', array(
 						'key' => $i,
 						'title' => $i,
-						'selected' => ($i == $view['weight']) ? ' selected="selected"' : ''));
-					$xtpl->parse('main.view.loop.weight_loop');
-				}
-				$xtpl->assign('CHECK', $view['active'] == 1 ? 'checked' : '');
-				$view['datefrom_format'] = (empty($view['datefrom'])) ? '' : nv_date('d/m/Y', $view['datefrom']);
-				$view['dateto_format'] = (empty($view['dateto'])) ? '' : nv_date('d/m/Y', $view['dateto']);
-				$view['mount'] = $view['yearmonth'][0].$view['yearmonth'][1];
-				$view['year'] = $view['yearmonth'][2].$view['yearmonth'][3].$view['yearmonth'][4].$view['yearmonth'][5];
-				$view['yearmonth_format'] = $view['mount'].'/'.$view['year'];
-				$view['product_name'] = $array_pid_lease[$view['pid']]['title_vi'];
-				$view['customer_name'] = $array_cid_lease[$view['cid']]['title'];
-				$view['service_name'] = $array_sid_lease[$view['sid']]['title_vi'];
-				$view['invoice_status'] = $array_invoice_status_lease[$view['invoice']]['title_vi'];
-				$view['totalvnd_format'] = number_format($view['totalvnd']);
-				$view['totalusd_format'] = number_format($view['totalusd']);
-				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['id'];
-				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['id'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);
-				$xtpl->assign('VIEW', $view);
-				$xtpl->parse('main.view.loop');
-			}
-			foreach ($array_pid_lease as $value) {
-				$xtpl->assign('OPTION', array(
-					'key' => $value['pid'],
-					'title' => $value['title_vi'],
-					'selected' => ($value['pid'] == $pid) ? ' selected="selected"' : ''
-				));
-				$xtpl->parse('main.view.select_pid');
-			}
-			foreach ($array_cid_lease as $value) {
-				$xtpl->assign('OPTION', array(
-					'key' => $value['cid'],
-					'title' => $value['title'],
-					'selected' => ($value['cid'] == $cid) ? ' selected="selected"' : ''
-				));
-				$xtpl->parse('main.view.select_cid');
-			}
-			foreach ($array_sid_lease as $value) {
-				if($value['service_main'] != 1){
-					$xtpl->assign('OPTION', array(
-						'key' => $value['sid'],
-						'title' => $value['title_vi'],
-						'selected' => ($value['sid'] == $sid) ? ' selected="selected"' : ''
+						'selected' => ($i == $year) ? ' selected="selected"' : ''
 					));
-					$xtpl->parse('main.view.select_sid');
+					$xtpl->parse('main.view.select_year');
 				}
-			}
-			
-			foreach ($array_month as $key => $title) {
-				$xtpl->assign('OPTION', array(
-					'key' => $key,
-					'title' => $title,
-					'selected' => ($key == $month) ? ' selected="selected"' : ''
-				));
-				$xtpl->parse('main.view.select_month');
+				$xtpl->parse('main.view');
 			}
 
-			for ($i=1970;$i<2050;$i++) {
-				$xtpl->assign('OPTION', array(
-					'key' => $i,
-					'title' => $i,
-					'selected' => ($i == $year) ? ' selected="selected"' : ''
-				));
-				$xtpl->parse('main.view.select_year');
+
+			if (!empty($error)) {
+				$xtpl->assign('ERROR', implode('<br />', $error));
+				$xtpl->parse('main.error');
 			}
-			$xtpl->parse('main.view');
 		}
+		$xtpl->parse('main');
+		$contents = $xtpl->text('main');
 
+		$page_title = $lang_module['serviceextra'];
 
-		if (!empty($error)) {
-			$xtpl->assign('ERROR', implode('<br />', $error));
-			$xtpl->parse('main.error');
-		}
+		include NV_ROOTDIR . '/includes/header.php';
+		echo nv_site_theme($contents);
+		include NV_ROOTDIR . '/includes/footer.php';
+	}else{
+		nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=users&' . NV_OP_VARIABLE . '=login&nv_redirect=' . nv_redirect_encrypt($client_info['selfurl']) . '&checkss=' . md5('0' . NV_CHECK_SESSION));
 	}
-	$xtpl->parse('main');
-	$contents = $xtpl->text('main');
-
-	$page_title = $lang_module['serviceextra'];
-
-	include NV_ROOTDIR . '/includes/header.php';
-	echo nv_site_theme($contents);
-	include NV_ROOTDIR . '/includes/footer.php';
-}else{
-	nv_redirect_location(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=users&' . NV_OP_VARIABLE . '=login&nv_redirect=' . nv_redirect_encrypt($client_info['selfurl']) . '&checkss=' . md5('0' . NV_CHECK_SESSION));
-}

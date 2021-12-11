@@ -8,9 +8,10 @@
  * @license GNU/GPL version 2 or any later version
  * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
-
 if (!defined('NV_IS_MOD_LEASE'))
     die('Stop!!!');
+print_r("expression");die;
+
 if(defined('NV_IS_USER')&& $permission[$op]){
 	
 	if($array_op[1] == "") {
@@ -142,10 +143,8 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$maxweight=$db->query('SELECT max(weight) as maxweight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote WHERE 	companyid = ' . $row['companyid'] . ' AND year = ' . $row['year'])->fetch(5)->maxweight;
 			if($maxweight == 0){$maxweight=1;}else{$maxweight++;}
 			$row['debitcode'] = vsprintf($array_config['debitnote_format_code'], $maxweight).$array_config['debitnote_center_prefix'].$row['year'].'/'.$row['company_code'];
-			$debitnoteidexit=$db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_debitnote WHERE 	pid = " . $row['pid'] . " AND cid = " . $row['cid'] . " AND yearmonth = '" . $row['month'].$row['year'] . "' AND debitcode = '" . $row['debitcode'] ."'")->fetch();
-			$list_extraservice = $nv_Request->get_string("list_extraservices", "post" , "");
-			$list_extraservice=html_entity_decode($list_extraservice);
-			$list_extraservices = json_decode($list_extraservice,True);
+			$debitnoteidexit=$db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_debitnote WHERE 	pid = " . $row['pid'] . " AND cid = " . $row['cid'] . " AND yearmonth = '" . $row['month'].$row['year'] . "'")->fetch();
+			
 			if (empty($row['pid'])) {
 				$error[] = $lang_module['error_required_pid'];
 			} elseif (empty($row['cid'])) {
@@ -180,7 +179,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 						$row['weight'] = $maxweight;
 						$row['active'] = 1;
 
-						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote (pid, cid, yearmonth, debitnotedate, mainservice, datefrom, dateto, areareal, exchangeusd, recipients_vi, recipients_en, explain_vi, explain_en, account_bank_vi, account_bank_en, holding_vi, holding_en, bank_name_vi, bank_name_en, bank_address_vi, bank_address_en, swiftcode, note_vi, note_en, companyid, year, comapyname_vi, comapyname_en, manager_name_vi, manager_name_en, adminid, crt_date, userid_edit, update_date, weight, debitcode, active, note, status) VALUES (:pid, :cid, :yearmonth, :debitnotedate, 0, :datefrom, :dateto, :areareal, :exchangeusd, :recipients_vi, :recipients_en, :explain_vi, :explain_en, :account_bank_vi, :account_bank_en, :holding_vi, :holding_en, :bank_name_vi, :bank_name_en, :bank_address_vi, :bank_address_en, :swiftcode, :note_vi, :note_en, :companyid, :year, :comapyname_vi, :comapyname_en, :manager_name_vi, :manager_name_en, :adminid, ' . NV_CURRENTTIME . ', :userid_edit, ' . NV_CURRENTTIME . ', :weight, :debitcode, :active, :note, 1)');
+						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote (pid, cid, yearmonth, debitnotedate, mainservice, datefrom, dateto, areareal, exchangeusd, recipients_vi, recipients_en, explain_vi, explain_en, account_bank_vi, account_bank_en, holding_vi, holding_en, bank_name_vi, bank_name_en, bank_address_vi, bank_address_en, swiftcode, note_vi, note_en, companyid, year, comapyname_vi, comapyname_en, manager_name_vi, manager_name_en, adminid, crt_date, userid_edit, update_date, weight, debitcode, active, note, status) VALUES (:pid, :cid, :yearmonth, :debitnotedate, 1, :datefrom, :dateto, :areareal, :exchangeusd, :recipients_vi, :recipients_en, :explain_vi, :explain_en, :account_bank_vi, :account_bank_en, :holding_vi, :holding_en, :bank_name_vi, :bank_name_en, :bank_address_vi, :bank_address_en, :swiftcode, :note_vi, :note_en, :companyid, :year, :comapyname_vi, :comapyname_en, :manager_name_vi, :manager_name_en, :adminid, ' . NV_CURRENTTIME . ', :userid_edit, ' . NV_CURRENTTIME . ', :weight, :debitcode, :active, :note, 1)');
 
 						$stmt->bindParam(':weight', $row['weight'], PDO::PARAM_INT);
 						$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
@@ -225,52 +224,94 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 					$exc = $stmt->execute();
 					$debitnotetid=$db->query("SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_debitnote WHERE debitcode = '" . $row['debitcode'] ."'")->fetch();
 					$row['debitnoteid'] = $debitnotetid['id'];
-					
+					$where ="yearmonth='". $row['yearmonth'] ."' AND cid=" . $row['cid'] ." AND pid=" . $row['pid'];
+				
+					$db->sqlreset()
+						->select('*')
+						->from('' . NV_PREFIXLANG . '_' . $module_data . '_contract')
+						->where($where);
+					$sth = $db->query($db->sql());
+					$data_contract = $sth->fetch();
 					
 					if ($exc) {
 						$nv_Cache->delMod($module_name);
-						if($list_extraservices[0]){
-							foreach ($list_extraservices as $key => $extraservices){
-								$weightse=$db->query('SELECT max(weight) as maxweight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra WHERE pid = ' . $row['pid'] . ' AND debitnoteid = ' . $row['debitnoteid'])->fetch(5)->maxweight;
-								if($weightse == 0){$weightse=1;}else{$weightse++;}
-								if(!empty($extraservices)){
-									
-									$extraservices['stitle'] = $array_sid_lease[$extraservices['name_service']]['title_vi'];
-										$extraservices['service_main'] = 0;
-										$extraservices['amount'] = $extraservices['quantity'];
-										$extraservices['amountmonth'] = 1;
-										$extraservices['amountday'] = 0;
-										$extraservices['pricevnd'] = $extraservices['priceusd'] *$row['exchangeusd'];
-										$extraservices['totalvnd'] = $extraservices['pricevnd'] * $extraservices['amount'];
-										$extraservices['totalusd'] = $extraservices['priceusd'] * $extraservices['amount'];
-										
-										$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra (debitnoteid, pid, cid, yearmonth, adddate, serviceid, service_name, service_main, exchangeusd, price_vi, price_en, amount, amountmonth, amountday, total_vi, total_en, note, userid_edit, update_date, adminid, crt_date, weight, active) 
-																															  VALUES (:debitnoteid, :pid, :cid, :yearmonth, :adddate, :serviceid, :service_name, :service_main, :exchangeusd, :price_vi, :price_en, :amount, :amountmonth, :amountday, :total_vi, :total_en, :note, ' . $user_info['userid'] . ', ' . NV_CURRENTTIME . ', ' . $user_info['userid'] . ', ' . NV_CURRENTTIME . ', :weight, :active)');
+						$value = $data_contract;
+						$weightse = 1;
+						if(!empty($value)){
+							$value['stitle'] = $array_sid_lease[$value['sid']]['title_vi'];
+							if (empty($row['id'])) {
+								$value['service_main'] = 1;
+								$value['amount'] = 1;
+								
+								$value['totalvnd'] = $value['pricevnd'] * $value['amount'];
+								$value['totalusd'] = $value['priceusd'] * $value['amount'];
+								
+								$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra (debitnoteid, pid, cid, yearmonth, adddate, serviceid, service_name, service_main, exchangeusd, price_vi, price_en, amount, total_vi, total_en, note, userid_edit, update_date, adminid, crt_date, weight, active) 
+																													  VALUES (:debitnoteid, :pid, :cid, :yearmonth, :adddate, :serviceid, :service_name, :service_main, :exchangeusd, :price_vi, :price_en, :amount, :total_vi, :total_en, :note, :userid_edit, ' . NV_CURRENTTIME . ', :adminid, ' . NV_CURRENTTIME . ', :weight, :active)');
 
-										$stmt->bindParam(':weight', $weightse, PDO::PARAM_INT);
-										$stmt->bindParam(':service_main', $extraservices['service_main'], PDO::PARAM_INT);
-									$stmt->bindParam(':debitnoteid', $row['debitnoteid'], PDO::PARAM_INT);
-									$stmt->bindParam(':pid', $row['pid'], PDO::PARAM_INT);
-									$stmt->bindParam(':cid', $row['cid'], PDO::PARAM_INT);
-									$stmt->bindParam(':yearmonth', $extraservices['time_begin'], PDO::PARAM_STR);
-									$stmt->bindParam(':adddate', $row['debitnotedate'], PDO::PARAM_INT);
-									$stmt->bindParam(':serviceid', $extraservices['name_service'], PDO::PARAM_INT);
-									$stmt->bindParam(':service_name', $extraservices['stitle'], PDO::PARAM_STR);
-									$extraservices['pricevnd'] = $extraservices['priceusd']*$row['exchangeusd'];
-									$stmt->bindParam(':exchangeusd', $row['exchangeusd'], PDO::PARAM_INT);
-									$stmt->bindParam(':price_vi', $extraservices['pricevnd'], PDO::PARAM_STR);
-									$stmt->bindParam(':price_en', $extraservices['priceusd'], PDO::PARAM_STR);
-									$stmt->bindParam(':amount', $extraservices['amount'], PDO::PARAM_STR);
-									$stmt->bindParam(':amountmonth', $extraservices['amountmonth'], PDO::PARAM_STR);
-									$stmt->bindParam(':amountday', $extraservices['amountday'], PDO::PARAM_STR);
-									$stmt->bindParam(':total_vi', $extraservices['totalvnd'], PDO::PARAM_STR);
-									$stmt->bindParam(':total_en', $extraservices['totalusd'], PDO::PARAM_STR);
-									$stmt->bindParam(':note', $row['note'], PDO::PARAM_STR, strlen($row['note']));
-									$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
+								$stmt->bindParam(':weight', $weightse, PDO::PARAM_INT);
+								$stmt->bindParam(':service_main', $value['service_main'], PDO::PARAM_INT);
+								$stmt->bindParam(':adminid', $user_info['userid'], PDO::PARAM_INT);
 
-									$exc = $stmt->execute();
+							} else {
+								$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra SET debitnoteid = :debitnoteid, pid = :pid, cid = :cid, yearmonth = :yearmonth, adddate = :adddate, serviceid = :serviceid, exchangeusd = :exchangeusd, price_vi = :price_vi, price_en = :price_en, amount = :amount, total_vi = :total_vi, total_en = :total_en, note = :note, userid_edit = :userid_edit, update_date = ' . NV_CURRENTTIME . ', active = :active WHERE debitnoteid=' . $row['id']);
+							}
+							$stmt->bindParam(':debitnoteid', $row['debitnoteid'], PDO::PARAM_INT);
+							$stmt->bindParam(':pid', $row['pid'], PDO::PARAM_INT);
+							$stmt->bindParam(':cid', $row['cid'], PDO::PARAM_INT);
+							$stmt->bindParam(':yearmonth', $value['yearmonth'], PDO::PARAM_STR);
+							$stmt->bindParam(':adddate', $row['debitnotedate'], PDO::PARAM_INT);
+							$stmt->bindParam(':serviceid', $value['sid'], PDO::PARAM_INT);
+							$stmt->bindParam(':service_name', $value['stitle'], PDO::PARAM_STR);
+							
+							$stmt->bindParam(':exchangeusd', $row['exchangeusd'], PDO::PARAM_INT);
+							$stmt->bindParam(':price_vi', $value['pricevnd'], PDO::PARAM_STR);
+							$stmt->bindParam(':price_en', $value['priceusd'], PDO::PARAM_STR);
+							$stmt->bindParam(':amount', $value['amount'], PDO::PARAM_STR);
+							$stmt->bindParam(':total_vi', $value['totalvnd'], PDO::PARAM_STR);
+							$stmt->bindParam(':total_en', $value['totalusd'], PDO::PARAM_STR);
+							$stmt->bindParam(':note', $value['note'], PDO::PARAM_STR, strlen($row['note']));
+							$stmt->bindParam(':userid_edit', $user_info['userid'], PDO::PARAM_INT);
+							$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
+
+							$exc = $stmt->execute();
+							if($exc){
+								if (empty($row['id'])) {
+									$value['service_main'] = 1;
+									$value['amount'] = 1;
 									
+									$value['totalvnd'] = $value['feevnd'] * $value['amount'];
+									$value['totalusd'] = $value['feeusd'] * $value['amount'];
+									
+									$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra (debitnoteid, pid, cid, yearmonth, adddate, serviceid, service_name, service_main, exchangeusd, price_vi, price_en, amount, total_vi, total_en, note, userid_edit, update_date, adminid, crt_date, weight, active) 
+																														  VALUES (:debitnoteid, :pid, :cid, :yearmonth, :adddate, :serviceid, :service_name, :service_main, :exchangeusd, :price_vi, :price_en, :amount, :total_vi, :total_en, :note, :userid_edit, ' . NV_CURRENTTIME . ', :adminid, ' . NV_CURRENTTIME . ', :weight, :active)');
+
+									$stmt->bindParam(':weight', $weightse, PDO::PARAM_INT);
+									$stmt->bindParam(':service_main', $value['service_main'], PDO::PARAM_INT);
+									$stmt->bindParam(':adminid', $user_info['userid'], PDO::PARAM_INT);
+
+								} else {
+									$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra SET debitnoteid = :debitnoteid, pid = :pid, cid = :cid, yearmonth = :yearmonth, adddate = :adddate, serviceid = :serviceid, exchangeusd = :exchangeusd, price_vi = :price_vi, price_en = :price_en, amount = :amount, total_vi = :total_vi, total_en = :total_en, note = :note, userid_edit = :userid_edit, update_date = ' . NV_CURRENTTIME . ', active = :active WHERE debitnoteid=' . $row['id']);
 								}
+								$stmt->bindParam(':debitnoteid', $row['debitnoteid'], PDO::PARAM_INT);
+								$stmt->bindParam(':pid', $row['pid'], PDO::PARAM_INT);
+								$stmt->bindParam(':cid', $row['cid'], PDO::PARAM_INT);
+								$stmt->bindParam(':yearmonth', $value['yearmonth'], PDO::PARAM_STR);
+								$stmt->bindParam(':adddate', $row['debitnotedate'], PDO::PARAM_INT);
+								$stmt->bindParam(':serviceid', $value['sid'], PDO::PARAM_INT);
+								$stmt->bindParam(':service_name', $lang_module['feeusd'], PDO::PARAM_STR);
+								
+								$stmt->bindParam(':exchangeusd', $row['exchangeusd'], PDO::PARAM_INT);
+								$stmt->bindParam(':price_vi', $value['feevnd'], PDO::PARAM_STR);
+								$stmt->bindParam(':price_en', $value['feeusd'], PDO::PARAM_STR);
+								$stmt->bindParam(':amount', $value['amount'], PDO::PARAM_STR);
+								$stmt->bindParam(':total_vi', $value['totalvnd'], PDO::PARAM_STR);
+								$stmt->bindParam(':total_en', $value['totalusd'], PDO::PARAM_STR);
+								$stmt->bindParam(':note', $value['note'], PDO::PARAM_STR, strlen($row['note']));
+								$stmt->bindParam(':userid_edit', $user_info['userid'], PDO::PARAM_INT);
+								$stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
+
+								$exc = $stmt->execute();
 							}
 						}
 						
@@ -584,7 +625,9 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 				}else{
 					$xtpl->parse('main.view.loop.link_view');
 				}
- 				$xtpl->parse('main.view.loop');
+				if($view['manager_name_vi'] == ''){
+					$xtpl->parse('main.view.loop');
+				}
 			}
 			
 			$xtpl->parse('main.view');
@@ -702,7 +745,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			}
 			$row['month'] = $row['yearmonth'][0].$row['yearmonth'][1];
 			$row['year'] = $row['yearmonth'][2].$row['yearmonth'][3].$row['yearmonth'][4].$row['yearmonth'][5];
-			$row['product'] = $array_pid_lease[$row['pid']]['title'];
+			$row['product'] = $array_pid_lease[$row['pid']]['title_vi'];
 			$row['customer'] = $array_cid_lease[$row['cid']]['title'];
 			$where ="debitnoteid= ". $row['id'] ;
 	
@@ -803,17 +846,8 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$id = $nv_Request->get_int('delete_id', 'get');
 			$delete_checkss = $nv_Request->get_string('delete_checkss', 'get');
 			if ($id > 0 and $delete_checkss == md5($id . NV_CACHE_PREFIX . $client_info['session_id'])) {
-				$db->sqlreset()
-						->select('*')
-						->from('' . NV_PREFIXLANG . '_' . $module_data . '_debitnote_extra')
-						->where(' debitnoteid=' . $id . ' AND service_main = 0');
-					$sth = $db->query($db->sql());
-					$data_service_extra = $sth->fetchAll();
-				foreach ($data_service_extra as $key => $value){
-					$db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_service_extra SET invoice=1 WHERE pid=' . intval($value['pid']) . ' AND cid= ' . intval($value['cid']) . ' AND sid= ' . intval($value['serviceid'])  . ' AND yearmonth= "' . $value['yearmonth'] . '"');
-				}	
 				
-				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote SET status = 0, status_del=1, weight =0 WHERE id=' . $id;
+				$query = 'UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote SET status = 0 WHERE id=' . $id;
 				$db->query($query);
 				$content = 'OK_' . $id;
 				
@@ -892,12 +926,12 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			}
 			$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
 			while ($view = $sth->fetch()) {
-				$view['datefrom_format'] = date("d/m/Y",$view['datefrom']);
-				$view['dateto_format'] = date("d/m/Y",$view['dateto']);
-				$view['debitnotedate_format'] = date("d/m/Y",$view['debitnotedate']);
 				$view['mount'] = $view['yearmonth'][0].$view['yearmonth'][1];
 				$view['year'] = $view['yearmonth'][2].$view['yearmonth'][3].$view['yearmonth'][4].$view['yearmonth'][5];
 				$view['yearmonth_format'] = $view['mount'].'/'.$view['year'];
+				$view['datefrom_format'] = date("d/m/Y",$view['datefrom']);
+				$view['dateto_format'] = date("d/m/Y",$view['dateto']);
+				$view['debitnotedate_format'] = date("d/m/Y",$view['debitnotedate']);
 				$view['customer_name'] = $array_cid_lease[$view['cid']]['title'];
 				$view['product_name'] = $array_pid_lease[$view['pid']]['title_vi'];
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['id'];
@@ -922,13 +956,53 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 				if(defined("NV_IS_GOLDADMIN")){
 					$xtpl->parse('main.view.loop.admin');
 				}
-				if($view['mainservice'] == 0) {
+				if($view['mainservice'] == 1) {
 					$xtpl->parse('main.view.loop');
 				}
 			}
 			$xtpl->parse('main.view');
+			
 		}
-
+		$nextmonth = nextMonth();
+		$month = $nextmonth->format('m');
+		$year = $nextmonth->format('Y');
+		$db->sqlreset()
+			->select('*')
+			->from('' . NV_PREFIXLANG . '_' . $module_data . '_contract')
+			->order('weight ASC');
+		$sthc = $db->prepare($db->sql());
+		$sthc->execute();
+		while ($viewnext = $sthc->fetch()) {
+			$viewnext['yearmonth'] = $month . $year;
+			$row = $db->query('SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_debitnote WHERE yearmonth=' . $viewnext['yearmonth'] . ' AND pid = ' . $viewnext['pid'] . ' AND cid = ' . $viewnext['cid'] . ' AND mainservice = 1 ' )->fetch();
+			if(empty($row['id'])){
+				$xtpl->assign('CHECK', $viewnext['active'] == 1 ? 'checked' : '');
+				$viewnext['yearmonth_format'] = $month . '/' . $year;
+				$viewnext['datefrom_format'] = (empty($viewnext['datefrom'])) ? '' : nv_date('d/m/Y', $viewnext['datefrom']);
+				$viewnext['debitnotedate_format'] = $viewnext['feedatemain'] . '/' . $month . '/' . $year;
+				$viewnext['dateto_format'] = (empty($viewnext['dateto'])) ? '' : nv_date('d/m/Y', $viewnext['dateto']);
+				$viewnext['product_name_vi'] = $array_pid_lease[$viewnext['pid']]['title_vi'];
+				$viewnext['product_name_en'] = $array_pid_lease[$viewnext['pid']]['title_en'];
+				$viewnext['link_view_product'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=product/view/' . str_replace("/","-",$array_pid_lease[$view['cid']]['alias']) . '';
+				$viewnext['customer_name_vi'] = $array_cid_lease[$viewnext['cid']]['title'];
+				$viewnext['customer_name_en'] = $array_cid_lease[$viewnext['cid']]['title'];
+				$viewnext['comapyname_vi'] = $array_companyid_lease[$viewnext['companyid']]['vi_title'];
+				$viewnext['comapyname_en'] = $array_companyid_lease[$viewnext['companyid']]['en_title'];
+				$viewnext['link_view_cus'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=debt/view/' . str_replace("/","-",$array_cid_lease[$view['cid']]['cuscode']) . '';
+				$viewnext['sid_vi'] = $array_sid_lease[$viewnext['sid']]['title_vi'];
+				$viewnext['sid_en'] = $array_sid_lease[$viewnext['sid']]['title_en'];
+				$viewnext['contract_status_format'] = $array_contract_status_lease[$viewnext['contract_status']]['title_vi'];
+				$viewnext['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/edit&amp;id=' . $view['id'];
+				$viewnext['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['id'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);
+				
+				$xtpl->assign('VIEWNEXT', $viewnext);
+				
+				if($view['status_del']==0){
+					$xtpl->parse('main.viewnext.list');
+				}
+			}
+		}
+		$xtpl->parse('main.viewnext');
 
 	}
 	$xtpl->parse('main');

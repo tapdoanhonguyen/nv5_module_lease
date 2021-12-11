@@ -1,24 +1,6 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: view -->
-<div class="well" style="display:none">
-<form action="{NV_BASE_SITEURL}index.php" method="get">
-    <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-    <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-    <input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-    <div class="row">
-        <div class="col-xs-24 col-md-6">
-            <div class="form-group">
-                <input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-3">
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-            </div>
-        </div>
-    </div>
-</form>
-</div>
+
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">	
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
@@ -28,14 +10,14 @@
 			<ol class="breadcrumb mb-0 p-0">
 				<li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item active" aria-current="page">{LANG.product}</li>
+				<li class="breadcrumb-item active" aria-current="page">{LANG.productlist}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{PRODUCT_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.product_add}</a> 
-			<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
+			<a type="button" class="btn btn-success" href="{PRODUCT_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.product_add}</a> 
+			<button type="button" class="btn btn-success bg-split-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
 				<a class="dropdown-item" href="{PRODUCT_IMPORT}">{LANG.product_import}</a>
@@ -47,17 +29,17 @@
 <div class="card">
 	<div class="card-body">
 		<div class="card-title">
-			<h4 class="mb-0">{LANG.product}</h4>
+			<h4 class="mb-0">{LANG.productlist}</h4>
 		</div>
 		<hr/>	
 		<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-			<div class="table-responsive">
+			
 				<div class="dataTables_wrapper dt-bootstrap4">
-					<table id="datatable" class="table table-striped table-bordered dataTable">
+					<table id="datatable" style="width: 100%;" class="table table-striped table-bordered dataTable">
 						<thead class="thead-dark">
 							<tr>
-								<th class="text-center">{LANG.weight}</th>
-								<th class="text-center">{LANG.active}</th> 
+								<th class="text-center">STT</th>
+								<th class="text-center">{LANG.func}</th> 
 								<th>{LANG.productcode}</th>
 								<th>{LANG.title_product_vi}</th>
 								<th>{LANG.title_product_en}</th>
@@ -75,9 +57,9 @@
 									<a class="large-icons-btn btn btn-primary" href="{VIEW.link_edit}#edit" data-toggle="tooltip" data-placement="top" title="{LANG.edit}" data-original-title="{LANG.edit}"><i class="lni lni-pencil"></i></a>&nbsp;&nbsp;
 									<a class="large-icons-btn btn btn-danger" href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);" data-toggle="tooltip" data-placement="top" title="{LANG.delete}" data-original-title="{LANG.delete}"><i class="lni lni-trash"></i></a>
 								</td>
-								<td> <a href ="{VIEW.link_view}" >(ID {VIEW.pid}):{VIEW.productcode}</a> </td>
-								<td> <a href ="{VIEW.link_view}" >{VIEW.title_vi}</a> </td>
-								<td> <a href ="{VIEW.link_view}" >{VIEW.title_en}</a> </td>
+								<td>(ID {VIEW.pid}):{VIEW.productcode}</td>
+								<td> <a class="text-info" href ="{VIEW.link_view}" >{VIEW.title_vi}</a> </td>
+								<td> <a class="text-info" href ="{VIEW.link_view}" >{VIEW.title_en}</a> </td>
 								<td>{VIEW.floorname}</td>
 								<td>{VIEW.area_format} {LANG.m2}</td>
 								<td>{VIEW.rent_status}</td>
@@ -104,7 +86,7 @@
 						</tfoot>
 					</table>
 				</div>
-			</div>
+			
 		</form>
 	</div>
 </div>	
@@ -145,13 +127,5 @@
     }
  
 //]]>
-</script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function () {
-	//Default data table
-	$('#datatable').DataTable();
-	
-});
 </script>
 <!-- END: main -->

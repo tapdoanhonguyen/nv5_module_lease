@@ -8,20 +8,20 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" aria-current="page">{LANG.list_company}</li>
+				<li class="breadcrumb-item" aria-current="page">Danh sách công ty</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{company_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{company_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
 <div class="card radius-15">
 	<div class="card-body">
 		<div class="card-title">
-			<h4 class="mb-0">{LANG.list_company}</h4>
+			<h4 class="mb-0">Danh sách công ty</h4>
 		</div>
 		<hr/>	
 		<!-- BEGIN: view -->
@@ -48,8 +48,8 @@
 					<table id="datatable" class="table table-striped table-bordered dataTable">
 						<thead class="thead-dark">
 							<tr>
-								<th class="w100">{LANG.stt}</th>
-								<th class="w100 text-center">{LANG.active}</th>
+								<th>{LANG.stt}</th>
+								<th class="text-center">{LANG.func}</th>
 								<th>{LANG.vi_title}</th>
 								<th>{LANG.en_title}</th>
 								<th>{LANG.vi_address}</th>
@@ -59,7 +59,7 @@
 								<th>{LANG.phone}</th>
 								<th>{LANG.fax}</th>
 								<th>{LANG.email}</th>
-								<th class="w150">{LANG.status}</th>
+								<th>{LANG.status}</th>
 							</tr>
 						</thead>
 						<!-- BEGIN: generate_page -->

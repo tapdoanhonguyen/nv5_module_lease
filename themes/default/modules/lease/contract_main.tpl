@@ -76,8 +76,8 @@
 									</a>
 								</td>
 								<td>{VIEW.ccode}</td>
-								<td><a href ="{VIEW.link_view_cus}" >{VIEW.cid_vi}</a></td>
-								<td><a href ="{VIEW.link_view_product}" >{VIEW.pid_vi}</a></td>
+								<td><a class="text-info" href ="{VIEW.link_view_cus}" >{VIEW.cid_vi}</a></td>
+								<td><a class="text-info" href ="{VIEW.link_view_product}" >{VIEW.pid_vi}</a></td>
 								<td>Từ {VIEW.datefrom_format} đến {VIEW.dateto_format}</td>
 								<td>
 									{VIEW.contract_status_format}
@@ -97,16 +97,7 @@
 		<!-- END: view -->
    </div>
 </div>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function () {
-	//Default data table
-	$('#datatable').DataTable({
-		"bFilter": false,
-		"bLengthChange": false
-	});
-});
-</script>
+
 
 <script type="text/javascript">
 //<![CDATA[
@@ -133,6 +124,9 @@ $(document).ready(function () {
 				var r_split = res.split('_');
 				if (r_split[0] != 'OK') {
 					alert(nv_is_change_act_confirm[2]);
+					
+				}else{
+					window.location.href = window.location.href;
 				}
 			});
 		}

@@ -8,14 +8,13 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" aria-current="page">{LANG.company}</li>
-				<li class="breadcrumb-item active" aria-current="page">{LANG.edit_company}</li>
+				<li class="breadcrumb-item active" aria-current="page">Sửa công ty</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{company_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{company_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -30,40 +29,40 @@
 		<!-- END: error -->
 		<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/edit" method="post">
 			<input type="hidden" name="cid" value="{ROW.cid}" />
-			<div class="form-group">
-				<label>{LANG.companycode} <span class="red">(*)</span></label>
-				<input class="form-control" type="text" name="companycode" value="{ROW.companycode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+			<div class="form-row">
+				<div class="col-md-2 mb-3">
+					<label>{LANG.companycode} <span class="red">(*)</span></label>
+					<input class="form-control" type="text" name="companycode" value="{ROW.companycode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+				</div>
 			</div>
 			<div class="form-row">
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.vi_title} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="vi_title" value="{ROW.vi_title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.vi_address} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="vi_address" value="{ROW.vi_address}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.vi_province} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="vi_province" value="{ROW.vi_province}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 			</div>
-			<hr />
 			<div class="form-row">
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.en_title} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="en_title" value="{ROW.en_title}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.en_address} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="en_address" value="{ROW.en_address}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-4 mb-3">
 					<label>{LANG.en_province} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="en_province" value="{ROW.en_province}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 			</div>
-			<hr />
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
 					<label>{LANG.phone} <span class="red">(*)</span></label>
@@ -74,7 +73,7 @@
 					<input class="form-control" type="text" name="fax" value="{ROW.fax}"  oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 				<div class="col-md-4 mb-3">
-					<label>{LANG.email}</label>
+					<label>{LANG.email} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="email" value="{ROW.email}" />
 				</div>
 			</div>

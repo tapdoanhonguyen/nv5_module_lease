@@ -17,7 +17,7 @@
 					</div>
 					<div class="d-flex align-items-center">
 						<div>
-							<p class="mb-0 text-white">Item Delivered</p>
+							<p class="mb-0 text-white">{LANG.customer}</p>
 						</div>
 						<div class="ml-auto font-14 text-white">+23.4%</div>
 					</div>
@@ -36,7 +36,7 @@
 					</div>
 					<div class="d-flex align-items-center">
 						<div>
-							<p class="mb-0 text-white">Refund Requests</p>
+							<p class="mb-0 text-white">{LANG.contract}</p>
 						</div>
 						<div class="ml-auto font-14 text-white">+14.7%</div>
 					</div>
@@ -55,7 +55,7 @@
 					</div>
 					<div class="d-flex align-items-center">
 						<div>
-							<p class="mb-0 text-white">Orders Cancelled</p>
+							<p class="mb-0 text-white">{LANG.product}</p>
 						</div>
 						<div class="ml-auto font-14 text-white">-12.9%</div>
 					</div>
@@ -74,7 +74,7 @@
 					</div>
 					<div class="d-flex align-items-center">
 						<div>
-							<p class="mb-0 text-white">New Users</p>
+							<p class="mb-0 text-white">{LANG.contract}</p>
 						</div>
 						<div class="ml-auto font-14 text-white">+13.6%</div>
 					</div>

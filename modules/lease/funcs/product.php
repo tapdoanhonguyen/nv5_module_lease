@@ -10,7 +10,7 @@
  */
 
 if (!defined('NV_IS_MOD_LEASE'))
-    die('Stop!!!');
+	die('Stop!!!');
 $array_rent_status_lease = array();
 $_sql = 'SELECT * FROM ' .NV_PREFIXLANG . '_' . $module_data . '_rent_status';
 $_query = $db->query($_sql);
@@ -43,27 +43,27 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 
 		$return .= '<textarea class="form-control" style="width: ' . $width . '; height:' . $height . ';" id="' . $module_data . '_' . $textareaname . '" name="' . $textareaname . '">' . $val . '</textarea>';
 		$return .= "<script type=\"text/javascript\">CKEDITOR.replace('" . $module_data . "_" . $textareaname . "', {
-		removePlugins: 'uploadfile,uploadimage,autosave',
-		contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
+			removePlugins: 'uploadfile,uploadimage,autosave',
+			contentsCss: '" . NV_BASE_SITEURL . NV_EDITORSDIR . "/ckeditor/nv.css?t=" . $global_config['timestamp'] . "'
 		});</script>";
 
 		return $return;
 	}
 	$xtpl = new XTemplate('product_'.$action.'.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
-		$xtpl->assign('LANG', $lang_module);
-		$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
-		$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
-		$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
-		$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-		$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-		$xtpl->assign('MODULE_NAME', $module_name);
-		$xtpl->assign('MODULE_UPLOAD', $module_upload);
-		$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
-		$xtpl->assign('OP', $op);
-		$xtpl->assign('PRODUCT_ADD', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/add'),true);
-		$xtpl->assign('PRODUCT_IMPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/import'),true);
-		$xtpl->assign('PRODUCT_EXPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/export',true));
-		
+	$xtpl->assign('LANG', $lang_module);
+	$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
+	$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
+	$xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+	$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
+	$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
+	$xtpl->assign('MODULE_NAME', $module_name);
+	$xtpl->assign('MODULE_UPLOAD', $module_upload);
+	$xtpl->assign('NV_ASSETS_DIR', NV_ASSETS_DIR);
+	$xtpl->assign('OP', $op);
+	$xtpl->assign('PRODUCT_ADD', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/add'),true);
+	$xtpl->assign('PRODUCT_IMPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/import'),true);
+	$xtpl->assign('PRODUCT_EXPORT', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=product/export',true));
+
 	if(	$action == "add" or $action == "edit"){
 		$row = array();
 		$error = array();
@@ -87,11 +87,19 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$row['oldimage'] = $nv_Request->get_title('oldimage', 'post', '');
 			$row['images'] = $nv_Request->get_title('images', 'post', '');
 
-			if (is_file(NV_DOCUMENT_ROOT . $row['image']))     {
-				$row['image'] = substr($row['image'], strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/'));
-			} else {
-				$row['image'] = '';
-			}
+
+
+			move_uploaded_file($_FILES['images']['tmp_name'],  NV_UPLOADS_DIR .'/'.$module_name.'/product/' . $_FILES['images']['name']);
+
+			$row['images'] = NV_UPLOADS_DIR .'/'.$module_name.'/product/' . $_FILES['images']['name'];
+
+
+			// if (is_file(NV_DOCUMENT_ROOT . $row['image']))     {
+			// 	$row['image'] = substr($row['image'], strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/'));
+			// } else {
+			// 	$row['image'] = '';
+			// }
+
 			$row['note'] = $nv_Request->get_editor('note', '', NV_ALLOWED_HTML_TAGS);
 
 			if (empty($row['fid'])) {
@@ -103,42 +111,44 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			} elseif (empty($row['area'])) {
 				$error[] = $lang_module['error_required_area'];
 			} 
-			$file = end(explode('/',$row['image']));
+			//$file = end(explode('/',$row['image']));
 			
-			$path = nv_check_path_upload(NV_UPLOADS_DIR . '/' . $module_upload . '/' . $op);
-			$allow_files_type = [
-				'images'
-			];
-			$sys_max_size = $sys_max_size_local = min($global_config['nv_max_size'], nv_converttoBytes(ini_get('upload_max_filesize')), nv_converttoBytes(ini_get('post_max_size')));
-			if ($global_config['nv_overflow_size'] > $sys_max_size and $global_config['upload_chunk_size'] > 0) {
-				$sys_max_size_local = $global_config['nv_overflow_size'];
-			}
+			// $path = nv_check_path_upload(NV_UPLOADS_DIR . '/' . $module_upload . '/' . $op);
+			// $allow_files_type = [
+			// 	'image'
+			// ];
+			// $sys_max_size = $sys_max_size_local = min($global_config['nv_max_size'], nv_converttoBytes(ini_get('upload_max_filesize')), nv_converttoBytes(ini_get('post_max_size')));
+			// if ($global_config['nv_overflow_size'] > $sys_max_size and $global_config['upload_chunk_size'] > 0) {
+			// 	$sys_max_size_local = $global_config['nv_overflow_size'];
+			// }
+			
+			// $upload = new NukeViet\Files\Upload($allow_files_type, $global_config['forbid_extensions'], $global_config['forbid_mimes'], [$sys_max_size, $sys_max_size_local], NV_MAX_WIDTH, NV_MAX_HEIGHT);
+			// $upload->setLanguage($lang_module);
+			// if (isset($_FILES['images']['tmp_name']) and is_uploaded_file($_FILES['images']['tmp_name'])) {
+			// 	// Upload Chunk (nhiều phần)
+			// 	if ($global_config['upload_chunk_size'] > 0 and $chunk_upload['chunks'] > 0) {
+			// 		$upload->setChunkOption($chunk_upload);
+			// 	}
+			// 	$upload_info = $upload->save_file($_FILES['images'], NV_ROOTDIR . '/' . $path, false, $global_config['nv_auto_resize']);
+			// }
+			//  if ($global_config['nv_auto_resize'] and ($upload_info['img_info'][0] > NV_MAX_WIDTH or $upload_info['img_info'][1] > NV_MAX_HEIGHT)) {
+			// 	$createImage = new NukeViet\Files\Image(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename'], $upload_info['img_info'][0], $upload_info['img_info'][1]);
+			// 	$createImage->resizeXY(NV_MAX_WIDTH, NV_MAX_HEIGHT);
+			// 	$createImage->save(NV_ROOTDIR . '/' . $path, $upload_info['basename'], $thumb_config['thumb_quality']);
+			// 	$createImage->close();
+			// 	$info = $createImage->create_Image_info;
+			// 	$upload_info['img_info'][0] = $info['width'];
+			// 	$upload_info['img_info'][1] = $info['height'];
+			// 	$upload_info['size'] = filesize(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename']);
+			// }
 
-			$upload = new NukeViet\Files\Upload($allow_files_type, $global_config['forbid_extensions'], $global_config['forbid_mimes'], [$sys_max_size, $sys_max_size_local], NV_MAX_WIDTH, NV_MAX_HEIGHT);
-			$upload->setLanguage($lang_module);
-			if (isset($_FILES['images']['tmp_name']) and is_uploaded_file($_FILES['images']['tmp_name'])) {
-				// Upload Chunk (nhiều phần)
-				if ($global_config['upload_chunk_size'] > 0 and $chunk_upload['chunks'] > 0) {
-					$upload->setChunkOption($chunk_upload);
-				}
-				$upload_info = $upload->save_file($_FILES['images'], NV_ROOTDIR . '/' . $path, false, $global_config['nv_auto_resize']);
-			}
-			 if ($global_config['nv_auto_resize'] and ($upload_info['img_info'][0] > NV_MAX_WIDTH or $upload_info['img_info'][1] > NV_MAX_HEIGHT)) {
-				$createImage = new NukeViet\Files\Image(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename'], $upload_info['img_info'][0], $upload_info['img_info'][1]);
-				$createImage->resizeXY(NV_MAX_WIDTH, NV_MAX_HEIGHT);
-				$createImage->save(NV_ROOTDIR . '/' . $path, $upload_info['basename'], $thumb_config['thumb_quality']);
-				$createImage->close();
-				$info = $createImage->create_Image_info;
-				$upload_info['img_info'][0] = $info['width'];
-				$upload_info['img_info'][1] = $info['height'];
-				$upload_info['size'] = filesize(NV_ROOTDIR . '/' . $path . '/' . $upload_info['basename']);
-			}
-			 if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
-					$lu = strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/floor' . '/');
-					$row['image'] = substr($row['image'], $lu);
-				} else {
-					$row['image'] = '';
-				}
+			 // if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
+				// 	$lu = strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/floor' . '/');
+				// 	$row['image'] = substr($row['image'], $lu);
+				// } else {
+				// 	$row['image'] = '';
+				// }
+
 			if (empty($error)) {
 				try {
 					if (empty($row['pid'])) {
@@ -147,7 +157,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 //print_r('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title_vi, alias, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title_vi, :alias, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');die;
 						$stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_product (fid, title_vi, title_en, alias, productcode, area, price_usd_min, price_usd_max, price_vnd_min, price_vnd_max, rent_status, image, note, active, adminid, crtd_date) VALUES (:fid, :title_vi, :title_en, :alias, :productcode, :area, :price_usd_min, :price_usd_max, :price_vnd_min, :price_vnd_max, :rent_status, :image, :note, 1, ' . $user_info['userid'] . ', ' .  NV_CURRENTTIME. ')');	
 						
-					$stmt->bindParam(':rent_status', $row['rent_status'], PDO::PARAM_INT);
+						$stmt->bindParam(':rent_status', $row['rent_status'], PDO::PARAM_INT);
 					} else {
 						$stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_product SET fid = :fid, title_vi = :title_vi, title_en = :title_en, alias = :alias, productcode = :productcode, area = :area, price_usd_min = :price_usd_min, price_usd_max = :price_usd_max, price_vnd_min = :price_vnd_min, price_vnd_max = :price_vnd_max, image = :image, note = :note, userid_edit = ' . $user_info['userid'] . ', update_date = ' . NV_CURRENTTIME . ' WHERE pid=' . $row['pid']);
 					}
@@ -209,7 +219,14 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 		$row['note'] = nv_htmlspecialchars(nv_editor_br2nl($row['note']));
 		$row['note'] = nv_module_aleditor('note', '100%', '300px', $row['note']);
 		$xtpl->assign('ROW', $row);
-		if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
+		// if (!nv_is_url($row['image']) and nv_is_file($row['image'], NV_UPLOADS_DIR . '/' . $module_upload . '/floor')) {
+		// 	$xtpl->assign('HIDDEN', '');
+		// }else{
+		// 	$row['image'] = '';
+		// 	$xtpl->assign('HIDDEN', 'hidden');
+		// }
+
+		if ($row['image']){
 			$xtpl->assign('HIDDEN', '');
 		}else{
 			$row['image'] = '';
@@ -338,8 +355,8 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$per_page = 2000;
 			$page = $nv_Request->get_int('page', 'post,get', 1);
 			$db->sqlreset()
-				->select('COUNT(*)')
-				->from('' . NV_PREFIXLANG . '_' . $module_data . '_product');
+			->select('COUNT(*)')
+			->from('' . NV_PREFIXLANG . '_' . $module_data . '_product');
 
 			if (!empty($q)) {
 				$db->where('fid LIKE :q_fid OR title_vi LIKE :q_title OR area LIKE :q_area OR price_usd_min LIKE :q_price_usd_min OR price_usd_max LIKE :q_price_usd_max OR price_vnd_min LIKE :q_price_vnd_min OR price_vnd_max LIKE :q_price_vnd_max OR rent_status LIKE :q_rent_status');
@@ -360,7 +377,7 @@ if(defined('NV_IS_USER')&& $permission[$op]){
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('update_date ASC');
+			->order('update_date ASC');
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {

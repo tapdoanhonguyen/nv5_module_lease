@@ -9,14 +9,13 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" aria-current="page">{LANG.bank}</li>
-				<li class="breadcrumb-item active" aria-current="page">{LANG.bank}</li>
+				<li class="breadcrumb-item active" aria-current="page">Danh sách ngân hàng</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{bank_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{bank_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 			
 		</div>
 	</div>
@@ -24,17 +23,17 @@
 <div class="card radius-15">
 	<div class="card-body">
 		<div class="card-title">
-			<h4 class="mb-0">{LANG.bank}</h4>
+			<h4 class="mb-0">Danh sách ngân hàng</h4>
 		</div>
 		<hr/>	
 		<!-- BEGIN: view -->
 		<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
 			<div class="table-responsive">
 				<table class="table table-striped table-bordered table-hover">
-					<thead>
+					<thead class="thead-dark">
 						<tr>
-							<th class="w100">{LANG.stt}</th>
-							<th class="w100 text-center">{LANG.active}</th>
+							<th>{LANG.stt}</th>
+							<th>{LANG.func}</th>
 							<th>{LANG.vi_bank_number}</th>
 							<th>{LANG.en_bank_number}</th>
 							<th>{LANG.vi_bank_account_holder}</th>
@@ -44,7 +43,7 @@
 							<th>{LANG.vi_address}</th>
 							<th>{LANG.en_address}</th>
 							<th>{LANG.swiftcode}</th>
-							<th class="w150">{LANG.status};</th>
+							<th>{LANG.status};</th>
 						</tr>
 					</thead>
 					<!-- BEGIN: generate_page -->

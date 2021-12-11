@@ -9,14 +9,13 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item " >{LANG.customer_groups}</li>
 				<li class="breadcrumb-item active" aria-current="page">{LANG.customer_groups_edit}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{customer_groups_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{customer_groups_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -32,11 +31,11 @@
 		<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/edit" method="post">
 			<input type="hidden" name="id" value="{ROW.id}" />
 			<div class="form-group">
-				<label>{LANG.customer_groups_code}</label>
-				<input class="form-control" type="text" name="code" value="{ROW.code}" />
+				<label>{LANG.customer_groups_code} <span class="red">(*)</span></label>
+				<input class="form-control" type="text" name="code" value="{ROW.code}"  />
 			</div>
 			<div class="form-group">
-				<label>{LANG.customer_groups_title}</label>
+				<label>{LANG.customer_groups_title} <span class="red">(*)</span></label>
 				<input class="form-control" type="text" name="title" value="{ROW.title}" />
 			</div>
 			<div class="form-group">

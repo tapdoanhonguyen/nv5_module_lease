@@ -242,7 +242,7 @@ if(defined('NV_IS_USER')){
 			}
 			$sth->execute();
 		}
-
+		print_r($db->sql());
 
 		$xtpl->assign('Q', $q);
 
@@ -258,14 +258,18 @@ if(defined('NV_IS_USER')){
 			}
 			$number = $page > 1 ? ($per_page * ($page - 1)) + 1 : 1;
 			while ($view = $sth->fetch()) {
-				
+				//$query = 'SELECT id FROM ' . NV_PREFIXLANG . '_' . $module_data . '_payment WHERE debitnote = ' . $view['id'];
+				//$debitnote_payment = $db->query($query)->fetch();
 				$view['month'] = date("m",NV_CURRENTTIME);
 				$view['year'] = date("Y",NV_CURRENTTIME);
 				$view['datefrom'] = date("d/m/Y",NV_CURRENTTIME);
 				$view['dateto'] = date("d/m/Y",NV_CURRENTTIME);
-				$view['debitnotedate'] = date("d/m/Y",NV_CURRENTTIME);
+				$view['debitnotedate'] = $month . '/' . $year;
+				$view['mount'] = $view['yearmonth'][0].$view['yearmonth'][1];
+				$view['year'] = $view['yearmonth'][2].$view['yearmonth'][3].$view['yearmonth'][4].$view['yearmonth'][5];
+				$view['yearmonth_format'] = $view['mount'].'/'.$view['year'];
 				$view['customer'] = $array_cid_lease[$view['cid']]['title'];
-				$view['product'] = $array_pid_lease[$view['pid']]['title'];
+				$view['product'] = $array_pid_lease[$view['pid']]['title_vi'];
 				for($i = 1; $i <= $num_items; ++$i) {
 					$xtpl->assign('WEIGHT', array(
 						'key' => $i,
@@ -277,7 +281,9 @@ if(defined('NV_IS_USER')){
 				$view['link_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;id=' . $view['id'];
 				$view['link_delete'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;delete_id=' . $view['id'] . '&amp;delete_checkss=' . md5($view['id'] . NV_CACHE_PREFIX . $client_info['session_id']);
 				$xtpl->assign('VIEW', $view);
-				$xtpl->parse('main.view.loop');
+				if($view['debitnote']){
+					$xtpl->parse('main.view.loop');
+				}
 			}
 			$xtpl->parse('main.view');
 		}

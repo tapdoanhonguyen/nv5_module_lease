@@ -9,14 +9,13 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" >{LANG.customer}</li>
 				<li class="breadcrumb-item active" aria-current="page">{LANG.customer_add}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{customer_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{customer_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -50,11 +49,9 @@
 			
 				</div>
 				<div class="col-md-3 mb-3">
-					<label>{LANG.gid}
-						<span class="red">(*)</span>
-					</label>
+					<label>{LANG.gid}</label>
 					<select class="form-control" name="gid">
-						<option value=""> --- </option>
+						<option value=""> -- Chọn Nhóm khách hàng -- </option>
 						<!-- BEGIN: select_gid -->
 						<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 						<!-- END: select_gid -->
@@ -67,7 +64,7 @@
 			</div>
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<label>{LANG.mobile}</label>
+					<label>{LANG.mobile} <span class="red">(*)</span> </label>
 					<input class="form-control" type="text" name="mobile" value="{ROW.mobile}" />
 				</div>
 				<div class="col-md-4 mb-3">
@@ -75,21 +72,21 @@
 					<input class="form-control" type="text" name="fax" value="{ROW.fax}" />
 				</div>
 				<div class="col-md-4 mb-3">
-					<label>{LANG.email}</label>
+					<label>{LANG.email} <span class="red">(*)</span> </label>
 					<input class="form-control" type="text" name="email" value="{ROW.email}" />
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<label>{LANG.taxcode}</label>
+					<label>{LANG.taxcode} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="taxcode" value="{ROW.taxcode}" />
 				</div>
 				<div class="col-md-4 mb-3">
-					<label>{LANG.person_legal}</label>
+					<label>{LANG.person_legal} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="person_legal" value="{ROW.person_legal}" />
 				</div>
 				<div class="col-md-4 mb-3">
-					<label>{LANG.person_legal_mobile}</label>
+					<label>{LANG.person_legal_mobile} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="person_legal_mobile" value="{ROW.person_legal_mobile}" />
 				</div>
 			</div>

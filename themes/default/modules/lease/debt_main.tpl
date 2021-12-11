@@ -14,7 +14,7 @@
 					<li class="breadcrumb-item">
 						<a href="/"><i class='bx bx-home-alt'></i></a>
 					</li>
-					<li class="breadcrumb-item active" aria-current="page">{LANG.debt}</li>
+					<li class="breadcrumb-item active" aria-current="page">Danh sách công nợ</li>
 				</ol>
 			</nav>
 		</div>
@@ -38,7 +38,7 @@
 			<table class="table table-striped table-bordered table-hover">
 				<thead>
 					<tr>
-						<th>{LANG.title}</th>
+						<th>Khách hàng</th>
 						<th>{LANG.gid}</th>
 						<th>{LANG.address}</th>
 						<th>{LANG.mobile}</th>

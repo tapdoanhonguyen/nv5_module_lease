@@ -98,8 +98,6 @@
 						<thead>
 							<tr>
 								<th>{LANG.service}</th>
-								<th>{LANG.datefrom}</th>
-								<th>{LANG.dateto}</th>
 								<th>{LANG.price}</th>
 								<th>{LANG.amount}</th>
 								<th>{LANG.total}</th>
@@ -108,18 +106,16 @@
 						<tbody >
 							<!-- BEGIN: service_vi -->
 							<tr>
-								<td>{DBN.service_name}</td>
-								<td>{ROW.datefrom_format}</td>
-								<td>{ROW.dateto_format}</td>
-								<td style="text-align:right">{DBN.price_format_vi}</td>
-								<td style="text-align:right">{DBN.amount_format}</td>
-								<td style="text-align:right">{DBN.total_format_vi}</td>
+								<td>{DBN.service_name} {LANG.yearmonth_vi} {DBN.yearmonth_format} </td>
+								<td style="text-align:right">{DBN.price_format_en} USD</td>
+								<td style="text-align:right">{DBN.amount_format} m2 ({DBN.amountmonth} {LANG.month_vi} , {DBN.amountday} {LANG.day_vi})</td>
+								<td style="text-align:right">{DBN.total_format_en} USD ({DBN.total_format_vi} VND)</td>
 							</tr>
 							<!-- END: service_vi -->
 						</tbody>
 						<tfoot>
 							<tr>
-								<th colspan="5" style="text-align:right">{LANG.total}</th>
+								<th colspan="3" style="text-align:right">{LANG.total}</th>
 								<th style="text-align:right">{total_format_vi}</th>
 							</tr>
 							

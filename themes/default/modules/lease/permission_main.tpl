@@ -16,8 +16,8 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{permission_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.permission_func_add}</a> 
-			<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.permission_func_add}</span>
+			<a type="button" class="btn btn-success" href="{permission_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.permission_func_add}</a> 
+			<button type="button" class="btn btn-success bg-split-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.permission_func_add}</span>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
 				<a class="dropdown-item" href="{permission_groups}">{LANG.permission_groups}</a>
@@ -57,7 +57,7 @@
 					<table id="datatable1" class="table table-striped table-bordered table-hover">
 						<thead class="thead-dark">
 							<tr>
-								<th>{LANG.title}</th>
+								<th>Danh mục</th>
 								<!-- BEGIN: permission -->
 								<th>{PERMISSION.title}</th>
 								<!-- END: permission -->

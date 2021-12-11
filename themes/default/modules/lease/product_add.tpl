@@ -27,15 +27,13 @@
 			<ol class="breadcrumb mb-0 p-0">
 				<li class="breadcrumb-item"><a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item"><a href="/lease/product/">{LANG.product}</a>
-				</li>
 				<li class="breadcrumb-item active" aria-current="page">{LANG.product_add}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{PRODUCT_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.product_add}</a> 
+			<a type="button" class="btn btn-success" href="{PRODUCT_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.product_add}</a> 
 			<button type="button" class="btn btn-primary bg-split-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">	<span class="sr-only">{LANG.product_more}</span>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
@@ -56,7 +54,7 @@
 			<div class="alert alert-warning">{ERROR}</div>
 		<!-- END: error -->
 				
-		<form class="needs-validation" action="{PRODUCT_ADD}" method="post">
+		<form class="needs-validation" action="{PRODUCT_ADD}" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="pid" value="{ROW.pid}" />
 			<div class="form-row">
 				<div class="col-md-6 mb-3">
@@ -78,9 +76,9 @@
 					<input class="form-control" type="text" name="title_en" value="{ROW.title_en}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
 				<div class="col-md-6 mb-3">
-					<label>{LANG.alias} <span class="red">(*)</span></label>
+					<label>{LANG.alias}</label>
 					<div class="input-group">
-						<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)"  />
+						<input readonly class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)"  />
 						<div class="input-group-append">
 							<button onclick="nv_get_alias('id_alias');" class="btn btn-info" type="button">
 								<i class="fa fa-refresh fa-lg icon-pointer"></i>
@@ -93,7 +91,7 @@
 				<div class="col-md-6 mb-3">
 					<label>{LANG.fid} <span class="red">(*)</span></label>
 					<select class="form-control" name="fid">
-							<option value=""> Chọn Tầng </option>
+							<option value="">-- Chọn Tầng --</option>
 							<!-- BEGIN: select_fid -->
 							<option value="{OPTION.key}" {OPTION.selected}>{OPTION.title}</option>
 							<!-- END: select_fid -->
@@ -105,7 +103,7 @@
 				</div>
 			</div>
 			<div class="mb-3">
-				<label>{LANG.image}</label><span class="red">(*)</span>
+				<label>{LANG.image}</label>
 				<div class="input-group">
 					<input class="form-control" type="text" name="image" value="{ROW.image}" id="imgfile"/>
 					<input type='file' id="homeimg" class="hidden" name="images"  />

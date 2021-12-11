@@ -15,7 +15,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{customer_groups_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{customer_groups_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -27,13 +27,12 @@
 		<hr/>
 		<!-- BEGIN: view -->
 		<form action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" method="post">
-			<div class="table-responsive">
 				<table class="table table-striped table-bordered table-hover">
-					<thead>
+					<thead class="thead-dark">
 						<tr>
 							<th class="w100 text-center">{LANG.stt}</th>
-							<th class="w100 text-center">{LANG.active}</th>
-							<th>{LANG.title}</th>
+							<th class="w100 text-center">{LANG.func}</th>
+							<th>Tên Nhóm</th>
 							<th class="text-center">{LANG.status}</th>
 						</tr>
 					</thead>

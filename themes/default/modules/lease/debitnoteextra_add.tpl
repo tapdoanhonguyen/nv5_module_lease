@@ -2,6 +2,7 @@
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/lobibox.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{NV_BASE_SITEURL}themes/default/js/moment.js"></script>
 <div class="well" style="display:none">
 	<form action="{NV_BASE_SITEURL}index.php" method="get">
 		<input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
@@ -166,6 +167,12 @@
 					</div>
 				</div>
 				<div class="form-row ">
+					<div class="col-md-12 mb-3 ">
+						
+						<button  type="button"  id="update_service"   > {LANG.update_service} </button>
+					</div>
+				</div>
+				<div class="form-row ">
 					<div class="col-md-6 mb-3 ">
 						<label>{LANG.explain_vi} <span class="red">(*)</span></label>
 						<input class="form-control" type="text" name="explain_vi" id="explain_vi" value="{ROW.explain_vi}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
@@ -189,12 +196,18 @@
 							<tbody id="serviceextravi">
 							</tbody>
 							
-							<tfoot class="tfoot-dark">
+							<tfoot >
 								<tr>
-									<th>{LANG.service}</th>
-									<th>{LANG.price}</th>
-									<th>{LANG.amount}</th>
-									<th>{LANG.total}</th>
+									<th colspan="3">Thành tiền</th>
+									<th><input class="mask form-control" type="text" name="total" value="{ROW.total}" id="total_vi" onkeyup="this.value=FormatNumber(this.value);" readonly=""/></th>
+								</tr>
+								<tr>
+									<th colspan="3">Thuế 10%</th>
+									<th><input class="mask form-control" type="text" name="vat" value="{ROW.vat}" id="vat_vi" onkeyup="this.value=FormatNumber(this.value);" readonly='' /></th>
+								</tr>
+								<tr>
+									<th colspan="3">Tổng thành tiền</th>
+									<th><input class="mask form-control" type="text" name="sum_total" value="{ROW.vat}" id="sum_total_vi" onkeyup="this.value=FormatNumber(this.value);" readonly=''/></th>
 								</tr>
 							</tfoot>	
 						</table>
@@ -377,14 +390,7 @@
 							</thead>
 							<tbody id="serviceextraen">
 							</tbody>
-							<tfoot class="tfoot-dark">
-								<tr>
-									<th>{LANG.service}</th>
-									<th>{LANG.price}</th>
-									<th>{LANG.amount}</th>
-									<th>{LANG.total}</th>
-								</tr>
-							</tfoot>	
+								
 						</table>
 					</div>
 				</div>
@@ -449,6 +455,7 @@
 			</div>
 			
 			<div class="text-center">
+				<input type="hidden" name="list_extraservices" id="list_extraservices" value="{LIST_ALL}" />
 				<button class="btn btn-primary" name="submit" type="submit"><i class="lni lni-save mrg-r-5"></i>{LANG.add}</button>
 			</div>
 		</form>
@@ -466,6 +473,7 @@
         showOtherMonths : true,
     });
 	$(".en,#lableservicemainvi,#lableservicemainen,#lableserviceextravi,#lableserviceextraen").hide();
+	let list_all = [];
 	function check_services(){
 		var customerid = $("#customerid").val();
 		var productid = $("#productid").val();
@@ -518,6 +526,8 @@
 		var datefrom = $("#datefrom").val();
 		var dateto = $("#dateto").val();
 		var yearmonth = month+year;
+		var exchangeusd = $("#exchangeusd").val();;
+		let list_all = [];
 		
 		 $.ajax({
 			type: 'POST',
@@ -533,21 +543,25 @@
 				nv_ajax: 1,
 				customerid: customerid,
 				productid: productid,
-				yearmonth: yearmonth
+				yearmonth: yearmonth,
+				exchangeusd: exchangeusd
 			},
 			dataType: "json"
 		}).done(function(a) {
 			var html_vi='';
 			var html_en='';
 			if (a.status == "OKE") {
+				var i=0;
+				var total=0;
 				$.each(a.message,function(index, data){ 
-					
-					html_vi = html_vi + '<tr><td > <a href="javascript:show_modal_serviceextrainfo_vi(' + data.sid + ');" id="serviceextra_detail_vi" data-id="' + data.sid + '">' + data.title + ' ' + data.yearmonth + '</a></td><td><input class="form-control" name="pricevnd" value="' + data.pricevnd_f + '" onkeyup="this.value=FormatNumber(this.value);"></td><td><input class="form-control" name="amountvndtoltal" id="amountvndtoltal" value="' + data.amount_f + '" onkeyup="this.value=FormatNumber(this.value);">' + ' ' + data.unit + '</td><td><input class="form-control" name="pricevndtoltal" value="' + data.totalvnd_f + '" onkeyup="this.value=FormatNumber(this.value);"></td></tr>';
-					html_en = html_en + '<tr><td > <a href="javascript:show_modal_serviceextrainfo_en(' + data.sid + ');" id="serviceextra_detail_en" data-id="' + data.sid + '">' + data.title + ' ' + data.yearmonth + '</a></td><td><input class="form-control" name="priceusd" value="' + data.priceusd_f + '" onkeyup="this.value=FormatNumber(this.value);"></td><td><input class="form-control" name="amountusdtoltal" id="amountvndtoltal" value="' + data.amount_f + '" onkeyup="this.value=FormatNumber(this.value);">' + ' ' + data.unit + '</td><td><input class="form-control" name="priceusdtoltal" value="' + data.totalusd_f + '" onkeyup="this.value=FormatNumber(this.value);"></td></tr>';
+					$.each(data.data,function(key, debitnote){
+						i++;
+						html_vi = '<tr id="row_' + debitnote.i + '"><td >' + debitnote.service_name_vi + ' {LANG.yearmonth_vi} ' + debitnote.yearmonth_format + '</td><td><input class="mask form-control" type="text" name="priceusd_' + debitnote.i + '[]" id="priceusd_' + debitnote.i + '" value="' + debitnote.price_f_en + '" onkeyup="this.value=FormatNumber(this.value);" onchange="total_debitnote();"> (USD) <span id="pricevnd_' + debitnote.i + '">' + debitnote.price_f_vi + ' </span>VNĐ/m2</td><td>' + debitnote.area_f_vi + ' ' + debitnote.areal_unit_vi + '</td><td><input class="mask form-control" type="text" name="priceusdtoltal_' + debitnote.i + '[]"  id="priceusdtoltal_' + debitnote.i + '" value="' + debitnote.total_priceusd_f_en + '" onkeyup="this.value=FormatNumber(this.value);" readonly = ""> (USD) <span id="totalvnd_' + debitnote.i + '" > ' + debitnote.total_pricevnd_f_vi + '</span> VNĐ <input type="hidden" name="service_' + debitnote.i + '[]" id="service_' + debitnote.i + '" value="' + debitnote.serviceid + '" ><input type="hidden" name="yearmonth_' + debitnote.i + '[]" id="yearmonth_' + debitnote.i + '" value="' + debitnote.yearmonth + '" ><input type="hidden" name="amount_month_' + debitnote.i + '[]" id="amount_month_' + debitnote.i + '" value="' + debitnote.amountmonth_f_en + '" ><input type="hidden" name="amount_day_' + debitnote.i + '[]" id="amount_day_' + debitnote.i + '" value="' + debitnote.amountday_f_en + '" ><input type="hidden" name="area_' + debitnote.i + '[]" id="area_' + debitnote.i + '" value="' + debitnote.amount + '" ></td></tr>';
+						$('#serviceextravi').append(html_vi);
+						list_all.push({"name_service":debitnote.serviceid,"time_begin":index,"time_end":index,"priceusd":debitnote.price_f_en,"quantity":debitnote.amount});
+					});
 				});
-				
-				$('#serviceextravi').html(html_vi);
-				$('#serviceextraen').html(html_en);
+				total_debitnote();
 			} else {
 				$('#serviceextravi').html('<td colspan="6">{LANG.no_service_extra_vi}</td>');
 				$('#serviceextraen').html('<td colspan="6">{LANG.no_service_extra_en}</td>');
@@ -590,6 +604,31 @@
 				console.log(a);
 			}
 		});
+	}
+	function total_debitnote(){
+		list_all = [];
+		var item = $('#serviceextravi > tr');
+		var total =0;
+		var exchangeusd = $("#exchangeusd").val();
+		for (var i = 1; i <= item.length; i++) {
+			serviceid = $('#service_' + i).val();
+			yearmonth = $('#yearmonth_' + i).val();
+			priceusd = $('#priceusd_' + i).val();
+			$('#pricevnd_' + i).val(priceusd*exchangeusd);
+			area = $('#area_' + i).val();
+			total_i = parseFloat(priceusd)*parseFloat(area);
+			$('#priceusdtoltal_'  + i).val(total_i);
+			$('#totalvnd_' + i).val(total_i*exchangeusd);
+			total += parseFloat(total_i);
+			list_all.push({"name_service":serviceid,"time_begin":yearmonth,"time_end":yearmonth,"priceusd":priceusd,"quantity":area});
+		}
+		total_vat = parseFloat(total)*10/100;
+		sum_total = total + total_vat;
+		listall = JSON.stringify(list_all)
+		$("#list_extraservices").val(listall);
+		$("#total_vi").val(total);
+		$("#vat_vi").val(total_vat);
+		$("#sum_total_vi").val(sum_total);
 	}
 	function show_modal_serviceextrainfo_en(sid){
 		

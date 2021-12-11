@@ -58,8 +58,13 @@
 								<th>{LANG.cid}</th>
 								<th>{LANG.yearmonth}</th>
 								<th>{LANG.adddate}</th>
-								<th>{LANG.serviceid}</th>
-								<th class="w100 text-center">{LANG.status}</th>
+								<th class="w100 text-center">{LANG.total_vi}</th>
+								<th class="w100 text-center">{LANG.total_payment_vi}</th>
+								<th class="w100 text-center">{LANG.debt_total_vi}</th>
+								<th class="w150">{LANG.total_en}</th>
+								<th class="w100 text-center">{LANG.total_payment_en}</th>
+								<th class="w150">{LANG.debt_total_en}</th>
+								<th class="w100 text-center">{LANG.active}</th>
 								
 							</tr>
 						</thead>
@@ -85,12 +90,17 @@
 									<a class="large-icons-btn btn btn-danger" href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);" data-toggle="tooltip" data-placement="top" title="{LANG.delete}" data-original-title="{LANG.delete}"><i class="lni lni-trash"></i>
 									</a>
 								</td>
-								<td>{VIEW.debitnoteid} </td>
-								<td>{VIEW.pid}</td>
-								<td>{VIEW.cid}</td>
-								<td>{VIEW.yearmonth}</td>
+								<td>{VIEW.debitcode} </td>
+								<td>{VIEW.product}</td>
+								<td>{VIEW.customer}</td>
+								<td>{VIEW.yearmonth_format}</td>
 								<td>{VIEW.adddate}</td>
-								<td>{VIEW.serviceid}</td>
+								<td> {VIEW.total_format_vi} </td>
+								<td> {VIEW.total_payment_format_vi} </td>
+								<td> {VIEW.total_debt_format_vi} </td>
+								<td> {VIEW.total_format_en} </td>
+								<td> {VIEW.total_payment_format_en} </td>
+								<td> {VIEW.total_debt_format_en} </td>
 								<td class="text-center">
 									<div class="custom-control custom-switch">
 										<input class="custom-control-input" type="checkbox" name="active" id="change_status_{VIEW.id}" value="{VIEW.id}" {CHECK} onclick="nv_change_status({VIEW.id});" /><label class="custom-control-label" for="change_status_{VIEW.id}" data-toggle="tooltip" data-placement="top" title="{LANG.on_off}" data-original-title="{LANG.on_off}"></label>

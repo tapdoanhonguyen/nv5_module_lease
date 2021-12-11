@@ -371,7 +371,9 @@ if(defined('NV_IS_USER')){
 				$view['link_payment'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '/payment&amp;id=' . $view['id'];
 				$xtpl->assign('VIEW', $view);
 				$xtpl->parse('main.view.loop.payment');
-				$xtpl->parse('main.view.loop');
+				if($view['manager_name_vi'] != ''){
+					$xtpl->parse('main.view.loop');
+				}
 			}
 			$xtpl->parse('main.view');
 		}

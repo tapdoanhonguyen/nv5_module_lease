@@ -91,13 +91,16 @@
 							<tr>
 								<th class="w100">{LANG.stt}</th>
 								<th class="w150">{LANG.func}</th>
-								<th>{LANG.customer}</th>
-								<th>Dịch vụ</th>
+								<th>{LANG.debitcode_service}</th>
+								<th>{LANG.service_title}</th>
 								<th>{LANG.yearmonth}</th>
-								<th>{LANG.datefrom}</th>
+								<th>{LANG.customer}</th>
+								
+								
+								<!--<th>{LANG.datefrom}</th> 
 								<th>{LANG.dateto}</th>
 								<th>{LANG.totalvnd}</th>
-								<th>{LANG.totalusd}</th>
+								<th>{LANG.totalusd}</th> -->
 								<th class="w100 text-center">{LANG.status}</th>
 								<th class="w100 text-center">{LANG.active}</th>
 								
@@ -121,17 +124,18 @@
 									</select>
 								</td>
 								<td class="text-center">
+									<a class="large-icons-btn btn btn-primary" href="#" data-toggle="tooltip" data-placement="top" title="{LANG.view}" data-original-title="{LANG.view}"><i class="lni lni-eye"></i></a>&nbsp;&nbsp;
 									<a class="large-icons-btn btn btn-primary" href="{VIEW.link_edit}#edit" data-toggle="tooltip" data-placement="top" title="{LANG.edit}" data-original-title="{LANG.edit}"><i class="lni lni-pencil"></i></a>&nbsp;&nbsp;
 									<a class="large-icons-btn btn btn-danger" href="{VIEW.link_delete}" onclick="return confirm(nv_is_del_confirm[0]);" data-toggle="tooltip" data-placement="top" title="{LANG.delete}" data-original-title="{LANG.delete}"><i class="lni lni-trash"></i>
 									</a>
 								</td>
-								<td>{VIEW.customer_name}</td>
+								<td><a class="text-info" href ="#" >{VIEW.customer_name}</a></td>
 								<td>{VIEW.service_name}</td>
 								<td>{VIEW.yearmonth_format}</td>
-								<td>{VIEW.datefrom_format}</td>
+								<!-- <td>{VIEW.datefrom_format}</td>
 								<td>{VIEW.dateto_format}</td>
 								<td>{VIEW.totalvnd_format}</td>
-								<td>{VIEW.totalusd_format}</td>
+								<td>{VIEW.totalusd_format}</td> -->
 								<td class="text-center">
 									{VIEW.invoice_status}
 								</td>
@@ -187,14 +191,5 @@
 	
 	//]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function () {
-	//Default data table
-	$('#datatable').DataTable({
-		"bFilter": false,
-		"bLengthChange": false
-	});
-});
-</script>
+
 <!-- END: main -->

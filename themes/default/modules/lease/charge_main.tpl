@@ -1,25 +1,7 @@
 <!-- BEGIN: main -->
 <link href="/themes/softs/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
 <link href="/themes/softs/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
-<div class="well" style="display:none">
-<form action="{NV_BASE_SITEURL}index.php" method="get">
-    <input type="hidden" name="{NV_LANG_VARIABLE}"  value="{NV_LANG_DATA}" />
-    <input type="hidden" name="{NV_NAME_VARIABLE}"  value="{MODULE_NAME}" />
-    <input type="hidden" name="{NV_OP_VARIABLE}"  value="{OP}" />
-    <div class="row">
-        <div class="col-xs-24 col-md-6">
-            <div class="form-group">
-                <input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-3">
-            <div class="form-group">
-                <input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
-            </div>
-        </div>
-    </div>
-</form>
-</div>
+
 <div class="page-breadcrumb d-none d-md-flex align-items-center mb-3">
 	<div class="breadcrumb-title pr-3">Dịch vụ</div>
 	<div class="pl-3">
@@ -34,7 +16,7 @@
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{charge_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{charge_add}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -51,8 +33,8 @@
 					<table id="datatable" class="table table-striped table-bordered dataTable">
 						<thead class="thead-dark">
 							<tr>
-								<th class="w100">{LANG.update_date}</th>
-								<th class="w100 text-center">{LANG.active}</th>
+								<th class="w100">STT</th>
+								<th class="w100 text-center">{LANG.func}</th>
 								<th>{LANG.charge}</th>
 								<th class="w100 text-center">{LANG.status}</th>
 							</tr>
@@ -130,14 +112,7 @@
     }
 //]]>
 </script>
-<script src="/themes/softs/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function () {
-	//Default data table
-	$('#datatable').DataTable();
-	
-});
-</script>
+
 <!-- END: main -->
 
 

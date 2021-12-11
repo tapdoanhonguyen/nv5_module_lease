@@ -330,9 +330,7 @@ print_r($row);
 			$num_items = $sth->fetchColumn();
 
 			$db->select('*')
-				->order('weight ASC')
-				->limit($per_page)
-				->offset(($page - 1) * $per_page);
+				->order('weight ASC');
 			$sth = $db->prepare($db->sql());
 
 			if (!empty($q)) {

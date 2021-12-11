@@ -9,14 +9,13 @@
 				<li class="breadcrumb-item">
 					<a href="/"><i class='bx bx-home-alt'></i></a>
 				</li>
-				<li class="breadcrumb-item" aria-current="page">{LANG.floor}</li>
 				<li class="breadcrumb-item active" aria-current="page">{LANG.floor_add}</li>
 			</ol>
 		</nav>
 	</div>
 	<div class="ml-auto">
 		<div class="btn-group">
-			<a type="button" class="btn btn-primary" href="{FLOOR_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
+			<a type="button" class="btn btn-success" href="{FLOOR_ADD}"><i class="lni lni-add-files mrg-r-5"></i>{LANG.add}</a>
 		</div>
 	</div>
 </div>
@@ -32,22 +31,22 @@
 		<form class="form-horizontal" action="{NV_BASE_SITEURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}/add" method="post" enctype="multipart/form-data" >
 			<input type="hidden" name="fid" value="{ROW.fid}" />
 			<div class="form-row">
-				<div class="col-md-6 mb-3">
+				<div class="col-md-3 mb-3">
 					<label>{LANG.floorcode} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="floorcode" value="{ROW.floorcode}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-3 mb-3">
 					<label>{LANG.title} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_vi" value="{ROW.title_vi}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-3 mb-3">
 					<label>{LANG.title_en} <span class="red">(*)</span></label>
 					<input class="form-control" type="text" name="title_en" value="{ROW.title_en}" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
 				</div>
-				<div class="col-md-6 mb-3">
+				<div class="col-md-3 mb-3">
 					<label>{LANG.alias} <span class="red">(*)</span></label>
 					<div class="input-group">
-						<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')" />
+						<input class="form-control" type="text" name="alias" value="{ROW.alias}" id="id_alias" required="required" oninvalid="setCustomValidity(nv_required)" oninput="setCustomValidity('')"  readonly />
 						<div class="input-group-append">
 							<button onclick="nv_get_alias('id_alias');" class="btn btn-info" type="button">
 								<i class="fa fa-refresh fa-lg icon-pointer">&nbsp;</i>
@@ -57,32 +56,35 @@
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="col-md-4 mb-3">
-					<label>{LANG.area} <span class="red">(*)</span></label>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.area} </label>
 					<input class="mask form-control" type="text" name="area" value="{ROW.area}"   required="required"/>
 				</div>
-				<div class="col-md-4 mb-3">
-					<label>{LANG.common_area} <span class="red">(*)</span></label>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.common_area}</label>
 					<input class="mask form-control" type="text" name="common_area" value="{ROW.common_area}"   required="required"/>
 				</div>
-				<div class="col-md-4 mb-3">
-					<label>{LANG.area_for_rent} </label>
+				<div class="col-md-3 mb-3">
+					<label>{LANG.area_for_rent} <span class="red">(*)</span></label>
 					<input class="mask form-control" type="text" name="area_for_rent" value="{ROW.area_for_rent}"   required="required"/>
 				</div>
-			</div>
-			<div class="mb-3">
-				<div class="d-flex">
-					<label class="mrg-r-15"> {LANG.elevatortype}:</label>
-					<!-- BEGIN: radio_elevator -->
-					<span class="custom-control custom-radio mrg-r-15">
-						<input type="radio" value="{OPTION.key}" id="elevator-{OPTION.key}" name="elevator" class="custom-control-input" {OPTION.checked}>
-						<label class="custom-control-label" for="elevator-{OPTION.key}">{OPTION.title}</label>
-					</span>
-					<!-- END: radio_elevator -->
+				<div class="col-md-3 mb-3">
+					
+						<label class="mrg-r-15"> {LANG.elevatortype}:</label>
+					<div class="d-flex">
+						<!-- BEGIN: radio_elevator -->
+						<span class="custom-control custom-radio mrg-r-15">
+							<input type="radio" value="{OPTION.key}" id="elevator-{OPTION.key}" name="elevator" class="custom-control-input" {OPTION.checked}>
+							<label class="custom-control-label" for="elevator-{OPTION.key}">{OPTION.title}</label>
+						</span>
+						<!-- END: radio_elevator -->
+					</div>
 				</div>
+				
 			</div>
+			
 			<div class="mb-3">
-				<label>{LANG.image}</label><span class="red">(*)</span>
+				<label>{LANG.image}</label>
 				<div class="input-group">
 					<input class="form-control" type="text" name="image" value="{ROW.image}" id="imgfile"/>
 					<input type='file' id="homeimg" class="hidden" name="images"  />
@@ -94,12 +96,6 @@
 					</div>
 				</div>
 				<img id="review_img" style="right: 16px; top: 0" src="{ROW.image}" alt="your image" class="{HIDDEN} img1 img3x4" style="object-fit: cover"/>
-			</div>
-			
-			<div class="form-row">
-				<div class="col-md-12 mb-3">
-					<label></label>
-				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-md-12 mb-3">
